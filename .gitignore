@@ -1,0 +1,7 @@
+.idea/
+target/
+bungeecord/target/
+spigot/target/
+
+*.iml
+*.ini

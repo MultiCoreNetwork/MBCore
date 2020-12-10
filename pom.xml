@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>it.multicoredev.mbcore</groupId>
+    <artifactId>MBCore</artifactId>
+    <version>7.0.3</version>
+    <packaging>pom</packaging>
+
+    <name>MBCore</name>
+    <description>Library for Spigot and BungeeCord plugin development</description>
+    <url>https://github.com/MultiCoreNetwork/MBCore</url>
+    <inceptionYear>2019</inceptionYear>
+
+    <properties>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+    <organization>
+        <name>MultiCore Network</name>
+        <url>https://multicore.network</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>The BSD 3-Clause License</name>
+            <url>http://opensource.org/licenses/BSD-3-Clause</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>LoreSchaeffer</id>
+            <name>Lorenzo Magni</name>
+            <url>https://github.com/LoreSchaeffer</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:MultiCoreNetwork/MBCore.git</connection>
+        <developerConnection>scm:git:git@github.com:MultiCoreNetwork/MBCore.git</developerConnection>
+        <url>git@github.com:MultiCoreNetwork/MBCore</url>
+    </scm>
+
+    <modules>
+        <module>spigot</module>
+        <module>bungeecord</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>20.1.0</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.7</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
