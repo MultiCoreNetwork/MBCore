@@ -7,13 +7,13 @@
     <parent>
         <groupId>it.multicoredev.mbcore</groupId>
         <artifactId>MBCore</artifactId>
-        <version>7.0.3</version>
+        <version>7.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.multicoredev.mbcore.spigot</groupId>
     <artifactId>MBCore-spigot</artifactId>
-    <version>7.0.3</version>
+    <version>7.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>MBCore-spigot</name>

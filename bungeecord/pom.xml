@@ -7,13 +7,13 @@
     <parent>
         <groupId>it.multicoredev.mbcore</groupId>
         <artifactId>MBCore</artifactId>
-        <version>7.0.3</version>
+        <version>7.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.multicoredev.mbcore.bungeecord</groupId>
     <artifactId>MBCore-bungeecord</artifactId>
-    <version>7.0.3</version>
+    <version>7.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>MBCore-bungeecord</name>
@@ -71,6 +71,10 @@
             <id>bungeecord-repo</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -87,6 +91,12 @@
             <version>1.16-R0.2-SNAPSHOT</version>
             <type>javadoc</type>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.MyzelYam</groupId>
+            <artifactId>PremiumVanishAPI</artifactId>
+            <version>2.0.3</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

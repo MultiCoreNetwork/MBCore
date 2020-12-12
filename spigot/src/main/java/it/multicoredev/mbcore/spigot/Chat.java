@@ -1,6 +1,8 @@
 package it.multicoredev.mbcore.spigot;
 
 import com.google.common.base.Preconditions;
+import com.google.gson.JsonSyntaxException;
+import it.multicoredev.mbcore.spigot.util.chat.RawMessage;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -145,6 +147,11 @@ public class Chat {
      * @param translate Convert the color codes.
      */
     public static void send(String msg, Player receiver, boolean translate) {
+        if (msg.startsWith("\\j")) {
+            sendRaw(msg, receiver);
+            return;
+        }
+
         receiver.sendMessage(translate ? getTranslated(msg) : msg);
     }
 
@@ -167,6 +174,11 @@ public class Chat {
      * @param permissions Convert the color codes if the sender has this permissions.
      */
     public static void send(String msg, Player receiver, Player sender, String... permissions) {
+        if (msg.startsWith("\\j")) {
+            sendRaw(msg, receiver);
+            return;
+        }
+
         receiver.sendMessage(getTranslated(msg, sender, permissions));
     }
 
@@ -179,6 +191,11 @@ public class Chat {
      * @param permissions Convert the color codes if the sender has this permissions.
      */
     public static void send(String msg, Player receiver, CommandSender sender, String... permissions) {
+        if (msg.startsWith("\\j")) {
+            sendRaw(msg, receiver);
+            return;
+        }
+
         receiver.sendMessage(getTranslated(msg, sender, permissions));
     }
 
@@ -190,6 +207,10 @@ public class Chat {
      * @param translate Convert the color codes.
      */
     public static void send(String msg, CommandSender receiver, boolean translate) {
+        if (msg.startsWith("\\j") && (receiver instanceof Player)) {
+            sendRaw(msg, (Player) receiver);
+            return;
+        }
         receiver.sendMessage(translate ? getTranslated(msg) : msg);
     }
 
@@ -212,6 +233,11 @@ public class Chat {
      * @param permissions Convert the color codes if the sender has this permissions.
      */
     public static void send(String msg, CommandSender receiver, Player sender, String... permissions) {
+        if (msg.startsWith("\\j") && (receiver instanceof Player)) {
+            sendRaw(msg, (Player) receiver);
+            return;
+        }
+
         receiver.sendMessage(getTranslated(msg, sender, permissions));
     }
 
@@ -224,7 +250,34 @@ public class Chat {
      * @param permissions Convert the color codes if the sender has this permissions.
      */
     public static void send(String msg, CommandSender receiver, CommandSender sender, String... permissions) {
+        if (msg.startsWith("\\j") && (receiver instanceof Player)) {
+            sendRaw(msg, (Player) receiver);
+            return;
+        }
+
         receiver.sendMessage(getTranslated(msg, sender, permissions));
+    }
+
+    /**
+     * Send a raw message like a tellraw.
+     *
+     * @param msg      The message to be sent.
+     * @param receiver The receiver of the message.
+     */
+    public static void sendRaw(RawMessage msg, Player receiver) {
+        receiver.spigot().sendMessage(msg.toTextComponent());
+    }
+
+    /**
+     * Send a raw message like a tellraw.
+     *
+     * @param jsonMsg  The message to be sent.
+     * @param receiver The receiver of the message.
+     */
+    public static void sendRaw(String jsonMsg, Player receiver) throws JsonSyntaxException {
+        if (jsonMsg.startsWith("[\"\",")) jsonMsg = jsonMsg.replace("\"\",", "");
+        jsonMsg = "{\"message\":" + jsonMsg + "}";
+        sendRaw(RawMessage.fromJson(jsonMsg), receiver);
     }
 
     /**

@@ -1,6 +1,8 @@
 package it.multicoredev.mbcore.bungeecord;
 
 import com.google.common.base.Preconditions;
+import com.google.gson.JsonSyntaxException;
+import it.multicoredev.mbcore.bungeecord.util.chat.RawMessage;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -139,6 +141,11 @@ public class Chat {
      * @param translate Convert the color codes.
      */
     public static void send(String msg, ProxiedPlayer receiver, boolean translate) {
+        if (msg.startsWith("\\j")) {
+            sendRaw(msg, receiver);
+            return;
+        }
+
         receiver.sendMessage(TextComponent.fromLegacyText(translate ? getTranslated(msg) : msg));
     }
 
@@ -161,6 +168,11 @@ public class Chat {
      * @param permissions Convert the color codes if the sender has this permissions.
      */
     public static void send(String msg, ProxiedPlayer receiver, ProxiedPlayer sender, String... permissions) {
+        if (msg.startsWith("\\j")) {
+            sendRaw(msg, receiver);
+            return;
+        }
+
         receiver.sendMessage(TextComponent.fromLegacyText(getTranslated(msg, sender, permissions)));
     }
 
@@ -173,6 +185,11 @@ public class Chat {
      * @param permissions Convert the color codes if the sender has this permissions.
      */
     public static void send(String msg, ProxiedPlayer receiver, CommandSender sender, String... permissions) {
+        if (msg.startsWith("\\j")) {
+            sendRaw(msg, receiver);
+            return;
+        }
+
         receiver.sendMessage(TextComponent.fromLegacyText(getTranslated(msg, sender, permissions)));
     }
 
@@ -184,6 +201,11 @@ public class Chat {
      * @param translate Convert the color codes.
      */
     public static void send(String msg, CommandSender receiver, boolean translate) {
+        if (msg.startsWith("\\j") && (receiver instanceof ProxiedPlayer)) {
+            sendRaw(msg, (ProxiedPlayer) receiver);
+            return;
+        }
+
         receiver.sendMessage(TextComponent.fromLegacyText(translate ? getTranslated(msg) : msg));
     }
 
@@ -206,6 +228,11 @@ public class Chat {
      * @param permissions Convert the color codes if the sender has this permissions.
      */
     public static void send(String msg, CommandSender receiver, ProxiedPlayer sender, String... permissions) {
+        if (msg.startsWith("\\j") && (receiver instanceof ProxiedPlayer)) {
+            sendRaw(msg, (ProxiedPlayer) receiver);
+            return;
+        }
+
         receiver.sendMessage(TextComponent.fromLegacyText(getTranslated(msg, sender, permissions)));
     }
 
@@ -218,7 +245,34 @@ public class Chat {
      * @param permissions Convert the color codes if the sender has this permissions.
      */
     public static void send(String msg, CommandSender receiver, CommandSender sender, String... permissions) {
+        if (msg.startsWith("\\j") && (receiver instanceof ProxiedPlayer)) {
+            sendRaw(msg, (ProxiedPlayer) receiver);
+            return;
+        }
+
         receiver.sendMessage(TextComponent.fromLegacyText(getTranslated(msg, sender, permissions)));
+    }
+
+    /**
+     * Send a raw message like a tellraw.
+     *
+     * @param msg      The message to be sent.
+     * @param receiver The receiver of the message.
+     */
+    public static void sendRaw(RawMessage msg, ProxiedPlayer receiver) {
+        receiver.sendMessage(msg.toTextComponent());
+    }
+
+    /**
+     * Send a raw message like a tellraw.
+     *
+     * @param jsonMsg  The message to be sent.
+     * @param receiver The receiver of the message.
+     */
+    public static void sendRaw(String jsonMsg, ProxiedPlayer receiver) throws JsonSyntaxException {
+        if (jsonMsg.startsWith("[\"\",")) jsonMsg = jsonMsg.replace("\"\",", "");
+        jsonMsg = "{\"message\":" + jsonMsg + "}";
+        sendRaw(RawMessage.fromJson(jsonMsg), receiver);
     }
 
     /**
