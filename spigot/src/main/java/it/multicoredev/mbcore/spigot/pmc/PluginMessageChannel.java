@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayInputStream;
@@ -41,6 +42,7 @@ import java.util.Objects;
 @SuppressWarnings("UnstableApiUsage")
 public class PluginMessageChannel implements PluginMessageListener {
     private final Plugin plugin;
+    private final BukkitScheduler scheduler;
     private final List<String> channels = new ArrayList<>();
 
     /**
@@ -56,6 +58,8 @@ public class PluginMessageChannel implements PluginMessageListener {
 
         registerChannel("BungeeCord");
         registerChannel("mbcore:default");
+
+        scheduler = Bukkit.getScheduler();
     }
 
     /**
@@ -111,22 +115,22 @@ public class PluginMessageChannel implements PluginMessageListener {
 
             switch (subchannel) {
                 case "IP":
-                    callEvent(new IPResponseEvent(in.readUTF(), in.readInt()));
+                    scheduler.runTaskAsynchronously(plugin, () -> callEvent(new IPResponseEvent(in.readUTF(), in.readInt())));
                     break;
                 case "IPOther":
-                    callEvent(new IPOtherResponseEvent(in.readUTF(), in.readUTF(), in.readInt()));
+                    scheduler.runTaskAsynchronously(plugin, () -> callEvent(new IPOtherResponseEvent(in.readUTF(), in.readUTF(), in.readInt())));
                     break;
                 case "PlayerCount":
-                    callEvent(new PlayerCountResponseEvent(in.readUTF(), in.readInt()));
-                    break;
+                    scheduler.runTaskAsynchronously(plugin, () -> callEvent(new PlayerCountResponseEvent(in.readUTF(), in.readInt())));
+                                        break;
                 case "PlayerList":
-                    callEvent(new PlayerListResponseEvent(in.readUTF(), in.readUTF().split(", ")));
+                    scheduler.runTaskAsynchronously(plugin, () -> callEvent(new PlayerListResponseEvent(in.readUTF(), in.readUTF().split(", "))));
                     break;
                 case "GetServers":
-                    callEvent(new GetServersResponseEvent(in.readUTF().split(", ")));
+                    scheduler.runTaskAsynchronously(plugin, () -> callEvent(new GetServersResponseEvent(in.readUTF().split(", "))));
                     break;
                 case "GetServer":
-                    callEvent(new GetServerResponseEvent(in.readUTF()));
+                    scheduler.runTaskAsynchronously(plugin, () -> callEvent(new GetServerResponseEvent(in.readUTF())));
                     break;
                 case "Forward": {
                     String subCh = in.readUTF();
@@ -135,7 +139,7 @@ public class PluginMessageChannel implements PluginMessageListener {
                     in.readFully(bytes);
                     DataInputStream dis = new DataInputStream(new ByteArrayInputStream(bytes));
 
-                    callEvent(new ForwardResponseEvent(subCh, len, dis));
+                    scheduler.runTaskAsynchronously(plugin, () -> callEvent(new ForwardResponseEvent(subCh, len, dis)));
                     break;
                 }
                 case "ForwardToPlayer": {
@@ -145,7 +149,7 @@ public class PluginMessageChannel implements PluginMessageListener {
                     in.readFully(bytes);
                     DataInputStream dis = new DataInputStream(new ByteArrayInputStream(bytes));
 
-                    callEvent(new ForwardToPlayerResponseEvent(subCh, len, dis));
+                    scheduler.runTaskAsynchronously(plugin, () -> callEvent(new ForwardToPlayerResponseEvent(subCh, len, dis)));
                     break;
                 }
             }

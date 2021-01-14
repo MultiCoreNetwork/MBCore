@@ -260,7 +260,7 @@ public class Chat {
      * @param receiver The receiver of the message.
      */
     public static void sendRaw(RawMessage msg, ProxiedPlayer receiver) {
-        receiver.sendMessage(msg.toTextComponent());
+        receiver.sendMessage(msg.toTextComponents());
     }
 
     /**
@@ -270,9 +270,7 @@ public class Chat {
      * @param receiver The receiver of the message.
      */
     public static void sendRaw(String jsonMsg, ProxiedPlayer receiver) throws JsonSyntaxException {
-        if (jsonMsg.startsWith("[\"\",")) jsonMsg = jsonMsg.replace("\"\",", "");
-        jsonMsg = "{\"message\":" + jsonMsg + "}";
-        sendRaw(RawMessage.fromJson(jsonMsg), receiver);
+        sendRaw(new RawMessage(jsonMsg), receiver);
     }
 
     /**

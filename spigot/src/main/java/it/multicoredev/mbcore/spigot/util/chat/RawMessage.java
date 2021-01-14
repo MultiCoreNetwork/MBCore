@@ -1,14 +1,17 @@
 package it.multicoredev.mbcore.spigot.util.chat;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import org.bukkit.entity.Player;
+import com.google.gson.GsonBuilder;
+import com.google.gson.internal.bind.ArrayTypeAdapter;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Copyright © 2020 by Lorenzo Magni
@@ -31,59 +34,83 @@ import java.util.List;
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 public class RawMessage {
-    private List<ChatComponent> message;
+    public static final Gson PARSER = new GsonBuilder()
+            .registerTypeAdapterFactory(ArrayTypeAdapter.FACTORY)
+            .registerTypeAdapter(TextComponent.class, new TellRawDeserializer())
+            .registerTypeAdapter(TextComponent.class, new TellRawSerializer())
+            .registerTypeAdapter(ClickEvent.class, new TellRawDeserializer.ClickDeserializer())
+            .registerTypeAdapter(ClickEvent.class, new TellRawSerializer.ClickSerializer())
+            .registerTypeAdapter(HoverEvent.class, new TellRawDeserializer.HoverDeserializer())
+            .registerTypeAdapter(HoverEvent.class, new TellRawSerializer.HoverSerializer())
+            .create();
+
+    private final String json;
+    private final List<TextComponent> components = new LinkedList<>();
 
     /**
-     * Container of a raw message.
+     * Representation of a raw message.
      *
-     * @param message One or more {@link ChatComponent} that compose the message.
+     * @param json Json representing the message using the Minecraft tellraw formatting.
      */
-    public RawMessage(ChatComponent... message) {
-        this.message = new LinkedList<>(Arrays.asList(message));
+    public RawMessage(@NotNull String json) {
+        Objects.requireNonNull(json);
+        this.json = json;
+
+        if (json.startsWith("[") && json.endsWith("]")) {
+            components.addAll(Arrays.asList(PARSER.fromJson(json, TextComponent[].class)));
+        } else {
+            components.add(PARSER.fromJson(json, TextComponent.class));
+        }
     }
 
     /**
-     * Container of a raw message.
+     * Representation of a raw message.
+     *
+     * @param components One or more {@link TextComponent} composing the message.
      */
-    public RawMessage() {
-        message = new LinkedList<>();
+    public RawMessage(@NotNull TextComponent... components) {
+        Objects.requireNonNull(components);
+        this.components.addAll(Arrays.asList(components));
+
+        if (components.length == 0) {
+            json = "{}";
+        } else if (components.length == 1) {
+            json = PARSER.toJson(components[0]);
+        } else {
+            json = PARSER.toJson(components);
+        }
     }
 
     /**
-     * Append a {@link ChatComponent} to the end of the message.
+     * Append a {@link TextComponent} at the end of the message.
      *
-     * @param component The component to be appended.
-     * @return This object.
+     * @param component The component to append.
+     * @return This class.
      */
-    public RawMessage append(ChatComponent component) {
-        message.add(component);
+    public RawMessage append(@NotNull TextComponent component) {
+        Objects.requireNonNull(component);
+        components.add(component);
         return this;
     }
 
     /**
-     * Convert this object to an array of {@link net.md_5.bungee.api.chat.TextComponent}.
+     * Convert this object to a list of {@link TextComponent}.
      *
-     * @return An array of {@link net.md_5.bungee.api.chat.TextComponent}.
+     * @return The list of {@link TextComponent}.
      */
-    public BaseComponent[] toTextComponent() {
-        ComponentBuilder builder = new ComponentBuilder();
-        for (ChatComponent component : message) {
-            builder.append(component.getTextComponent());
-        }
-        return builder.create();
+    public TextComponent[] toTextComponents() {
+        TextComponent[] tComponents = new TextComponent[components.size()];
+        components.toArray(tComponents);
+
+        return tComponents;
     }
 
     /**
-     * Get an instance of this class from a json string.
-     * Keep in mind that the Minecraft format used for example in tellraws is not a valid json.
-     * Look {@link it.multicoredev.mbcore.spigot.Chat#sendRaw(String, Player)} for more info on how to convert
-     * Minecraft format to valid json.
+     * Get this message as a json string.
      *
-     * @param jsonMsg The json representing the RawMessage.
-     * @return An instance of this class.
-     * @throws JsonSyntaxException Thrown when the passed json is invalid.
+     * @return The json string representing this message.
      */
-    public static RawMessage fromJson(String jsonMsg) throws JsonSyntaxException {
-        return new Gson().fromJson(jsonMsg, RawMessage.class);
+    public String getJson() {
+        return json;
     }
 }

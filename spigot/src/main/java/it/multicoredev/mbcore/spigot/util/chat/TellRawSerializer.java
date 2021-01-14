@@ -2,15 +2,13 @@ package it.multicoredev.mbcore.spigot.util.chat;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.md_5.bungee.api.chat.BaseComponent;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.ItemTag;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Content;
-import net.md_5.bungee.api.chat.hover.content.Item;
-import net.md_5.bungee.api.chat.hover.content.Text;
 
-import java.util.Arrays;
+import java.lang.reflect.Type;
 
 /**
  * Copyright © 2020 by Lorenzo Magni
@@ -32,33 +30,42 @@ import java.util.Arrays;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class ChatHoverEvent {
-    private String action;
-    private JsonObject contents;
+public class TellRawSerializer implements JsonSerializer<TextComponent> {
 
-    public HoverEvent.Action getAction() {
-        if (action.equalsIgnoreCase("show_text")) return HoverEvent.Action.SHOW_TEXT;
-        else if (action.equalsIgnoreCase("show_item")) return HoverEvent.Action.SHOW_ITEM;
-        else if (action.equalsIgnoreCase("show_entity")) return HoverEvent.Action.SHOW_ENTITY;
-        else return null;
+    public JsonElement serialize(TextComponent component, Type type, JsonSerializationContext ctx) {
+        JsonObject json = new JsonObject();
+        json.addProperty("text", component.getText());
+        json.addProperty("color", component.getColor().getName());
+        json.addProperty("font", component.getFont());
+        json.addProperty("bold", component.isBold());
+        json.addProperty("italic", component.isItalic());
+        json.addProperty("underlined", component.isUnderlined());
+        json.addProperty("strikethrough", component.isStrikethrough());
+        json.addProperty("obfuscated", component.isObfuscated());
+        json.addProperty("insertion", component.getInsertion());
+
+
+        return json;
     }
 
-    public Content getContents() {
-        if (action.equalsIgnoreCase("show_text")) {
-            return new Text(RawMessage.fromJson("{\"message\":[" + contents.toString() + "]}").toTextComponent());
-        } else if (action.equalsIgnoreCase("show_item")) {
-            return null;
-            /*System.out.println(contents.toString());
-            String id = contents.get("id").getAsString();
-            JsonElement countElement = contents.get("Count");
-            byte count = countElement != null ? countElement.getAsByte() : 1;
-            JsonElement tagElement = contents.get("tag");
-            System.out.println();
-            return new Item(id, count, ItemTag.ofNbt(tagElement.getAsString()));*/
-        } else if (action.equalsIgnoreCase("show_entity")) {
-            return null;
-        } else {
-            return null;
+    public static class ClickSerializer implements JsonSerializer<ClickEvent> {
+
+        public JsonElement serialize(ClickEvent event, Type type, JsonSerializationContext ctx) {
+            JsonObject json = new JsonObject();
+            json.addProperty("action", event.getAction().name().toLowerCase());
+            json.addProperty("value", event.getValue());
+
+            return json;
+        }
+    }
+
+    public static class HoverSerializer implements JsonSerializer<HoverEvent> {
+
+        public JsonElement serialize(HoverEvent event, Type type, JsonSerializationContext ctx) {
+            JsonObject json = new JsonObject();
+            json.addProperty("action", event.getAction().name().toLowerCase());
+
+            return json;
         }
     }
 }

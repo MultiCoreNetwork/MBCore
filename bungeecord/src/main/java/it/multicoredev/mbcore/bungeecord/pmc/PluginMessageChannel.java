@@ -53,7 +53,6 @@ public class PluginMessageChannel implements Listener {
      */
     public PluginMessageChannel(Plugin plugin) {
         this.plugin = plugin;
-        registerChannel("mbcore:default");
         ProxyServer.getInstance().getPluginManager().registerListener(plugin, this);
     }
 
@@ -80,6 +79,13 @@ public class PluginMessageChannel implements Listener {
         channels.remove(channel.toLowerCase());
 
         ProxyServer.getInstance().unregisterChannel(channel);
+    }
+
+    /**
+     * Register the default channel.
+     */
+    public void registerDefault() {
+        registerChannel("mbcore:default");
     }
 
     /**
