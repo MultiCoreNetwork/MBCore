@@ -6,10 +6,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Copyright © 2020 by Lorenzo Magni
@@ -127,6 +124,27 @@ public class TabCompleterUtil {
         }
 
         return servers;
+    }
+
+    /**
+     * Get a list of completions starting with the searched characters.
+     *
+     * @param search      The starting characters of the completions searched.
+     *                    If null or empty all completions will be returned.
+     * @param completions A list of completions.
+     * @return A list of completions.
+     */
+    public static Set<String> getCompletions(@Nullable String search, @NotNull List<String> completions) {
+        Objects.requireNonNull(completions);
+        if (search == null || search.trim().isEmpty()) return new HashSet<>(completions);
+        Set<String> matches = new HashSet<>();
+
+        for (String completion : completions) {
+            if (!completion.toLowerCase().startsWith(search.toLowerCase())) continue;
+            matches.add(completion);
+        }
+
+        return matches;
     }
 
     /**

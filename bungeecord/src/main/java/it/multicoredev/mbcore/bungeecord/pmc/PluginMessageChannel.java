@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Copyright © 2020 by Lorenzo Magni
@@ -41,7 +42,7 @@ import java.util.Objects;
 @SuppressWarnings("UnstableApiUsage")
 public class PluginMessageChannel implements Listener {
     private final Plugin plugin;
-    private final List<String> channels = new ArrayList<>();
+    private final List<String> channels = new CopyOnWriteArrayList<>();
 
     /**
      * Implementation of BungeeCord Custom Plugin Message API. An easy to use API to send and receive default and custom plugin

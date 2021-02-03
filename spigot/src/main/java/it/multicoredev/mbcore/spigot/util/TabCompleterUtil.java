@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -118,6 +119,27 @@ public class TabCompleterUtil {
     public static List<String> getCompletions(@Nullable String search, @NotNull List<String> completions) {
         Objects.requireNonNull(completions);
         if (search == null || search.trim().isEmpty()) return completions;
+        List<String> matches = new ArrayList<>();
+
+        for (String completion : completions) {
+            if (!completion.toLowerCase().startsWith(search.toLowerCase())) continue;
+            matches.add(completion);
+        }
+
+        return matches;
+    }
+
+    /**
+     * Get a list of completions starting with the searched characters.
+     *
+     * @param search      The starting characters of the completions searched.
+     *                    If null or empty all completions will be returned.
+     * @param completions A list of completions.
+     * @return A list of completions.
+     */
+    public static List<String> getCompletions(@Nullable String search, @NotNull String... completions) {
+        Objects.requireNonNull(completions);
+        if (search == null || search.trim().isEmpty()) return Arrays.asList(completions);
         List<String> matches = new ArrayList<>();
 
         for (String completion : completions) {

@@ -18,6 +18,7 @@ import java.io.DataInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Copyright © 2020 by Lorenzo Magni
@@ -43,7 +44,7 @@ import java.util.Objects;
 public class PluginMessageChannel implements PluginMessageListener {
     private final Plugin plugin;
     private final BukkitScheduler scheduler;
-    private final List<String> channels = new ArrayList<>();
+    private final List<String> channels = new CopyOnWriteArrayList<>();
 
     /**
      * Implementation of Bukkit Custom Plugin Message API. An easy to use API to send and receive default and custom plugin
