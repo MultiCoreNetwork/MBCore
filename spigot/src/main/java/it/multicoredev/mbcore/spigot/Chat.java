@@ -147,8 +147,8 @@ public class Chat {
      * @param translate Convert the color codes.
      */
     public static void send(String msg, Player receiver, boolean translate) {
-        if (msg.startsWith("\\j")) {
-            sendRaw(msg, receiver);
+        if (msg.startsWith("!j")) {
+            sendRaw(msg.substring(2), receiver);
             return;
         }
 
@@ -174,8 +174,8 @@ public class Chat {
      * @param permissions Convert the color codes if the sender has this permissions.
      */
     public static void send(String msg, Player receiver, Player sender, String... permissions) {
-        if (msg.startsWith("\\j")) {
-            sendRaw(msg, receiver);
+        if (msg.startsWith("!j")) {
+            sendRaw(msg.substring(2), receiver);
             return;
         }
 
@@ -191,8 +191,8 @@ public class Chat {
      * @param permissions Convert the color codes if the sender has this permissions.
      */
     public static void send(String msg, Player receiver, CommandSender sender, String... permissions) {
-        if (msg.startsWith("\\j")) {
-            sendRaw(msg, receiver);
+        if (msg.startsWith("!j")) {
+            sendRaw(msg.substring(2), receiver);
             return;
         }
 
@@ -207,8 +207,8 @@ public class Chat {
      * @param translate Convert the color codes.
      */
     public static void send(String msg, CommandSender receiver, boolean translate) {
-        if (msg.startsWith("\\j") && (receiver instanceof Player)) {
-            sendRaw(msg, (Player) receiver);
+        if (msg.startsWith("!j") && (receiver instanceof Player)) {
+            sendRaw(msg.substring(2), (Player) receiver);
             return;
         }
         receiver.sendMessage(translate ? getTranslated(msg) : msg);
@@ -233,8 +233,8 @@ public class Chat {
      * @param permissions Convert the color codes if the sender has this permissions.
      */
     public static void send(String msg, CommandSender receiver, Player sender, String... permissions) {
-        if (msg.startsWith("\\j") && (receiver instanceof Player)) {
-            sendRaw(msg, (Player) receiver);
+        if (msg.startsWith("!j") && (receiver instanceof Player)) {
+            sendRaw(msg.substring(2), (Player) receiver);
             return;
         }
 
@@ -250,8 +250,8 @@ public class Chat {
      * @param permissions Convert the color codes if the sender has this permissions.
      */
     public static void send(String msg, CommandSender receiver, CommandSender sender, String... permissions) {
-        if (msg.startsWith("\\j") && (receiver instanceof Player)) {
-            sendRaw(msg, (Player) receiver);
+        if (msg.startsWith("!j") && (receiver instanceof Player)) {
+            sendRaw(msg.substring(2), (Player) receiver);
             return;
         }
 
