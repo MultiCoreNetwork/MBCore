@@ -100,6 +100,7 @@ public class Chat {
         Preconditions.checkNotNull(msg, "Cannot translate null text");
 
         msg = msg.replaceAll("&[0-9a-fA-FkKlLmMnNoOrR]", "");
+        msg = msg.replaceAll("§[0-9a-fA-FkKlLmMnNoOrR]", "");
 
         Matcher matcher = hexColorPattern.matcher(msg);
         while (matcher.find()) {
