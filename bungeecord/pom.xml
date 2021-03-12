@@ -7,13 +7,13 @@
     <parent>
         <groupId>it.multicoredev.mbcore</groupId>
         <artifactId>MBCore</artifactId>
-        <version>7.2.2</version>
+        <version>7.2.3</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.multicoredev.mbcore.bungeecord</groupId>
     <artifactId>MBCore-bungeecord</artifactId>
-    <version>7.2.2</version>
+    <version>7.2.3</version>
     <packaging>jar</packaging>
 
     <name>MBCore-bungeecord</name>

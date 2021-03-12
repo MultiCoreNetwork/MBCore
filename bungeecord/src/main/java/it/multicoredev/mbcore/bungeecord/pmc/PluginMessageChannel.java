@@ -43,6 +43,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class PluginMessageChannel implements Listener {
     private final Plugin plugin;
     private final List<String> channels = new CopyOnWriteArrayList<>();
+    private boolean defListener = false;
 
     /**
      * Implementation of BungeeCord Custom Plugin Message API. An easy to use API to send and receive default and custom plugin
@@ -87,6 +88,15 @@ public class PluginMessageChannel implements Listener {
      */
     public void registerDefault() {
         registerChannel("mbcore:default");
+        defListener = true;
+    }
+
+    /**
+     * Unregister the default channel.
+     */
+    public void unregisterDefault() {
+        unregisterChannel("mbcore:default");
+        defListener = false;
     }
 
     /**
@@ -97,6 +107,7 @@ public class PluginMessageChannel implements Listener {
         for (String channel : channels) {
             unregisterChannel(channel);
         }
+        defListener = false;
     }
 
     /**
@@ -106,7 +117,7 @@ public class PluginMessageChannel implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPluginMessageReceived(PluginMessageEvent event) {
-        if (!event.getTag().equals("mbcore:default")) return;
+        if (!event.getTag().equals("mbcore:default") || !defListener) return;
 
         ByteArrayDataInput in = ByteStreams.newDataInput(event.getData());
         String subchannel = in.readUTF();

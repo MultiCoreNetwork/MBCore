@@ -45,6 +45,7 @@ public class PluginMessageChannel implements PluginMessageListener {
     private final Plugin plugin;
     private final BukkitScheduler scheduler;
     private final List<String> channels = new CopyOnWriteArrayList<>();
+    private boolean defListener = false;
 
     /**
      * Implementation of Bukkit Custom Plugin Message API. An easy to use API to send and receive default and custom plugin
@@ -58,7 +59,6 @@ public class PluginMessageChannel implements PluginMessageListener {
         this.plugin = plugin;
 
         registerChannel("BungeeCord");
-        registerChannel("mbcore:default");
 
         scheduler = Bukkit.getScheduler();
     }
@@ -91,6 +91,22 @@ public class PluginMessageChannel implements PluginMessageListener {
     }
 
     /**
+     * Register the default channel.
+     */
+    public void registerDefault() {
+        registerChannel("mbcore:default");
+        defListener = true;
+    }
+
+    /**
+     * Unregister the default channel.
+     */
+    public void unregisterDefault() {
+        unregisterChannel("mbcore:default");
+        defListener = false;
+    }
+
+    /**
      * Unregister all channels.
      * Keep in mind that this will unregister also BungeeCord and mbcore:default channels.
      */
@@ -98,6 +114,8 @@ public class PluginMessageChannel implements PluginMessageListener {
         for (String channel : channels) {
             unregisterChannel(channel);
         }
+
+        defListener = false;
     }
 
     /**
@@ -154,7 +172,7 @@ public class PluginMessageChannel implements PluginMessageListener {
                     break;
                 }
             }
-        } else if (channel.equals("mbcore:default")) {
+        } else if (channel.equals("mbcore:default") && defListener) {
             String subchannel = in.readUTF();
 
             switch (subchannel) {
