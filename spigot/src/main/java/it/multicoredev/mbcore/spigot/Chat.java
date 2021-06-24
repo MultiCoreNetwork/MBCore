@@ -43,7 +43,14 @@ public class Chat {
         Validate.notNull(msg, "Cannot translate null text");
 
         if (useAllColors == null) {
-            useAllColors = Integer.parseInt(Bukkit.getBukkitVersion().split("\\.")[1]) >= 16;
+            Matcher matcher = Pattern.compile("[0-9]\\.[0-9]+").matcher(Bukkit.getBukkitVersion());
+
+            if (matcher.find()) {
+                try {
+                    useAllColors = Integer.parseInt(matcher.group(0).split("\\.")[1]) >= 16;
+                } catch (NumberFormatException ignored) {
+                }
+            }
         }
 
         if (!useAllColors) return msg;
