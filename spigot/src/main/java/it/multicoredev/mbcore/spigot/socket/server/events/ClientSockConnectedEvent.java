@@ -29,7 +29,7 @@ public class ClientSockConnectedEvent extends Event {
     private final Client client;
 
     public ClientSockConnectedEvent(Client client) {
-        super(false);
+        super(true);
         this.client = client;
     }
 

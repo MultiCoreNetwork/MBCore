@@ -30,7 +30,7 @@ public class SockMessageReceivedEvent extends Event {
     private final String json;
 
     public SockMessageReceivedEvent(Client client, String json) {
-        super(false);
+        super(true);
         this.client = client;
         this.json = json;
     }

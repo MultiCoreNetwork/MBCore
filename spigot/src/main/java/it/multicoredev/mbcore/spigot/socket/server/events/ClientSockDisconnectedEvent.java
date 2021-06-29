@@ -30,7 +30,7 @@ public class ClientSockDisconnectedEvent extends Event {
     private final SocketAddress client;
 
     public ClientSockDisconnectedEvent(SocketAddress client) {
-        super(false);
+        super(true);
         this.client = client;
     }
 

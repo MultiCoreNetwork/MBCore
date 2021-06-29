@@ -27,7 +27,7 @@ public class ServerSockStoppedEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
 
     public ServerSockStoppedEvent() {
-        super(false);
+        super(true);
     }
 
     public HandlerList getHandlers() {

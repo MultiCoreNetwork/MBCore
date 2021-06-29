@@ -27,7 +27,7 @@ public class ServerSockStartedEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
 
     public ServerSockStartedEvent() {
-        super(false);
+        super(true);
     }
 
     public HandlerList getHandlers() {
