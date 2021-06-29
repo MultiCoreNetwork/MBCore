@@ -27,7 +27,7 @@ public class ClientSockConnectedEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
 
     public ClientSockConnectedEvent() {
-        super(false);
+        super(true);
     }
 
     public HandlerList getHandlers() {
