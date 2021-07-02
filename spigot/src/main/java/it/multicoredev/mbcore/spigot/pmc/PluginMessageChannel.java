@@ -95,7 +95,6 @@ public class PluginMessageChannel implements PluginMessageListener {
      */
     public void registerDefault() {
         registerChannel("mbcore:default");
-        defListener = true;
     }
 
     /**
@@ -103,7 +102,6 @@ public class PluginMessageChannel implements PluginMessageListener {
      */
     public void unregisterDefault() {
         unregisterChannel("mbcore:default");
-        defListener = false;
     }
 
     /**
@@ -114,7 +112,19 @@ public class PluginMessageChannel implements PluginMessageListener {
         for (String channel : channels) {
             unregisterChannel(channel);
         }
+    }
 
+    /**
+     * Enable the default channel listener.
+     */
+    public void enableDefaultListener() {
+        defListener = true;
+    }
+
+    /**
+     * Disable the default channel listener.
+     */
+    public void disableDefaultListener() {
         defListener = false;
     }
 
