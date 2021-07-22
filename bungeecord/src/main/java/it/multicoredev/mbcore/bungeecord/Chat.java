@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Copyright © 2020 by Lorenzo Magni
@@ -91,6 +92,92 @@ public class Chat {
     }
 
     /**
+     * Convert '&amp;' color codes to Minecraft understandable color codes.
+     *
+     * @param msgs The messages to convert.
+     * @return The converted messages.
+     */
+    public static String[] getTranslated(String[] msgs) {
+        for (int i = 0; i < msgs.length; i++) {
+            String msg = msgs[i];
+            if (msg == null) return null;
+            msg = ChatColor.translateAlternateColorCodes('&', msg);
+            msg = translateHex(msg);
+            msgs[i] = msg;
+        }
+
+        return msgs;
+    }
+
+    /**
+     * Convert '&amp;' color codes to Minecraft understandable color codes if the sender has one or more permissions.
+     *
+     * @param msgs        The messages to convert.
+     * @param sender      The sender of the message.
+     * @param permissions One or more permissions to check.
+     * @return The converted messages.
+     */
+    public static String[] getTranslated(String[] msgs, ProxiedPlayer sender, String... permissions) {
+        if (hasPermission(sender, permissions)) return getTranslated(msgs);
+        return msgs;
+    }
+
+    /**
+     * Convert '&amp;' color codes to Minecraft understandable color codes if the sender has one or more permissions.
+     *
+     * @param msgs        The messages to convert.
+     * @param sender      The sender of the message.
+     * @param permissions One or more permissions to check.
+     * @return The converted messages.
+     */
+    public static String[] getTranslated(String[] msgs, CommandSender sender, String... permissions) {
+        if (sender instanceof ProxiedPlayer) return getTranslated(msgs, (ProxiedPlayer) sender, permissions);
+        return getTranslated(msgs);
+    }
+
+    /**
+     * Convert '&amp;' color codes to Minecraft understandable color codes.
+     *
+     * @param msgs The messages to convert.
+     * @return The converted messages.
+     */
+    public static List<String> getTranslated(List<String> msgs) {
+        for (String msg : msgs) {
+            if (msg == null) return null;
+            msg = ChatColor.translateAlternateColorCodes('&', msg);
+            msg = translateHex(msg);
+        }
+
+        return msgs;
+    }
+
+    /**
+     * Convert '&amp;' color codes to Minecraft understandable color codes if the sender has one or more permissions.
+     *
+     * @param msgs        The messages to convert.
+     * @param sender      The sender of the message.
+     * @param permissions One or more permissions to check.
+     * @return The converted messages.
+     */
+    public static List<String> getTranslated(List<String> msgs, ProxiedPlayer sender, String... permissions) {
+        if (hasPermission(sender, permissions)) return getTranslated(msgs);
+        return msgs;
+    }
+
+    /**
+     * Convert '&amp;' color codes to Minecraft understandable color codes if the sender has one or more permissions.
+     *
+     * @param msgs        The messages to convert.
+     * @param sender      The sender of the message.
+     * @param permissions One or more permissions to check.
+     * @return The converted messages.
+     */
+    public static List<String> getTranslated(List<String> msgs, CommandSender sender, String... permissions) {
+        if (sender instanceof ProxiedPlayer) return getTranslated(msgs, (ProxiedPlayer) sender, permissions);
+        return getTranslated(msgs);
+    }
+
+    /**
      * Remove all '&amp;' color codes.
      *
      * @param msg The message to convert.
@@ -109,6 +196,55 @@ public class Chat {
         }
 
         return msg;
+    }
+
+    /**
+     * Remove all '&amp;' color codes.
+     *
+     * @param msgs The messages to convert.
+     * @return The converted messages.
+     */
+    public static String[] getDiscolored(String[] msgs) {
+        if (msgs == null) return null;
+
+        for (int i = 0; i < msgs.length; i++) {
+            String msg = msgs[i];
+            msg = msg.replaceAll("&[0-9a-fA-FkKlLmMnNoOrR]", "");
+            msg = msg.replaceAll("§[0-9a-fA-FkKlLmMnNoOrR]", "");
+
+            Matcher matcher = hexColorPattern.matcher(msg);
+            while (matcher.find()) {
+                String match = matcher.group(0);
+                msg = msg.replace(match, "");
+            }
+
+            msgs[i] = msg;
+        }
+
+        return msgs;
+    }
+
+    /**
+     * Remove all '&amp;' color codes.
+     *
+     * @param msgs The messages to convert.
+     * @return The converted messages.
+     */
+    public static List<String> getDiscolored(List<String> msgs) {
+        if (msgs == null) return null;
+
+        for (String msg : msgs) {
+            msg = msg.replaceAll("&[0-9a-fA-FkKlLmMnNoOrR]", "");
+            msg = msg.replaceAll("§[0-9a-fA-FkKlLmMnNoOrR]", "");
+
+            Matcher matcher = hexColorPattern.matcher(msg);
+            while (matcher.find()) {
+                String match = matcher.group(0);
+                msg = msg.replace(match, "");
+            }
+        }
+
+        return msgs;
     }
 
     /**
@@ -255,6 +391,271 @@ public class Chat {
     }
 
     /**
+     * Send a message to a player.
+     *
+     * @param msgs      The messages to be sent.
+     * @param receiver  The receiver of the message.
+     * @param translate Convert the color codes.
+     */
+    public static void send(String[] msgs, ProxiedPlayer receiver, boolean translate) {
+        for (String msg : msgs) {
+            if (msg.startsWith("!j")) {
+                sendRaw(msg.substring(2), receiver);
+                return;
+            }
+
+            receiver.sendMessage(TextComponent.fromLegacyText(translate ? getTranslated(msg) : msg));
+        }
+    }
+
+    /**
+     * Send a message to a player.
+     *
+     * @param msgs     The messages to be sent.
+     * @param receiver The receiver of the message.
+     */
+    public static void send(String[] msgs, ProxiedPlayer receiver) {
+        send(msgs, receiver, true);
+    }
+
+    /**
+     * Send a message to a player.
+     *
+     * @param msgs        The messages to be sent.
+     * @param receiver    The receiver of the message.
+     * @param sender      The sender of the message.
+     * @param permissions Convert the color codes if the sender has this permissions.
+     */
+    public static void send(String[] msgs, ProxiedPlayer receiver, ProxiedPlayer sender, String... permissions) {
+        for (String msg : msgs) {
+            if (msg.startsWith("!j")) {
+                sendRaw(msg.substring(2), receiver);
+                return;
+            }
+
+            receiver.sendMessage(TextComponent.fromLegacyText(getTranslated(msg, sender, permissions)));
+        }
+    }
+
+    /**
+     * Send a message to a player.
+     *
+     * @param msgs        The messages to be sent.
+     * @param receiver    The receiver of the message.
+     * @param sender      The sender of the message.
+     * @param permissions Convert the color codes if the sender has this permissions.
+     */
+    public static void send(String[] msgs, ProxiedPlayer receiver, CommandSender sender, String... permissions) {
+        for (String msg : msgs) {
+            if (msg.startsWith("!j")) {
+                sendRaw(msg.substring(2), receiver);
+                return;
+            }
+
+            receiver.sendMessage(TextComponent.fromLegacyText(getTranslated(msg, sender, permissions)));
+        }
+    }
+
+    /**
+     * Send a message to a player.
+     *
+     * @param msgs      The messages to be sent.
+     * @param receiver  The receiver of the message.
+     * @param translate Convert the color codes.
+     */
+    public static void send(String[] msgs, CommandSender receiver, boolean translate) {
+        for (String msg : msgs) {
+            if (msg.startsWith("!j") && (receiver instanceof ProxiedPlayer)) {
+                sendRaw(msg.substring(2), (ProxiedPlayer) receiver);
+                return;
+            }
+
+            receiver.sendMessage(TextComponent.fromLegacyText(translate ? getTranslated(msg) : msg));
+        }
+    }
+
+    /**
+     * Send a message to a player.
+     *
+     * @param msgs     The messages to be sent.
+     * @param receiver The receiver of the message.
+     */
+    public static void send(String[] msgs, CommandSender receiver) {
+        send(msgs, receiver, true);
+    }
+
+    /**
+     * Send a message to a player.
+     *
+     * @param msgs        The messages to be sent.
+     * @param receiver    The receiver of the message.
+     * @param sender      The sender of the message.
+     * @param permissions Convert the color codes if the sender has this permissions.
+     */
+    public static void send(String[] msgs, CommandSender receiver, ProxiedPlayer sender, String... permissions) {
+        for (String msg : msgs) {
+            if (msg.startsWith("!j") && (receiver instanceof ProxiedPlayer)) {
+                sendRaw(msg.substring(2), (ProxiedPlayer) receiver);
+                return;
+            }
+
+            receiver.sendMessage(TextComponent.fromLegacyText(getTranslated(msg, sender, permissions)));
+        }
+
+    }
+
+    /**
+     * Send a message to a player.
+     *
+     * @param msgs        The messages to be sent.
+     * @param receiver    The receiver of the message.
+     * @param sender      The sender of the message.
+     * @param permissions Convert the color codes if the sender has this permissions.
+     */
+    public static void send(String[] msgs, CommandSender receiver, CommandSender sender, String... permissions) {
+        for (String msg : msgs) {
+            if (msg.startsWith("!j") && (receiver instanceof ProxiedPlayer)) {
+                sendRaw(msg.substring(2), (ProxiedPlayer) receiver);
+                return;
+            }
+
+            receiver.sendMessage(TextComponent.fromLegacyText(getTranslated(msg, sender, permissions)));
+        }
+    }
+
+    /**
+     * Send a message to a player.
+     *
+     * @param msgs      The messages to be sent.
+     * @param receiver  The receiver of the message.
+     * @param translate Convert the color codes.
+     */
+    public static void send(List<String> msgs, ProxiedPlayer receiver, boolean translate) {
+        for (String msg : msgs) {
+            if (msg.startsWith("!j")) {
+                sendRaw(msg.substring(2), receiver);
+                return;
+            }
+
+            receiver.sendMessage(TextComponent.fromLegacyText(translate ? getTranslated(msg) : msg));
+        }
+    }
+
+    /**
+     * Send a message to a player.
+     *
+     * @param msgs     The messages to be sent.
+     * @param receiver The receiver of the message.
+     */
+    public static void send(List<String> msgs, ProxiedPlayer receiver) {
+        send(msgs, receiver, true);
+    }
+
+    /**
+     * Send a message to a player.
+     *
+     * @param msgs        The messages to be sent.
+     * @param receiver    The receiver of the message.
+     * @param sender      The sender of the message.
+     * @param permissions Convert the color codes if the sender has this permissions.
+     */
+    public static void send(List<String> msgs, ProxiedPlayer receiver, ProxiedPlayer sender, String... permissions) {
+        for (String msg : msgs) {
+            if (msg.startsWith("!j")) {
+                sendRaw(msg.substring(2), receiver);
+                return;
+            }
+
+            receiver.sendMessage(TextComponent.fromLegacyText(getTranslated(msg, sender, permissions)));
+        }
+    }
+
+    /**
+     * Send a message to a player.
+     *
+     * @param msgs        The messages to be sent.
+     * @param receiver    The receiver of the message.
+     * @param sender      The sender of the message.
+     * @param permissions Convert the color codes if the sender has this permissions.
+     */
+    public static void send(List<String> msgs, ProxiedPlayer receiver, CommandSender sender, String... permissions) {
+        for (String msg : msgs) {
+            if (msg.startsWith("!j")) {
+                sendRaw(msg.substring(2), receiver);
+                return;
+            }
+
+            receiver.sendMessage(TextComponent.fromLegacyText(getTranslated(msg, sender, permissions)));
+        }
+    }
+
+    /**
+     * Send a message to a player.
+     *
+     * @param msgs      The messages to be sent.
+     * @param receiver  The receiver of the message.
+     * @param translate Convert the color codes.
+     */
+    public static void send(List<String> msgs, CommandSender receiver, boolean translate) {
+        for (String msg : msgs) {
+            if (msg.startsWith("!j") && (receiver instanceof ProxiedPlayer)) {
+                sendRaw(msg.substring(2), (ProxiedPlayer) receiver);
+                return;
+            }
+            receiver.sendMessage(TextComponent.fromLegacyText(translate ? getTranslated(msg) : msg));
+        }
+    }
+
+    /**
+     * Send a message to a player.
+     *
+     * @param msgs     The messages to be sent.
+     * @param receiver The receiver of the message.
+     */
+    public static void send(List<String> msgs, CommandSender receiver) {
+        send(msgs, receiver, true);
+    }
+
+    /**
+     * Send a message to a player.
+     *
+     * @param msgs        The messages to be sent.
+     * @param receiver    The receiver of the message.
+     * @param sender      The sender of the message.
+     * @param permissions Convert the color codes if the sender has this permissions.
+     */
+    public static void send(List<String> msgs, CommandSender receiver, ProxiedPlayer sender, String... permissions) {
+        for (String msg : msgs) {
+            if (msg.startsWith("!j") && (receiver instanceof ProxiedPlayer)) {
+                sendRaw(msg.substring(2), (ProxiedPlayer) receiver);
+                return;
+            }
+
+            receiver.sendMessage(TextComponent.fromLegacyText(getTranslated(msg, sender, permissions)));
+        }
+
+    }
+
+    /**
+     * Send a message to a player.
+     *
+     * @param msgs        The messages to be sent.
+     * @param receiver    The receiver of the message.
+     * @param sender      The sender of the message.
+     * @param permissions Convert the color codes if the sender has this permissions.
+     */
+    public static void send(List<String> msgs, CommandSender receiver, CommandSender sender, String... permissions) {
+        for (String msg : msgs) {
+            if (msg.startsWith("!j") && (receiver instanceof ProxiedPlayer)) {
+                sendRaw(msg.substring(2), (ProxiedPlayer) receiver);
+                return;
+            }
+
+            receiver.sendMessage(TextComponent.fromLegacyText(getTranslated(msg, sender, permissions)));
+        }
+    }
+
+    /**
      * Send a raw message like a tellraw.
      *
      * @param msg      The message to be sent.
@@ -272,6 +673,42 @@ public class Chat {
      */
     public static void sendRaw(String jsonMsg, ProxiedPlayer receiver) throws JsonSyntaxException {
         sendRaw(new RawMessage(jsonMsg), receiver);
+    }
+
+    /**
+     * Send a raw message like a tellraw.
+     *
+     * @param msgs     The messages to be sent.
+     * @param receiver The receiver of the message.
+     */
+    public static void sendRaw(RawMessage[] msgs, ProxiedPlayer receiver) {
+        for (RawMessage msg : msgs) {
+            receiver.sendMessage(msg.toTextComponents());
+        }
+    }
+
+    /**
+     * Send a raw message like a tellraw.
+     *
+     * @param jsonMsgs The messages to be sent.
+     * @param receiver The receiver of the message.
+     */
+    public static void sendRaw(String[] jsonMsgs, ProxiedPlayer receiver) throws JsonSyntaxException {
+        for (String jsonMsg : jsonMsgs) {
+            sendRaw(new RawMessage(jsonMsg), receiver);
+        }
+    }
+
+    /**
+     * Send a raw message like a tellraw.
+     *
+     * @param msgs     The messages to be sent.
+     * @param receiver The receiver of the message.
+     */
+    public static void sendRaw(List<RawMessage> msgs, ProxiedPlayer receiver) {
+        for (RawMessage msg : msgs) {
+            receiver.sendMessage(msg.toTextComponents());
+        }
     }
 
     /**
@@ -395,6 +832,258 @@ public class Chat {
      */
     public static void broadcast(String msg, String... permissions) {
         broadcast(msg, true, permissions);
+    }
+
+    /**
+     * Broadcast a message to all players.
+     *
+     * @param msgs      The messages to be broadcast.
+     * @param translate Convert the color codes.
+     */
+    public static void broadcast(String[] msgs, boolean translate) {
+        for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+            send(msgs, player, translate);
+        }
+    }
+
+    /**
+     * Broadcast a message to all players.
+     *
+     * @param msgs The messages to be broadcast.
+     */
+    public static void broadcast(String[] msgs) {
+        broadcast(msgs, true);
+    }
+
+    /**
+     * Broadcast a message to all players.
+     *
+     * @param msgs        The messages to be broadcast.
+     * @param sender      The sender of The messages.
+     * @param permissions Convert the color codes if the sender has this permissions.
+     */
+    public static void broadcast(String[] msgs, ProxiedPlayer sender, String... permissions) {
+        for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+            send(msgs, player, sender, permissions);
+        }
+    }
+
+    /**
+     * Broadcast a message to all players.
+     *
+     * @param msgs        The messages to be broadcast.
+     * @param sender      The sender of The messages.
+     * @param permissions Convert the color codes if the sender has this permissions.
+     */
+    public static void broadcast(String[] msgs, CommandSender sender, String... permissions) {
+        for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+            send(msgs, player, sender, permissions);
+        }
+    }
+
+    /**
+     * Broadcast a message to all players except blacklisted ones.
+     *
+     * @param msgs      The messages to be broadcast.
+     * @param translate Convert the color codes.
+     * @param blacklist Players that will not receive The messages.
+     */
+    public static void broadcast(String[] msgs, boolean translate, ProxiedPlayer... blacklist) {
+        List<ProxiedPlayer> players = ProxyServer.getInstance().getPlayers().stream().filter(p -> {
+            for (ProxiedPlayer player : blacklist) {
+                if (player.getUniqueId().equals(p.getUniqueId())) return false;
+            }
+
+            return true;
+        }).collect(Collectors.toList());
+
+        for (ProxiedPlayer player : players) {
+            send(msgs, player, translate);
+        }
+    }
+
+    /**
+     * Broadcast a message to all players except blacklisted ones.
+     *
+     * @param msgs      The messages to be broadcast.
+     * @param blacklist Players that will not receive The messages.
+     */
+    public static void broadcast(String[] msgs, ProxiedPlayer... blacklist) {
+        broadcast(msgs, true, blacklist);
+    }
+
+    /**
+     * Broadcast a message to all players in a server.
+     *
+     * @param msgs      The messages to be broadcast.
+     * @param translate Convert the color codes.
+     * @param server    The server target of the broadcast.
+     */
+    public static void broadcast(String[] msgs, boolean translate, ServerInfo server) {
+        for (ProxiedPlayer player : server.getPlayers()) {
+            send(msgs, player, translate);
+        }
+    }
+
+    /**
+     * Broadcast a message to all players in a server.
+     *
+     * @param msgs   The messages to be broadcast.
+     * @param server The server target of the broadcast.
+     */
+    public static void broadcast(String[] msgs, ServerInfo server) {
+        broadcast(msgs, true, server);
+    }
+
+    /**
+     * Broadcast a message to all players except blacklisted ones.
+     *
+     * @param msgs        The messages to be broadcast.
+     * @param translate   Convert the color codes.
+     * @param permissions Players with this perm will receive The messages.
+     */
+    public static void broadcast(String[] msgs, boolean translate, String... permissions) {
+        for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+            if (hasPermission(player, permissions)) {
+                send(msgs, player, translate);
+            }
+        }
+    }
+
+    /**
+     * Broadcast a message to all players except blacklisted ones.
+     *
+     * @param msgs        The messages to be broadcast.
+     * @param permissions Players with this perm will receive The messages.
+     */
+    public static void broadcast(String[] msgs, String... permissions) {
+        broadcast(msgs, true, permissions);
+    }
+
+    /**
+     * Broadcast a message to all players.
+     *
+     * @param msgs      The messages to be broadcast.
+     * @param translate Convert the color codes.
+     */
+    public static void broadcast(List<String> msgs, boolean translate) {
+        for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+            send(msgs, player, translate);
+        }
+    }
+
+    /**
+     * Broadcast a message to all players.
+     *
+     * @param msgs The messages to be broadcast.
+     */
+    public static void broadcast(List<String> msgs) {
+        broadcast(msgs, true);
+    }
+
+    /**
+     * Broadcast a message to all players.
+     *
+     * @param msgs        The messages to be broadcast.
+     * @param sender      The sender of The messages.
+     * @param permissions Convert the color codes if the sender has this permissions.
+     */
+    public static void broadcast(List<String> msgs, ProxiedPlayer sender, String... permissions) {
+        for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+            send(msgs, player, sender, permissions);
+        }
+    }
+
+    /**
+     * Broadcast a message to all players.
+     *
+     * @param msgs        The messages to be broadcast.
+     * @param sender      The sender of The messages.
+     * @param permissions Convert the color codes if the sender has this permissions.
+     */
+    public static void broadcast(List<String> msgs, CommandSender sender, String... permissions) {
+        for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+            send(msgs, player, sender, permissions);
+        }
+    }
+
+    /**
+     * Broadcast a message to all players except blacklisted ones.
+     *
+     * @param msgs      The messages to be broadcast.
+     * @param translate Convert the color codes.
+     * @param blacklist Players that will not receive The messages.
+     */
+    public static void broadcast(List<String> msgs, boolean translate, ProxiedPlayer... blacklist) {
+        List<ProxiedPlayer> players = ProxyServer.getInstance().getPlayers().stream().filter(p -> {
+            for (ProxiedPlayer player : blacklist) {
+                if (player.getUniqueId().equals(p.getUniqueId())) return false;
+            }
+
+            return true;
+        }).collect(Collectors.toList());
+
+        for (ProxiedPlayer player : players) {
+            send(msgs, player, translate);
+        }
+    }
+
+    /**
+     * Broadcast a message to all players except blacklisted ones.
+     *
+     * @param msgs      The messages to be broadcast.
+     * @param blacklist Players that will not receive The messages.
+     */
+    public static void broadcast(List<String> msgs, ProxiedPlayer... blacklist) {
+        broadcast(msgs, true, blacklist);
+    }
+
+    /**
+     * Broadcast a message to all players in a server.
+     *
+     * @param msgs      The messages to be broadcast.
+     * @param translate Convert the color codes.
+     * @param server    The server target of the broadcast.
+     */
+    public static void broadcast(List<String> msgs, boolean translate, ServerInfo server) {
+        for (ProxiedPlayer player : server.getPlayers()) {
+            send(msgs, player, translate);
+        }
+    }
+
+    /**
+     * Broadcast a message to all players in a server.
+     *
+     * @param msgs   The messages to be broadcast.
+     * @param server The server target of the broadcast.
+     */
+    public static void broadcast(List<String> msgs, ServerInfo server) {
+        broadcast(msgs, true, server);
+    }
+
+    /**
+     * Broadcast a message to all players except blacklisted ones.
+     *
+     * @param msgs        The messages to be broadcast.
+     * @param translate   Convert the color codes.
+     * @param permissions Players with this perm will receive The messages.
+     */
+    public static void broadcast(List<String> msgs, boolean translate, String... permissions) {
+        for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+            if (hasPermission(player, permissions)) {
+                send(msgs, player, translate);
+            }
+        }
+    }
+
+    /**
+     * Broadcast a message to all players except blacklisted ones.
+     *
+     * @param msgs        The messages to be broadcast.
+     * @param permissions Players with this perm will receive The messages.
+     */
+    public static void broadcast(List<String> msgs, String... permissions) {
+        broadcast(msgs, true, permissions);
     }
 
     /**

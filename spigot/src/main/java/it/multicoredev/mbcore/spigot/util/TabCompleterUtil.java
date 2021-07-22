@@ -151,6 +151,27 @@ public class TabCompleterUtil {
     }
 
     /**
+     * Get the list of world names starting with the searched characters.
+     *
+     * @param search The starting characters of the names searched.
+     *               If null or empty all world names will be returned.
+     * @return A list of world names.
+     */
+    public static List<String> getWorlds(@Nullable String search) {
+        List<String> worlds = new ArrayList<>();
+
+        if (search == null || search.trim().isEmpty()) {
+            Bukkit.getWorlds().forEach(world -> worlds.add(world.getName()));
+        } else {
+            Bukkit.getWorlds().forEach(world -> {
+                if (world.getName().toLowerCase().startsWith(search.toLowerCase())) worlds.add(world.getName());
+            });
+        }
+
+        return worlds;
+    }
+
+    /**
      * Check if a player is vanished using Supervanish.
      *
      * @param player The player to check.
