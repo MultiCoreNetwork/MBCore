@@ -43,6 +43,9 @@ public class Chat {
     private static String translateHex(String msg) {
         Preconditions.checkNotNull(msg, "Cannot translate null text");
 
+        msg = msg.replace("&g", "#2196F3")
+                .replace("&h", "#2962FF");
+
         Matcher matcher = hexColorPattern.matcher(msg);
         while (matcher.find()) {
             String match = matcher.group(0);
@@ -186,8 +189,8 @@ public class Chat {
     public static String getDiscolored(String msg) {
         Preconditions.checkNotNull(msg, "Cannot translate null text");
 
-        msg = msg.replaceAll("&[0-9a-fA-FkKlLmMnNoOrR]", "");
-        msg = msg.replaceAll("§[0-9a-fA-FkKlLmMnNoOrR]", "");
+        msg = msg.replaceAll("&[0-9a-hA-HkKlLmMnNoOrR]", "");
+        msg = msg.replaceAll("§[0-9a-hA-HkKlLmMnNoOrR]", "");
 
         Matcher matcher = hexColorPattern.matcher(msg);
         while (matcher.find()) {
@@ -209,8 +212,8 @@ public class Chat {
 
         for (int i = 0; i < msgs.length; i++) {
             String msg = msgs[i];
-            msg = msg.replaceAll("&[0-9a-fA-FkKlLmMnNoOrR]", "");
-            msg = msg.replaceAll("§[0-9a-fA-FkKlLmMnNoOrR]", "");
+            msg = msg.replaceAll("&[0-9a-hA-HkKlLmMnNoOrR]", "");
+            msg = msg.replaceAll("§[0-9a-hA-HkKlLmMnNoOrR]", "");
 
             Matcher matcher = hexColorPattern.matcher(msg);
             while (matcher.find()) {
@@ -234,8 +237,8 @@ public class Chat {
         if (msgs == null) return null;
 
         for (String msg : msgs) {
-            msg = msg.replaceAll("&[0-9a-fA-FkKlLmMnNoOrR]", "");
-            msg = msg.replaceAll("§[0-9a-fA-FkKlLmMnNoOrR]", "");
+            msg = msg.replaceAll("&[0-9a-hA-HkKlLmMnNoOrR]", "");
+            msg = msg.replaceAll("§[0-9a-hA-HkKlLmMnNoOrR]", "");
 
             Matcher matcher = hexColorPattern.matcher(msg);
             while (matcher.find()) {

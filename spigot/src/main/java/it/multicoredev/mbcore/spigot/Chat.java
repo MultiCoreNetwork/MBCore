@@ -1,14 +1,13 @@
 package it.multicoredev.mbcore.spigot;
 
+import com.google.common.base.Preconditions;
 import com.google.gson.JsonSyntaxException;
 import it.multicoredev.mbcore.spigot.util.chat.RawMessage;
-import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
@@ -40,9 +39,12 @@ public class Chat {
     private static Boolean useAllColors = null;
 
     private static String translateHex(String msg) {
-        Validate.notNull(msg, "Cannot translate null text");
+        Preconditions.checkNotNull(msg, "Cannot translate null text");
 
         if (useAllColors == null) {
+            msg = msg.replace("&g", "#2196F3")
+                    .replace("&h", "#2962FF");
+
             Matcher matcher = Pattern.compile("[0-9]\\.[0-9]+").matcher(Bukkit.getBukkitVersion());
 
             if (matcher.find()) {
@@ -198,8 +200,8 @@ public class Chat {
     public static String getDiscolored(String msg) {
         if (msg == null) return null;
 
-        msg = msg.replaceAll("&[0-9a-fA-FkKlLmMnNoOrR]", "");
-        msg = msg.replaceAll("§[0-9a-fA-FkKlLmMnNoOrR]", "");
+        msg = msg.replaceAll("&[0-9a-hA-HkKlLmMnNoOrR]", "");
+        msg = msg.replaceAll("§[0-9a-hA-HkKlLmMnNoOrR]", "");
 
         Matcher matcher = hexColorPattern.matcher(msg);
         while (matcher.find()) {
@@ -221,8 +223,8 @@ public class Chat {
 
         for (int i = 0; i < msgs.length; i++) {
             String msg = msgs[i];
-            msg = msg.replaceAll("&[0-9a-fA-FkKlLmMnNoOrR]", "");
-            msg = msg.replaceAll("§[0-9a-fA-FkKlLmMnNoOrR]", "");
+            msg = msg.replaceAll("&[0-9a-hA-HkKlLmMnNoOrR]", "");
+            msg = msg.replaceAll("§[0-9a-hA-HkKlLmMnNoOrR]", "");
 
             Matcher matcher = hexColorPattern.matcher(msg);
             while (matcher.find()) {
@@ -246,8 +248,8 @@ public class Chat {
         if (msgs == null) return null;
 
         for (String msg : msgs) {
-            msg = msg.replaceAll("&[0-9a-fA-FkKlLmMnNoOrR]", "");
-            msg = msg.replaceAll("§[0-9a-fA-FkKlLmMnNoOrR]", "");
+            msg = msg.replaceAll("&[0-9a-hA-HkKlLmMnNoOrR]", "");
+            msg = msg.replaceAll("§[0-9a-hA-HkKlLmMnNoOrR]", "");
 
             Matcher matcher = hexColorPattern.matcher(msg);
             while (matcher.find()) {
@@ -826,7 +828,7 @@ public class Chat {
     /**
      * Broadcast a message to all players.
      *
-     * @param msgs       The message to be broadcast.
+     * @param msgs      The message to be broadcast.
      * @param translate Convert the color codes.
      */
     public static void broadcast(String[] msgs, boolean translate) {
@@ -847,7 +849,7 @@ public class Chat {
     /**
      * Broadcast a message to all players.
      *
-     * @param msgs         The message to be broadcast.
+     * @param msgs        The message to be broadcast.
      * @param sender      The sender of the message.
      * @param permissions Convert the color codes if the sender has this permissions.
      */
@@ -860,7 +862,7 @@ public class Chat {
     /**
      * Broadcast a message to all players.
      *
-     * @param msgs         The message to be broadcast.
+     * @param msgs        The message to be broadcast.
      * @param sender      The sender of the message.
      * @param permissions Convert the color codes if the sender has this permissions.
      */
@@ -873,7 +875,7 @@ public class Chat {
     /**
      * Broadcast a message to all players except blacklisted ones.
      *
-     * @param msgs       The message to be broadcast.
+     * @param msgs      The message to be broadcast.
      * @param translate Convert the color codes.
      * @param blacklist Players that will not receive the message.
      */
@@ -893,7 +895,7 @@ public class Chat {
     /**
      * Broadcast a message to all players except blacklisted ones.
      *
-     * @param msgs       The message to be broadcast.
+     * @param msgs      The message to be broadcast.
      * @param blacklist Players that will not receive the message.
      */
     public static void broadcast(String[] msgs, Player... blacklist) {
@@ -903,7 +905,7 @@ public class Chat {
     /**
      * Broadcast a message to all players except blacklisted ones.
      *
-     * @param msgs         The message to be broadcast.
+     * @param msgs        The message to be broadcast.
      * @param translate   Convert the color codes.
      * @param permissions Players with this perm will receive the message.
      */
@@ -918,7 +920,7 @@ public class Chat {
     /**
      * Broadcast a message to all players except blacklisted ones.
      *
-     * @param msgs         The message to be broadcast.
+     * @param msgs        The message to be broadcast.
      * @param permissions Players with this perm will receive the message.
      */
     public static void broadcast(String[] msgs, String... permissions) {
@@ -928,7 +930,7 @@ public class Chat {
     /**
      * Broadcast a message to all players.
      *
-     * @param msgs       The message to be broadcast.
+     * @param msgs      The message to be broadcast.
      * @param translate Convert the color codes.
      */
     public static void broadcast(List<String> msgs, boolean translate) {
@@ -949,7 +951,7 @@ public class Chat {
     /**
      * Broadcast a message to all players.
      *
-     * @param msgs         The message to be broadcast.
+     * @param msgs        The message to be broadcast.
      * @param sender      The sender of the message.
      * @param permissions Convert the color codes if the sender has this permissions.
      */
@@ -962,7 +964,7 @@ public class Chat {
     /**
      * Broadcast a message to all players.
      *
-     * @param msgs         The message to be broadcast.
+     * @param msgs        The message to be broadcast.
      * @param sender      The sender of the message.
      * @param permissions Convert the color codes if the sender has this permissions.
      */
@@ -975,7 +977,7 @@ public class Chat {
     /**
      * Broadcast a message to all players except blacklisted ones.
      *
-     * @param msgs       The message to be broadcast.
+     * @param msgs      The message to be broadcast.
      * @param translate Convert the color codes.
      * @param blacklist Players that will not receive the message.
      */
@@ -995,7 +997,7 @@ public class Chat {
     /**
      * Broadcast a message to all players except blacklisted ones.
      *
-     * @param msgs       The message to be broadcast.
+     * @param msgs      The message to be broadcast.
      * @param blacklist Players that will not receive the message.
      */
     public static void broadcast(List<String> msgs, Player... blacklist) {
@@ -1005,7 +1007,7 @@ public class Chat {
     /**
      * Broadcast a message to all players except blacklisted ones.
      *
-     * @param msgs         The message to be broadcast.
+     * @param msgs        The message to be broadcast.
      * @param translate   Convert the color codes.
      * @param permissions Players with this perm will receive the message.
      */
@@ -1020,7 +1022,7 @@ public class Chat {
     /**
      * Broadcast a message to all players except blacklisted ones.
      *
-     * @param msgs         The message to be broadcast.
+     * @param msgs        The message to be broadcast.
      * @param permissions Players with this perm will receive the message.
      */
     public static void broadcast(List<String> msgs, String... permissions) {
