@@ -9,8 +9,8 @@ jobs:
     container:
       image: musedev/analyst
       credentials:
-        username: ${{ secrets.DOCKER_HUB_USERNAME }}
-        password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+        username: ${{ secrets.docker_hub_username }}
+        password: ${{ secrets.docker_hub_password }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -48,8 +48,8 @@ jobs:
     container:
       image: musedev/analyst
       credentials:
-        username: ${{ secrets.DOCKER_HUB_USERNAME }}
-        password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+        username: ${{ secrets.docker_hub_username }}
+        password: ${{ secrets.docker_hub_password }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -82,8 +82,8 @@ jobs:
     container:
       image: musedev/github-comment-composer
       credentials:
-        username: ${{ secrets.DOCKER_HUB_USERNAME }}
-        password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+        username: ${{ secrets.docker_hub_username }}
+        password: ${{ secrets.docker_hub_password }}
     steps:
       - name: Get Dst
         uses: actions/download-artifact@v2
