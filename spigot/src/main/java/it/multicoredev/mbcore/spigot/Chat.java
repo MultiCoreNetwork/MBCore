@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
@@ -41,10 +42,10 @@ public class Chat {
     private static String translateHex(String msg) {
         Preconditions.checkNotNull(msg, "Cannot translate null text");
 
-        if (useAllColors == null) {
-            msg = msg.replace("&g", "#2196F3")
-                    .replace("&h", "#2962FF");
+        msg = msg.replace("&g", "#2196F3")
+                .replace("&h", "#2962FF");
 
+        if (useAllColors == null) {
             Matcher matcher = Pattern.compile("[0-9]\\.[0-9]+").matcher(Bukkit.getBukkitVersion());
 
             if (matcher.find()) {
@@ -156,13 +157,15 @@ public class Chat {
      * @return The converted messages.
      */
     public static List<String> getTranslated(List<String> msgs) {
+        List<String> out = new ArrayList<>();
         for (String msg : msgs) {
             if (msg == null) return null;
-            msg = ChatColor.translateAlternateColorCodes('&', msg);
+            msg = net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', msg);
             msg = translateHex(msg);
+            out.add(msg);
         }
 
-        return msgs;
+        return out;
     }
 
     /**

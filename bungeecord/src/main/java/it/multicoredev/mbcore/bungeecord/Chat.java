@@ -145,13 +145,15 @@ public class Chat {
      * @return The converted messages.
      */
     public static List<String> getTranslated(List<String> msgs) {
+        List<String> out = new ArrayList<>();
         for (String msg : msgs) {
             if (msg == null) return null;
             msg = ChatColor.translateAlternateColorCodes('&', msg);
             msg = translateHex(msg);
+            out.add(msg);
         }
 
-        return msgs;
+        return out;
     }
 
     /**
