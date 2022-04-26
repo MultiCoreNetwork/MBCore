@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <name>MBCore</name>
-    <description>Library for Spigot and BungeeCord plugin development</description>
+    <description>Library for Spigot, BungeeCord and Velocity plugin development</description>
     <url>https://github.com/MultiCoreNetwork/MBCore</url>
     <inceptionYear>2019</inceptionYear>
 
@@ -62,6 +62,7 @@
     <modules>
         <module>spigot</module>
         <module>bungeecord</module>
+        <module>velocity</module>
     </modules>
 
     <dependencies>
