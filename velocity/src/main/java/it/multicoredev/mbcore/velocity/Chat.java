@@ -722,7 +722,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players.
+     * Broadcasts a message to all players.
      *
      * @param msg       The message to be broadcast.
      * @param translate Convert the color codes.
@@ -734,7 +734,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players.
+     * Broadcasts a message to all players.
      *
      * @param msg The message to be broadcast.
      */
@@ -743,7 +743,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players.
+     * Broadcasts a message to all players.
      *
      * @param msg         The message to be broadcast.
      * @param sender      The sender of the message.
@@ -756,7 +756,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players.
+     * Broadcasts a message to all players.
      *
      * @param msg         The message to be broadcast.
      * @param sender      The sender of the message.
@@ -769,7 +769,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players except blacklisted ones.
+     * Broadcasts a message to all players except blacklisted ones.
      *
      * @param msg       The message to be broadcast.
      * @param translate Convert the color codes.
@@ -787,7 +787,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players except blacklisted ones.
+     * Broadcasts a message to all players except blacklisted ones.
      *
      * @param msg       The message to be broadcast.
      * @param blacklist Players that will not receive the message.
@@ -797,7 +797,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players in a server.
+     * Broadcasts a message to all players in a server.
      *
      * @param msg       The message to be broadcast.
      * @param translate Convert the color codes.
@@ -810,7 +810,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players in a server.
+     * Broadcasts a message to all players in a server.
      *
      * @param msg    The message to be broadcast.
      * @param server The server target of the broadcast.
@@ -820,7 +820,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players except blacklisted ones.
+     * Broadcasts a message to all players except blacklisted ones.
      *
      * @param msg         The message to be broadcast.
      * @param translate   Convert the color codes.
@@ -835,7 +835,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players except blacklisted ones.
+     * Broadcasts a message to all players except blacklisted ones.
      *
      * @param msg         The message to be broadcast.
      * @param permissions Players with this perm will receive the message.
@@ -845,7 +845,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players.
+     * Broadcasts a message to all players.
      *
      * @param msgs      The messages to be broadcast.
      * @param translate Convert the color codes.
@@ -857,7 +857,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players.
+     * Broadcasts a message to all players.
      *
      * @param msgs The messages to be broadcast.
      */
@@ -866,7 +866,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players.
+     * Broadcasts a message to all players.
      *
      * @param msgs        The messages to be broadcast.
      * @param sender      The sender of The messages.
@@ -879,7 +879,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players.
+     * Broadcasts a message to all players.
      *
      * @param msgs        The messages to be broadcast.
      * @param sender      The sender of The messages.
@@ -892,7 +892,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players except blacklisted ones.
+     * Broadcasts a message to all players except blacklisted ones.
      *
      * @param msgs      The messages to be broadcast.
      * @param translate Convert the color codes.
@@ -913,7 +913,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players except blacklisted ones.
+     * Broadcasts a message to all players except blacklisted ones.
      *
      * @param msgs      The messages to be broadcast.
      * @param blacklist Players that will not receive The messages.
@@ -923,7 +923,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players in a server.
+     * Broadcasts a message to all players in a server.
      *
      * @param msgs      The messages to be broadcast.
      * @param translate Convert the color codes.
@@ -936,7 +936,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players in a server.
+     * Broadcasts a message to all players in a server.
      *
      * @param msgs   The messages to be broadcast.
      * @param server The server target of the broadcast.
@@ -946,7 +946,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players except blacklisted ones.
+     * Broadcasts a message to all players except blacklisted ones.
      *
      * @param msgs        The messages to be broadcast.
      * @param translate   Convert the color codes.
@@ -961,7 +961,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players except blacklisted ones.
+     * Broadcasts a message to all players except blacklisted ones.
      *
      * @param msgs        The messages to be broadcast.
      * @param permissions Players with this perm will receive The messages.
@@ -971,7 +971,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players.
+     * Broadcasts a message to all players.
      *
      * @param msgs      The messages to be broadcast.
      * @param translate Convert the color codes.
@@ -983,7 +983,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players.
+     * Broadcasts a message to all players.
      *
      * @param msgs The messages to be broadcast.
      */
@@ -992,7 +992,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players.
+     * Broadcasts a message to all players.
      *
      * @param msgs        The messages to be broadcast.
      * @param sender      The sender of The messages.
@@ -1005,7 +1005,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players.
+     * Broadcasts a message to all players.
      *
      * @param msgs        The messages to be broadcast.
      * @param sender      The sender of The messages.
@@ -1018,7 +1018,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players except blacklisted ones.
+     * Broadcasts a message to all players except blacklisted ones.
      *
      * @param msgs      The messages to be broadcast.
      * @param translate Convert the color codes.
@@ -1039,7 +1039,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players except blacklisted ones.
+     * Broadcasts a message to all players except blacklisted ones.
      *
      * @param msgs      The messages to be broadcast.
      * @param blacklist Players that will not receive The messages.
@@ -1049,7 +1049,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players in a server.
+     * Broadcasts a message to all players in a server.
      *
      * @param msgs      The messages to be broadcast.
      * @param translate Convert the color codes.
@@ -1062,7 +1062,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players in a server.
+     * Broadcasts a message to all players in a server.
      *
      * @param msgs   The messages to be broadcast.
      * @param server The server target of the broadcast.
@@ -1072,7 +1072,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players except blacklisted ones.
+     * Broadcasts a message to all players except blacklisted ones.
      *
      * @param msgs        The messages to be broadcast.
      * @param translate   Convert the color codes.
@@ -1087,7 +1087,7 @@ public class Chat {
     }
 
     /**
-     * Broadcast a message to all players except blacklisted ones.
+     * Broadcasts a message to all players except blacklisted ones.
      *
      * @param msgs        The messages to be broadcast.
      * @param permissions Players with this perm will receive The messages.

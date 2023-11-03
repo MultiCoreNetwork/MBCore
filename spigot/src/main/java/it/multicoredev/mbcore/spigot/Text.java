@@ -8,6 +8,8 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.title.Title;
+import net.kyori.adventure.title.TitlePart;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,6 +17,8 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -401,7 +405,6 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
     /*    SEND    */
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
-
 
     /**
      * Sends a text to a {@link CommandSender} or a {@link Player}.
@@ -1967,7 +1970,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a text to all {@link Player}s with a specific permission.
+     * Broadcasts a text to all {@link Player}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param text             The text to send.
@@ -1983,7 +1986,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link Player}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param text             The text to send.
@@ -1995,7 +1998,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link Player}s with some permissions.
      *
      * @param text             The text to send.
      * @param tagResolver      The {@link TagResolver} for any additional tags to handle.
@@ -2012,7 +2015,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link Player}s with some permissions.
      *
      * @param text             The text to send.
      * @param neededPermission The permission needed to receive the broadcast.
@@ -2024,7 +2027,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link Player}s with some permissions.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text             The text to send.
@@ -2051,7 +2054,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link Player}s with some permissions.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text             The text to send.
@@ -2069,7 +2072,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -2090,7 +2093,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      * The texts are deserialized before being sent.
      *
      * @param texts            The texts to send.
@@ -2102,7 +2105,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      *
      * @param texts            The texts to send.
      * @param tagResolver      The {@link TagResolver} for any additional tags to handle.
@@ -2119,7 +2122,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      *
      * @param texts            The texts to send.
      * @param neededPermission The permission needed to receive the broadcast.
@@ -2130,7 +2133,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts            The texts to send.
@@ -2157,7 +2160,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -2174,7 +2177,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -2195,7 +2198,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      * The texts are deserialized before being sent.
      *
      * @param texts            The texts to send.
@@ -2207,7 +2210,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      *
      * @param texts            The texts to send.
      * @param tagResolver      The {@link TagResolver} for any additional tags to handle.
@@ -2224,7 +2227,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      *
      * @param texts            The texts to send.
      * @param neededPermission The permission needed to receive the broadcast.
@@ -2235,7 +2238,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts            The texts to send.
@@ -2262,7 +2265,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -2279,7 +2282,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a text to all {@link Player}s with a specific permission.
+     * Broadcasts a text to all {@link Player}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param text              The text to send.
@@ -2298,7 +2301,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link Player}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param text              The text to send.
@@ -2310,7 +2313,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link Player}s with some permissions.
      *
      * @param text              The text to send.
      * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
@@ -2327,7 +2330,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link Player}s with some permissions.
      *
      * @param text              The text to send.
      * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
@@ -2339,7 +2342,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link Player}s with some permissions.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text              The text to send.
@@ -2366,7 +2369,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link Player}s with some permissions.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text              The text to send.
@@ -2384,7 +2387,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -2409,7 +2412,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      * The texts are deserialized before being sent.
      *
      * @param texts             The texts to send.
@@ -2421,7 +2424,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      *
      * @param texts             The texts to send.
      * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
@@ -2438,7 +2441,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      *
      * @param texts             The texts to send.
      * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
@@ -2449,7 +2452,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts             The texts to send.
@@ -2476,7 +2479,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -2493,7 +2496,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -2518,7 +2521,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      * The texts are deserialized before being sent.
      *
      * @param texts             The texts to send.
@@ -2530,7 +2533,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      *
      * @param texts             The texts to send.
      * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
@@ -2547,7 +2550,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      *
      * @param texts             The texts to send.
      * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
@@ -2558,7 +2561,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts             The texts to send.
@@ -2585,7 +2588,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -2602,7 +2605,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a text to all {@link Player}s with a specific permission.
+     * Broadcasts a text to all {@link Player}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param text              The text to send.
@@ -2621,7 +2624,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link Player}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param text              The text to send.
@@ -2633,7 +2636,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link Player}s with some permissions.
      *
      * @param text              The text to send.
      * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
@@ -2650,7 +2653,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link Player}s with some permissions.
      *
      * @param text              The text to send.
      * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
@@ -2662,7 +2665,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link Player}s with some permissions.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text              The text to send.
@@ -2689,7 +2692,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link Player}s with some permissions.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text              The text to send.
@@ -2707,7 +2710,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -2732,7 +2735,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      * The texts are deserialized before being sent.
      *
      * @param texts             The texts to send.
@@ -2744,7 +2747,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      *
      * @param texts             The texts to send.
      * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
@@ -2761,7 +2764,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      *
      * @param texts             The texts to send.
      * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
@@ -2772,7 +2775,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts             The texts to send.
@@ -2799,7 +2802,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -2816,7 +2819,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -2841,7 +2844,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      * The texts are deserialized before being sent.
      *
      * @param texts             The texts to send.
@@ -2853,7 +2856,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      *
      * @param texts             The texts to send.
      * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
@@ -2870,7 +2873,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      *
      * @param texts             The texts to send.
      * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
@@ -2881,7 +2884,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts             The texts to send.
@@ -2908,7 +2911,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link Player}s with some permissions.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -2918,5 +2921,2758 @@ public class Text {
      */
     public <P extends Collection<String>, T extends Collection<String>> void broadcast(@NotNull T texts, @NotNull P neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
         broadcast(texts, null, neededPermissions, sender, permissions);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    ACTION BAR    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Sends an action bar text to a {@link Player}.
+     * The text is deserialized before being sent.
+     *
+     * @param text        The text to send.
+     * @param receiver    The receiver of the text.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @throws NullPointerException if the text or the receiver is null.
+     */
+    public void sendActionBar(@NotNull String text, @NotNull Player receiver, TagResolver tagResolver) {
+        Preconditions.checkNotNull(text, "Text cannot be null");
+        Preconditions.checkNotNull(receiver, "Receiver cannot be null");
+
+        Audience audience;
+        if (receiver instanceof Player) audience = audiences.player((Player) receiver);
+        else audience = audiences.sender(receiver);
+
+        audience.sendActionBar(deserialize(text, tagResolver));
+    }
+
+    /**
+     * Sends an action bar text to a {@link Player}.
+     * The text is deserialized before being sent.
+     *
+     * @param text     The text to send.
+     * @param receiver The receiver of the text.
+     * @throws NullPointerException if the text or the receiver is null.
+     */
+    public void sendActionBar(@NotNull String text, @NotNull Player receiver) {
+        sendActionBar(text, receiver, null);
+    }
+
+    /**
+     * Sends an action bar text to a {@link Player}.
+     *
+     * @param text            The text to send.
+     * @param receiver        The receiver of the text.
+     * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException if the text or the receiver is null.
+     */
+    public void sendActionBar(@NotNull String text, @NotNull Player receiver, TagResolver tagResolver, boolean stripFormatting) {
+        if (stripFormatting) {
+            sendActionBar(stripFormatting(text, tagResolver), receiver, tagResolver);
+        } else {
+            sendActionBar(text, receiver, tagResolver);
+        }
+    }
+
+    /**
+     * Sends an action bar text to a {@link Player}.
+     *
+     * @param text            The text to send.
+     * @param receiver        The receiver of the text.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException if the text or the receiver is null.
+     */
+    public void sendActionBar(@NotNull String text, @NotNull Player receiver, boolean stripFormatting) {
+        sendActionBar(text, receiver, null, stripFormatting);
+    }
+
+    /**
+     * Sends an action bar text to a {@link Player}.
+     * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
+     *
+     * @param text        The text to send.
+     * @param receiver    The receiver of the text.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException if the text, the receiver, the sender or the permissions is null.
+     */
+    public void sendActionBar(@NotNull String text, @NotNull Player receiver, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+        Preconditions.checkNotNull(sender, "Sender cannot be null");
+        Preconditions.checkNotNull(permissions, "Permissions cannot be null");
+
+        boolean hasPermission = false;
+        for (String permission : permissions) {
+            if (permission == null) continue;
+            if (sender.hasPermission(permission)) {
+                hasPermission = true;
+                break;
+            }
+        }
+
+        sendActionBar(text, receiver, tagResolver, !hasPermission);
+    }
+
+    /**
+     * Sends an action bar text to a {@link Player}.
+     * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
+     *
+     * @param text        The text to send.
+     * @param receiver    The receiver of the text.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException if the text, the receiver or the sender or the permissions is null.
+     */
+    public void sendActionBar(@NotNull String text, @NotNull Player receiver, @NotNull CommandSender sender, @NotNull String... permissions) {
+        sendActionBar(text, receiver, null, sender, permissions);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    ACTION BAR TO MULTIPLE RECEIVERS (ARRAY)    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Sends an action bar text to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param text        The text to send.
+     * @param receivers   The receivers of the text.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @throws NullPointerException if the text or the receivers is null.
+     */
+    public void sendActionBar(@NotNull String text, @NotNull Player[] receivers, TagResolver tagResolver) {
+        Preconditions.checkNotNull(receivers, "Receivers cannot be null");
+
+        for (Player receiver : receivers) {
+            if (receiver == null) continue;
+            sendActionBar(text, receiver, tagResolver);
+        }
+    }
+
+    /**
+     * Sends an action bar text to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param text      The text to send.
+     * @param receivers The receivers of the text.
+     * @throws NullPointerException if the text or the receivers is null.
+     */
+    public void sendActionBar(@NotNull String text, @NotNull Player[] receivers) {
+        sendActionBar(text, receivers, null);
+    }
+
+    /**
+     * Sends an action bar text to a group of {@link Player}s.
+     *
+     * @param text            The text to send.
+     * @param receivers       The receivers of the text.
+     * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException if the text or the receivers is null.
+     */
+    public void sendActionBar(@NotNull String text, @NotNull Player[] receivers, TagResolver tagResolver, boolean stripFormatting) {
+        if (stripFormatting) {
+            sendActionBar(stripFormatting(text, tagResolver), receivers, tagResolver);
+        } else {
+            sendActionBar(text, receivers, tagResolver);
+        }
+    }
+
+    /**
+     * Sends an action bar text to a group of {@link Player}s.
+     *
+     * @param text            The text to send.
+     * @param receivers       The receivers of the text.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException if the text or the receivers is null.
+     */
+    public void sendActionBar(@NotNull String text, @NotNull Player[] receivers, boolean stripFormatting) {
+        sendActionBar(text, receivers, null, stripFormatting);
+    }
+
+    /**
+     * Sends an action bar text to a group of {@link Player}s.
+     * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
+     *
+     * @param text        The text to send.
+     * @param receivers   The receivers of the text.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException if the text, the receivers or the sender or the permissions is null.
+     */
+    public void sendActionBar(@NotNull String text, @NotNull Player[] receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+        Preconditions.checkNotNull(sender, "Sender cannot be null");
+        Preconditions.checkNotNull(permissions, "Permissions cannot be null");
+
+        boolean hasPermission = false;
+        for (String permission : permissions) {
+            if (permission == null) continue;
+            if (sender.hasPermission(permission)) {
+                hasPermission = true;
+                break;
+            }
+        }
+
+        sendActionBar(text, receivers, tagResolver, !hasPermission);
+    }
+
+    /**
+     * Sends an action bar text to a group of {@link Player}s.
+     * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
+     *
+     * @param text        The text to send.
+     * @param receivers   The receivers of the text.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException if the text, the receivers, the sender or the permissions is null.
+     */
+    public void sendActionBar(@NotNull String text, @NotNull Player[] receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
+        sendActionBar(text, receivers, null, sender, permissions);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    ACTION BAR TO MULTIPLE RECEIVERS (COLLECTION)    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Sends an action bar text to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param text        The text to send.
+     * @param receivers   The receivers of the text.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @throws NullPointerException if the text or the receivers is null.
+     */
+    public <R extends Collection<Player>> void sendActionBar(@NotNull String text, @NotNull R receivers, TagResolver tagResolver) {
+        Preconditions.checkNotNull(receivers, "Receivers cannot be null");
+
+        for (Player receiver : receivers) {
+            if (receiver == null) continue;
+            sendActionBar(text, receiver, tagResolver);
+        }
+    }
+
+    /**
+     * Sends an action bar text to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param text      The text to send.
+     * @param receivers The receivers of the text.
+     * @throws NullPointerException if the text or the receivers is null.
+     */
+    public <R extends Collection<Player>> void sendActionBar(@NotNull String text, @NotNull R receivers) {
+        sendActionBar(text, receivers, null);
+    }
+
+    /**
+     * Sends an action bar text to a group of {@link Player}s.
+     *
+     * @param text            The text to send.
+     * @param receivers       The receivers of the text.
+     * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException if the text or the receivers is null.
+     */
+    public <R extends Collection<Player>> void sendActionBar(@NotNull String text, @NotNull R receivers, TagResolver tagResolver, boolean stripFormatting) {
+        if (stripFormatting) {
+            sendActionBar(stripFormatting(text, tagResolver), receivers, tagResolver);
+        } else {
+            sendActionBar(text, receivers, tagResolver);
+        }
+    }
+
+    /**
+     * Sends an action bar text to a group of {@link Player}s.
+     *
+     * @param text            The text to send.
+     * @param receivers       The receivers of the text.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException if the text or the receivers is null.
+     */
+    public <R extends Collection<Player>> void sendActionBar(@NotNull String text, @NotNull R receivers, boolean stripFormatting) {
+        sendActionBar(text, receivers, null, stripFormatting);
+    }
+
+    /**
+     * Sends an action bar text to a group of {@link Player}s.
+     * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
+     *
+     * @param text        The text to send.
+     * @param receivers   The receivers of the text.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException if the text, the receivers, the sender or the permissions is null.
+     */
+    public <R extends Collection<Player>> void sendActionBar(@NotNull String text, @NotNull R receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+        Preconditions.checkNotNull(sender, "Sender cannot be null");
+        Preconditions.checkNotNull(permissions, "Permissions cannot be null");
+
+        boolean hasPermission = false;
+        for (String permission : permissions) {
+            if (permission == null) continue;
+            if (sender.hasPermission(permission)) {
+                hasPermission = true;
+                break;
+            }
+        }
+
+        sendActionBar(text, receivers, tagResolver, !hasPermission);
+    }
+
+    /**
+     * Sends an action bar text to a group of {@link Player}s.
+     * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
+     *
+     * @param text        The text to send.
+     * @param receivers   The receivers of the text.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException if the text, the receivers, the sender or the permissions is null.
+     */
+    public <R extends Collection<Player>> void sendActionBar(@NotNull String text, @NotNull R receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
+        sendActionBar(text, receivers, null, sender, permissions);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    BROADCAST    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s on the server.
+     * The text is deserialized before being sent.
+     *
+     * @param text        The text to send.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @throws NullPointerException if the text is null.
+     */
+    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver) {
+        Preconditions.checkNotNull(text, "Text cannot be null");
+
+        audiences.players().sendActionBar(deserialize(text, tagResolver));
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s on the server.
+     * The text is deserialized before being sent.
+     *
+     * @param text The text to send.
+     * @throws NullPointerException if the text is null.
+     */
+    public void broadcastActionBar(@NotNull String text) {
+        broadcastActionBar(text, (TagResolver) null);
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s on the server.
+     *
+     * @param text            The text to send.
+     * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException if the text is null.
+     */
+    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, boolean stripFormatting) {
+        if (stripFormatting) {
+            broadcastActionBar(stripFormatting(text, tagResolver), tagResolver);
+        } else {
+            broadcastActionBar(text, tagResolver);
+        }
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s on the server.
+     *
+     * @param text            The text to send.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException if the text is null.
+     */
+    public void broadcastActionBar(@NotNull String text, boolean stripFormatting) {
+        broadcastActionBar(text, (TagResolver) null, stripFormatting);
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s on the server.
+     * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
+     *
+     * @param text        The text to send.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException if the text, the sender or the permissions is null.
+     */
+    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+        Preconditions.checkNotNull(sender, "Sender cannot be null");
+        Preconditions.checkNotNull(permissions, "Permissions cannot be null");
+
+        boolean hasPermission = false;
+        for (String permission : permissions) {
+            if (permission == null) continue;
+            if (sender.hasPermission(permission)) {
+                hasPermission = true;
+                break;
+            }
+        }
+
+        broadcastActionBar(text, tagResolver, !hasPermission);
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s on the server.
+     * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
+     *
+     * @param text        The text to send.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException if the text, the sender or the permissions is null.
+     */
+    public void broadcastActionBar(@NotNull String text, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcastActionBar(text, (TagResolver) null, sender, permissions);
+    }
+
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    WORLD BROADCAST    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s in a world.
+     * The text is deserialized before being sent.
+     *
+     * @param text        The text to send.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @param world       The {@link World} to send the text to.
+     * @throws NullPointerException if the text or the world is null.
+     */
+    @SuppressWarnings("PatternValidation")
+    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull World world) {
+        Preconditions.checkNotNull(text, "Text cannot be null");
+        Preconditions.checkNotNull(world, "World cannot be null");
+
+        audiences.world(Key.key(world.getKey().toString())).sendActionBar(deserialize(text, tagResolver));
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s on the server.
+     * The text is deserialized before being sent.
+     *
+     * @param text  The text to send.
+     * @param world The {@link World} to send the text to.
+     * @throws NullPointerException if the text or the world is null.
+     */
+    public void broadcastActionBar(@NotNull String text, @NotNull World world) {
+        broadcastActionBar(text, null, world);
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s on the server.
+     *
+     * @param text            The text to send.
+     * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
+     * @param world           The {@link World} to send the text to.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException if the text or the world is null.
+     */
+    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull World world, boolean stripFormatting) {
+        if (stripFormatting) {
+            broadcastActionBar(stripFormatting(text, tagResolver), tagResolver, world);
+        } else {
+            broadcastActionBar(text, tagResolver, world);
+        }
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s on the server.
+     *
+     * @param text            The text to send.
+     * @param world           The {@link World} to send the text to.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException if the text or the world is null.
+     */
+    public void broadcastActionBar(@NotNull String text, @NotNull World world, boolean stripFormatting) {
+        broadcastActionBar(text, null, world, stripFormatting);
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s on the server.
+     * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
+     *
+     * @param text        The text to send.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @param world       The {@link World} to send the text to.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException if the text, the world, the sender or the permissions is null.
+     */
+    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
+        Preconditions.checkNotNull(sender, "Sender cannot be null");
+        Preconditions.checkNotNull(permissions, "Permissions cannot be null");
+
+        boolean hasPermission = false;
+        for (String permission : permissions) {
+            if (permission == null) continue;
+            if (sender.hasPermission(permission)) {
+                hasPermission = true;
+                break;
+            }
+        }
+
+        broadcastActionBar(text, tagResolver, world, !hasPermission);
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s on the server.
+     * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
+     *
+     * @param text        The text to send.
+     * @param world       The {@link World} to send the text to.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException if the text, the world, the sender or the permissions is null.
+     */
+    public void broadcastActionBar(@NotNull String text, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcastActionBar(text, null, world, sender, permissions);
+    }
+
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    PERMISSION BROADCAST    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param text             The text to send.
+     * @param tagResolver      The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermission The permission needed to receive the broadcast.
+     * @throws NullPointerException if the text or the neededPermission is null.
+     */
+    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull String neededPermission) {
+        Preconditions.checkNotNull(text, "Text cannot be null");
+        Preconditions.checkNotNull(neededPermission, "Needed permission cannot be null");
+
+        audiences.permission(neededPermission).sendActionBar(deserialize(text, tagResolver));
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param text             The text to send.
+     * @param neededPermission The permission needed to receive the broadcast.
+     * @throws NullPointerException if the text or the neededPermission is null.
+     */
+    public void broadcastActionBar(@NotNull String text, @NotNull String neededPermission) {
+        broadcastActionBar(text, null, neededPermission);
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     *
+     * @param text             The text to send.
+     * @param tagResolver      The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermission The permission needed to receive the broadcast.
+     * @param stripFormatting  Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException if the text or the neededPermission is null.
+     */
+    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull String neededPermission, boolean stripFormatting) {
+        if (stripFormatting) {
+            broadcastActionBar(stripFormatting(text, tagResolver), tagResolver, neededPermission);
+        } else {
+            broadcastActionBar(text, tagResolver, neededPermission);
+        }
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     *
+     * @param text             The text to send.
+     * @param neededPermission The permission needed to receive the broadcast.
+     * @param stripFormatting  Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException if the text or the neededPermission is null.
+     */
+    public void broadcastActionBar(@NotNull String text, @NotNull String neededPermission, boolean stripFormatting) {
+        broadcastActionBar(text, null, neededPermission, stripFormatting);
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
+     *
+     * @param text             The text to send.
+     * @param tagResolver      The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermission The permission needed to receive the broadcast.
+     * @param sender           The sender of the text.
+     * @param permissions      The permissions to check.
+     * @throws NullPointerException if the text, the neededPermission, the sender or the permissions is null.
+     */
+    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull String neededPermission, @NotNull CommandSender sender, @NotNull String... permissions) {
+        Preconditions.checkNotNull(sender, "Sender cannot be null");
+        Preconditions.checkNotNull(permissions, "Permissions cannot be null");
+
+        boolean hasPermission = false;
+        for (String permission : permissions) {
+            if (permission == null) continue;
+            if (sender.hasPermission(permission)) {
+                hasPermission = true;
+                break;
+            }
+        }
+
+        broadcastActionBar(text, tagResolver, neededPermission, !hasPermission);
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
+     *
+     * @param text             The text to send.
+     * @param neededPermission The permission needed to receive the broadcast.
+     * @param sender           The sender of the text.
+     * @param permissions      The permissions to check.
+     * @throws NullPointerException if the text, the neededPermission, the sender or the permissions is null.
+     */
+    public void broadcastActionBar(@NotNull String text, @NotNull String neededPermission, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcastActionBar(text, null, neededPermission, sender, permissions);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    PERMISSIONS (ARRAY) BROADCAST    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param text              The text to send.
+     * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @throws NullPointerException if the text or the neededPermissions is null.
+     */
+    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull String[] neededPermissions) {
+        Preconditions.checkNotNull(text, "Text cannot be null");
+        Preconditions.checkNotNull(neededPermissions, "Needed permission cannot be null");
+
+        for (String permission : neededPermissions) {
+            if (permission == null) continue;
+            audiences.permission(permission).sendActionBar(deserialize(text, tagResolver));
+        }
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param text              The text to send.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @throws NullPointerException if the text or the neededPermissions is null.
+     */
+    public void broadcastActionBar(@NotNull String text, @NotNull String[] neededPermissions) {
+        broadcastActionBar(text, (TagResolver) null, neededPermissions);
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     *
+     * @param text              The text to send.
+     * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @param stripFormatting   Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException if the text or the neededPermissions is null.
+     */
+    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull String[] neededPermissions, boolean stripFormatting) {
+        if (stripFormatting) {
+            broadcastActionBar(stripFormatting(text, tagResolver), tagResolver, neededPermissions);
+        } else {
+            broadcastActionBar(text, tagResolver, neededPermissions);
+        }
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     *
+     * @param text              The text to send.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @param stripFormatting   Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException if the text or the neededPermissions is null.
+     */
+    public void broadcastActionBar(@NotNull String text, @NotNull String[] neededPermissions, boolean stripFormatting) {
+        broadcastActionBar(text, null, neededPermissions, stripFormatting);
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
+     *
+     * @param text              The text to send.
+     * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @param sender            The sender of the text.
+     * @param permissions       The permissions to check.
+     * @throws NullPointerException if the text, the neededPermissions, the sender or The permissions is null.
+     */
+    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull String[] neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+        Preconditions.checkNotNull(sender, "Sender cannot be null");
+        Preconditions.checkNotNull(permissions, "Permissions cannot be null");
+
+        boolean hasPermission = false;
+        for (String permission : permissions) {
+            if (permission == null) continue;
+            if (sender.hasPermission(permission)) {
+                hasPermission = true;
+                break;
+            }
+        }
+
+        broadcastActionBar(text, tagResolver, neededPermissions, !hasPermission);
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
+     *
+     * @param text              The text to send.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @param sender            The sender of the text.
+     * @param permissions       The permissions to check.
+     * @throws NullPointerException if the text, the neededPermissions, the sender or The permissions is null.
+     */
+    public void broadcastActionBar(@NotNull String text, @NotNull String[] neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcastActionBar(text, null, neededPermissions, sender, permissions);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    PERMISSIONS (COLLECTION) BROADCAST    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param text              The text to send.
+     * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @throws NullPointerException if the text or the neededPermissions is null.
+     */
+    public <P extends Collection<String>> void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull P neededPermissions) {
+        Preconditions.checkNotNull(text, "Text cannot be null");
+        Preconditions.checkNotNull(neededPermissions, "Needed permission cannot be null");
+
+        for (String permission : neededPermissions) {
+            if (permission == null) continue;
+            audiences.permission(permission).sendActionBar(deserialize(text, tagResolver));
+        }
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param text              The text to send.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @throws NullPointerException if the text or the neededPermissions is null.
+     */
+    public <P extends Collection<String>> void broadcastActionBar(@NotNull String text, @NotNull P neededPermissions) {
+        broadcastActionBar(text, (TagResolver) null, neededPermissions);
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     *
+     * @param text              The text to send.
+     * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @param stripFormatting   Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException if the text or the neededPermissions is null.
+     */
+    public <P extends Collection<String>> void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull P neededPermissions, boolean stripFormatting) {
+        if (stripFormatting) {
+            broadcastActionBar(stripFormatting(text, tagResolver), tagResolver, neededPermissions);
+        } else {
+            broadcastActionBar(text, tagResolver, neededPermissions);
+        }
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     *
+     * @param text              The text to send.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @param stripFormatting   Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException if the text or the neededPermissions is null.
+     */
+    public <P extends Collection<String>> void broadcastActionBar(@NotNull String text, @NotNull P neededPermissions, boolean stripFormatting) {
+        broadcastActionBar(text, null, neededPermissions, stripFormatting);
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
+     *
+     * @param text              The text to send.
+     * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @param sender            The sender of the text.
+     * @param permissions       The permissions to check.
+     * @throws NullPointerException if the text, the neededPermissions, the sender or The permissions is null.
+     */
+    public <P extends Collection<String>> void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull P neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+        Preconditions.checkNotNull(sender, "Sender cannot be null");
+        Preconditions.checkNotNull(permissions, "Permissions cannot be null");
+
+        boolean hasPermission = false;
+        for (String permission : permissions) {
+            if (permission == null) continue;
+            if (sender.hasPermission(permission)) {
+                hasPermission = true;
+                break;
+            }
+        }
+
+        broadcastActionBar(text, tagResolver, neededPermissions, !hasPermission);
+    }
+
+    /**
+     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
+     *
+     * @param text              The text to send.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @param sender            The sender of the text.
+     * @param permissions       The permissions to check.
+     * @throws NullPointerException if the text, the neededPermissions, the sender or The permissions is null.
+     */
+    public <P extends Collection<String>> void broadcastActionBar(@NotNull String text, @NotNull P neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcastActionBar(text, null, neededPermissions, sender, permissions);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    TITLE    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Sends a title to a {@link Player}.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param fadeIn      The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay        The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut     The time in milliseconds for the title to fade out. (default: 1000)
+     * @param receiver    The receiver of the text.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player receiver, TagResolver tagResolver) {
+        Preconditions.checkArgument((title == null && subtitle != null) || (title != null && subtitle == null), "Both title and subtitle cannot be null simultaneously");
+        Preconditions.checkNotNull(receiver, "Receiver cannot be null");
+
+        Audience audience;
+        if (receiver instanceof Player) audience = audiences.player((Player) receiver);
+        else audience = audiences.sender(receiver);
+
+        if (title != null) audience.sendTitlePart(TitlePart.TITLE, deserialize(title, tagResolver));
+        if (subtitle != null) audience.sendTitlePart(TitlePart.SUBTITLE, deserialize(subtitle, tagResolver));
+        audience.sendTitlePart(TitlePart.TIMES, Title.Times.times(
+                Duration.of(fadeIn != null ? fadeIn : 1000, ChronoUnit.MILLIS),
+                Duration.of(stay != null ? stay : 3000, ChronoUnit.MILLIS),
+                Duration.of(fadeOut != null ? fadeOut : 1000, ChronoUnit.MILLIS)
+        ));
+    }
+
+    /**
+     * Sends a title to a {@link Player}.
+     * The text is deserialized before being sent.
+     *
+     * @param title    The title to send.
+     * @param subtitle The subtitle to send.
+     * @param fadeIn   The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay     The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut  The time in milliseconds for the title to fade out. (default: 1000)
+     * @param receiver The receiver of the text.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player receiver) {
+        sendTitle(title, subtitle, fadeIn, stay, fadeOut, receiver, null);
+    }
+
+    /**
+     * Sends a title to a {@link Player}.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param receiver    The receiver of the text.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void sendTitle(String title, String subtitle, @NotNull Player receiver, TagResolver tagResolver) {
+        sendTitle(title, subtitle, null, null, null, receiver, tagResolver);
+    }
+
+    /**
+     * Sends a title to a {@link Player}.
+     * The text is deserialized before being sent.
+     *
+     * @param title    The title to send.
+     * @param subtitle The subtitle to send.
+     * @param receiver The receiver of the text.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void sendTitle(String title, String subtitle, @NotNull Player receiver) {
+        sendTitle(title, subtitle, null, null, null, receiver, null);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    TITLE STRIP FORMATTING    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Sends a title to a {@link Player}.
+     * The text is deserialized before being sent.
+     *
+     * @param title           The title to send.
+     * @param subtitle        The subtitle to send.
+     * @param fadeIn          The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay            The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut         The time in milliseconds for the title to fade out. (default: 1000)
+     * @param receiver        The receiver of the text.
+     * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player receiver, TagResolver tagResolver, boolean stripFormatting) {
+        if (stripFormatting) {
+            sendTitle(stripFormatting(title, tagResolver), stripFormatting(subtitle, tagResolver), fadeIn, stay, fadeOut, receiver, tagResolver);
+        } else {
+            sendTitle(title, subtitle, fadeIn, stay, fadeOut, receiver, tagResolver);
+        }
+    }
+
+    /**
+     * Sends a title to a {@link Player}.
+     * The text is deserialized before being sent.
+     *
+     * @param title           The title to send.
+     * @param subtitle        The subtitle to send.
+     * @param fadeIn          The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay            The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut         The time in milliseconds for the title to fade out. (default: 1000)
+     * @param receiver        The receiver of the text.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player receiver, boolean stripFormatting) {
+        sendTitle(title, subtitle, fadeIn, stay, fadeOut, receiver, null, stripFormatting);
+    }
+
+    /**
+     * Sends a title to a {@link Player}.
+     * The text is deserialized before being sent.
+     *
+     * @param title           The title to send.
+     * @param subtitle        The subtitle to send.
+     * @param receiver        The receiver of the text.
+     * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void sendTitle(String title, String subtitle, @NotNull Player receiver, TagResolver tagResolver, boolean stripFormatting) {
+        sendTitle(title, subtitle, null, null, null, receiver, tagResolver, stripFormatting);
+    }
+
+    /**
+     * Sends a title to a {@link Player}.
+     * The text is deserialized before being sent.
+     *
+     * @param title           The title to send.
+     * @param subtitle        The subtitle to send.
+     * @param receiver        The receiver of the text.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void sendTitle(String title, String subtitle, @NotNull Player receiver, boolean stripFormatting) {
+        sendTitle(title, subtitle, null, null, null, receiver, null, stripFormatting);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    TITLE PERMISSION BASED FORMATTING    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Sends a title to a {@link Player}.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param fadeIn      The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay        The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut     The time in milliseconds for the title to fade out. (default: 1000)
+     * @param receiver    The receiver of the text.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player receiver, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+        Preconditions.checkNotNull(sender, "Sender cannot be null");
+        Preconditions.checkNotNull(permissions, "Permissions cannot be null");
+
+        boolean hasPermission = false;
+        for (String permission : permissions) {
+            if (permission == null) continue;
+            if (sender.hasPermission(permission)) {
+                hasPermission = true;
+                break;
+            }
+        }
+
+        sendTitle(title, subtitle, fadeIn, stay, fadeOut, receiver, tagResolver, !hasPermission);
+    }
+
+    /**
+     * Sends a title to a {@link Player}.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param fadeIn      The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay        The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut     The time in milliseconds for the title to fade out. (default: 1000)
+     * @param receiver    The receiver of the text.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player receiver, @NotNull CommandSender sender, @NotNull String... permissions) {
+        sendTitle(title, subtitle, fadeIn, stay, fadeOut, receiver, null, sender, permissions);
+    }
+
+    /**
+     * Sends a title to a {@link Player}.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param receiver    The receiver of the text.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void sendTitle(String title, String subtitle, @NotNull Player receiver, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+        sendTitle(title, subtitle, null, null, null, receiver, tagResolver, sender, permissions);
+    }
+
+    /**
+     * Sends a title to a {@link Player}.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param receiver    The receiver of the text.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void sendTitle(String title, String subtitle, @NotNull Player receiver, @NotNull CommandSender sender, @NotNull String... permissions) {
+        sendTitle(title, subtitle, null, null, null, receiver, null, sender, permissions);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    TITLE TO MULTIPLE RECEIVERS (ARRAY)    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Sends a title to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param fadeIn      The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay        The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut     The time in milliseconds for the title to fade out. (default: 1000)
+     * @param receivers   The receivers of the text.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @throws NullPointerException     if the receivers is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player[] receivers, TagResolver tagResolver) {
+        Preconditions.checkArgument((title == null && subtitle != null) || (title != null && subtitle == null), "Both title and subtitle cannot be null simultaneously");
+        Preconditions.checkNotNull(receivers, "Receiver cannot be null");
+
+        for (Player receiver : receivers) {
+            if (receiver == null) continue;
+            sendTitle(title, subtitle, fadeIn, stay, fadeOut, receiver, tagResolver);
+        }
+    }
+
+    /**
+     * Sends a title to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param title     The title to send.
+     * @param subtitle  The subtitle to send.
+     * @param fadeIn    The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay      The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut   The time in milliseconds for the title to fade out. (default: 1000)
+     * @param receivers The receivers of the text.
+     * @throws NullPointerException     if the receivers is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player[] receivers) {
+        sendTitle(title, subtitle, fadeIn, stay, fadeOut, receivers, null);
+    }
+
+    /**
+     * Sends a title to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param receivers   The receivers of the text.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @throws NullPointerException     if the receivers is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void sendTitle(String title, String subtitle, @NotNull Player[] receivers, TagResolver tagResolver) {
+        sendTitle(title, subtitle, null, null, null, receivers, tagResolver);
+    }
+
+    /**
+     * Sends a title to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param title     The title to send.
+     * @param subtitle  The subtitle to send.
+     * @param receivers The receivers of the text.
+     * @throws NullPointerException     if the receivers is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void sendTitle(String title, String subtitle, @NotNull Player[] receivers) {
+        sendTitle(title, subtitle, null, null, null, receivers, null);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    TITLE TO MULTIPLE RECEIVERS (ARRAY) STRIP FORMATTING    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Sends a title to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param title           The title to send.
+     * @param subtitle        The subtitle to send.
+     * @param fadeIn          The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay            The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut         The time in milliseconds for the title to fade out. (default: 1000)
+     * @param receivers       The receivers of the text.
+     * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receivers is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player[] receivers, TagResolver tagResolver, boolean stripFormatting) {
+        if (stripFormatting) {
+            sendTitle(stripFormatting(title, tagResolver), stripFormatting(subtitle, tagResolver), fadeIn, stay, fadeOut, receivers, tagResolver);
+        } else {
+            sendTitle(title, subtitle, fadeIn, stay, fadeOut, receivers, tagResolver);
+        }
+    }
+
+    /**
+     * Sends a title to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param title           The title to send.
+     * @param subtitle        The subtitle to send.
+     * @param fadeIn          The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay            The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut         The time in milliseconds for the title to fade out. (default: 1000)
+     * @param receivers       The receivers of the text.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receivers is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player[] receivers, boolean stripFormatting) {
+        sendTitle(title, subtitle, fadeIn, stay, fadeOut, receivers, null, stripFormatting);
+    }
+
+    /**
+     * Sends a title to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param title           The title to send.
+     * @param subtitle        The subtitle to send.
+     * @param receivers       The receivers of the text.
+     * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receivers is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void sendTitle(String title, String subtitle, @NotNull Player[] receivers, TagResolver tagResolver, boolean stripFormatting) {
+        sendTitle(title, subtitle, null, null, null, receivers, tagResolver, stripFormatting);
+    }
+
+    /**
+     * Sends a title to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param title           The title to send.
+     * @param subtitle        The subtitle to send.
+     * @param receivers       The receivers of the text.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receivers is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void sendTitle(String title, String subtitle, @NotNull Player[] receivers, boolean stripFormatting) {
+        sendTitle(title, subtitle, null, null, null, receivers, null, stripFormatting);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    TITLE TO MULTIPLE RECEIVERS (ARRAY) PERMISSION BASED FORMATTING    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Sends a title to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param fadeIn      The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay        The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut     The time in milliseconds for the title to fade out. (default: 1000)
+     * @param receivers   The receivers of the text.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException     if the receivers is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player[] receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+        Preconditions.checkNotNull(sender, "Sender cannot be null");
+        Preconditions.checkNotNull(permissions, "Permissions cannot be null");
+
+        boolean hasPermission = false;
+        for (String permission : permissions) {
+            if (permission == null) continue;
+            if (sender.hasPermission(permission)) {
+                hasPermission = true;
+                break;
+            }
+        }
+
+        sendTitle(title, subtitle, fadeIn, stay, fadeOut, receivers, tagResolver, !hasPermission);
+    }
+
+    /**
+     * Sends a title to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param fadeIn      The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay        The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut     The time in milliseconds for the title to fade out. (default: 1000)
+     * @param receivers   The receivers of the text.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException     if the receivers is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player[] receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
+        sendTitle(title, subtitle, fadeIn, stay, fadeOut, receivers, null, sender, permissions);
+    }
+
+    /**
+     * Sends a title to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param receivers   The receivers of the text.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException     if the receivers is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void sendTitle(String title, String subtitle, @NotNull Player[] receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+        sendTitle(title, subtitle, null, null, null, receivers, tagResolver, sender, permissions);
+    }
+
+    /**
+     * Sends a title to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param receivers   The receivers of the text.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException     if the receivers is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void sendTitle(String title, String subtitle, @NotNull Player[] receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
+        sendTitle(title, subtitle, null, null, null, receivers, null, sender, permissions);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    TITLE TO MULTIPLE RECEIVERS (COLLECTION)    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Sends a title to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param fadeIn      The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay        The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut     The time in milliseconds for the title to fade out. (default: 1000)
+     * @param receivers   The receivers of the text.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @throws NullPointerException     if the receivers is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull R receivers, TagResolver tagResolver) {
+        Preconditions.checkArgument((title == null && subtitle != null) || (title != null && subtitle == null), "Both title and subtitle cannot be null simultaneously");
+        Preconditions.checkNotNull(receivers, "Receiver cannot be null");
+
+        for (Player receiver : receivers) {
+            if (receiver == null) continue;
+            sendTitle(title, subtitle, fadeIn, stay, fadeOut, receiver, tagResolver);
+        }
+    }
+
+    /**
+     * Sends a title to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param title     The title to send.
+     * @param subtitle  The subtitle to send.
+     * @param fadeIn    The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay      The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut   The time in milliseconds for the title to fade out. (default: 1000)
+     * @param receivers The receivers of the text.
+     * @throws NullPointerException     if the receivers is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull R receivers) {
+        sendTitle(title, subtitle, fadeIn, stay, fadeOut, receivers, null);
+    }
+
+    /**
+     * Sends a title to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param receivers   The receivers of the text.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @throws NullPointerException     if the receivers is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, @NotNull R receivers, TagResolver tagResolver) {
+        sendTitle(title, subtitle, null, null, null, receivers, tagResolver);
+    }
+
+    /**
+     * Sends a title to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param title     The title to send.
+     * @param subtitle  The subtitle to send.
+     * @param receivers The receivers of the text.
+     * @throws NullPointerException     if the receivers is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, @NotNull R receivers) {
+        sendTitle(title, subtitle, null, null, null, receivers, null);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    TITLE TO MULTIPLE RECEIVERS (COLLECTION) STRIP FORMATTING    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Sends a title to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param title           The title to send.
+     * @param subtitle        The subtitle to send.
+     * @param fadeIn          The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay            The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut         The time in milliseconds for the title to fade out. (default: 1000)
+     * @param receivers       The receivers of the text.
+     * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receivers is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull R receivers, TagResolver tagResolver, boolean stripFormatting) {
+        if (stripFormatting) {
+            sendTitle(stripFormatting(title, tagResolver), stripFormatting(subtitle, tagResolver), fadeIn, stay, fadeOut, receivers, tagResolver);
+        } else {
+            sendTitle(title, subtitle, fadeIn, stay, fadeOut, receivers, tagResolver);
+        }
+    }
+
+    /**
+     * Sends a title to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param title           The title to send.
+     * @param subtitle        The subtitle to send.
+     * @param fadeIn          The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay            The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut         The time in milliseconds for the title to fade out. (default: 1000)
+     * @param receivers       The receivers of the text.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receivers is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull R receivers, boolean stripFormatting) {
+        sendTitle(title, subtitle, fadeIn, stay, fadeOut, receivers, null, stripFormatting);
+    }
+
+    /**
+     * Sends a title to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param title           The title to send.
+     * @param subtitle        The subtitle to send.
+     * @param receivers       The receivers of the text.
+     * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receivers is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, @NotNull R receivers, TagResolver tagResolver, boolean stripFormatting) {
+        sendTitle(title, subtitle, null, null, null, receivers, tagResolver, stripFormatting);
+    }
+
+    /**
+     * Sends a title to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param title           The title to send.
+     * @param subtitle        The subtitle to send.
+     * @param receivers       The receivers of the text.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receivers is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, @NotNull R receivers, boolean stripFormatting) {
+        sendTitle(title, subtitle, null, null, null, receivers, null, stripFormatting);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    TITLE TO MULTIPLE RECEIVERS (COLLECTION) PERMISSION BASED FORMATTING    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Sends a title to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param fadeIn      The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay        The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut     The time in milliseconds for the title to fade out. (default: 1000)
+     * @param receivers   The receivers of the text.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException     if the receivers is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull R receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+        Preconditions.checkNotNull(sender, "Sender cannot be null");
+        Preconditions.checkNotNull(permissions, "Permissions cannot be null");
+
+        boolean hasPermission = false;
+        for (String permission : permissions) {
+            if (permission == null) continue;
+            if (sender.hasPermission(permission)) {
+                hasPermission = true;
+                break;
+            }
+        }
+
+        sendTitle(title, subtitle, fadeIn, stay, fadeOut, receivers, tagResolver, !hasPermission);
+    }
+
+    /**
+     * Sends a title to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param fadeIn      The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay        The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut     The time in milliseconds for the title to fade out. (default: 1000)
+     * @param receivers   The receivers of the text.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException     if the receivers is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull R receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
+        sendTitle(title, subtitle, fadeIn, stay, fadeOut, receivers, null, sender, permissions);
+    }
+
+    /**
+     * Sends a title to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param receivers   The receivers of the text.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException     if the receivers is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, @NotNull R receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+        sendTitle(title, subtitle, null, null, null, receivers, tagResolver, sender, permissions);
+    }
+
+    /**
+     * Sends a title to a group of {@link Player}s.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param receivers   The receivers of the text.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException     if the receivers is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, @NotNull R receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
+        sendTitle(title, subtitle, null, null, null, receivers, null, sender, permissions);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    BROADCAST    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Broadcasts a title to all {@link Player}s on the server.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param fadeIn      The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay        The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut     The time in milliseconds for the title to fade out. (default: 1000)
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver) {
+        Preconditions.checkArgument((title == null && subtitle != null) || (title != null && subtitle == null), "Both title and subtitle cannot be null simultaneously");
+
+        Audience audience = audiences.players();
+
+        if (title != null) audience.sendTitlePart(TitlePart.TITLE, deserialize(title, tagResolver));
+        if (subtitle != null) audience.sendTitlePart(TitlePart.SUBTITLE, deserialize(subtitle, tagResolver));
+        audience.sendTitlePart(TitlePart.TIMES, Title.Times.times(
+                Duration.of(fadeIn != null ? fadeIn : 1000, ChronoUnit.MILLIS),
+                Duration.of(stay != null ? stay : 3000, ChronoUnit.MILLIS),
+                Duration.of(fadeOut != null ? fadeOut : 1000, ChronoUnit.MILLIS)
+        ));
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s on the server.
+     * The text is deserialized before being sent.
+     *
+     * @param title    The title to send.
+     * @param subtitle The subtitle to send.
+     * @param fadeIn   The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay     The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut  The time in milliseconds for the title to fade out. (default: 1000)
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut) {
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, (TagResolver) null);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s on the server.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver) {
+        broadcastTitle(title, subtitle, null, null, null, tagResolver);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s on the server.
+     * The text is deserialized before being sent.
+     *
+     * @param title    The title to send.
+     * @param subtitle The subtitle to send.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle) {
+        broadcastTitle(title, subtitle, null, null, null, (TagResolver) null);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    BROADCAST STRIP FORMATTING    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Broadcasts a title to all {@link Player}s on the server.
+     * The text is deserialized before being sent.
+     *
+     * @param title           The title to send.
+     * @param subtitle        The subtitle to send.
+     * @param fadeIn          The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay            The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut         The time in milliseconds for the title to fade out. (default: 1000)
+     * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, boolean stripFormatting) {
+        if (stripFormatting) {
+            broadcastTitle(stripFormatting(title, tagResolver), stripFormatting(subtitle, tagResolver), fadeIn, stay, fadeOut, tagResolver);
+        } else {
+            broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, tagResolver);
+        }
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s on the server.
+     * The text is deserialized before being sent.
+     *
+     * @param title           The title to send.
+     * @param subtitle        The subtitle to send.
+     * @param fadeIn          The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay            The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut         The time in milliseconds for the title to fade out. (default: 1000)
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, boolean stripFormatting) {
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, (TagResolver) null, stripFormatting);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s on the server.
+     * The text is deserialized before being sent.
+     *
+     * @param title           The title to send.
+     * @param subtitle        The subtitle to send.
+     * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, boolean stripFormatting) {
+        broadcastTitle(title, subtitle, null, null, null, tagResolver, stripFormatting);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s on the server.
+     * The text is deserialized before being sent.
+     *
+     * @param title           The title to send.
+     * @param subtitle        The subtitle to send.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, boolean stripFormatting) {
+        broadcastTitle(title, subtitle, null, null, null, (TagResolver) null, stripFormatting);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    BROADCAST PERMISSIONS    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Broadcasts a title to all {@link Player}s on the server.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param fadeIn      The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay        The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut     The time in milliseconds for the title to fade out. (default: 1000)
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+        Preconditions.checkNotNull(sender, "Sender cannot be null");
+        Preconditions.checkNotNull(permissions, "Permissions cannot be null");
+
+        boolean hasPermission = false;
+        for (String permission : permissions) {
+            if (permission == null) continue;
+            if (sender.hasPermission(permission)) {
+                hasPermission = true;
+                break;
+            }
+        }
+
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, tagResolver, !hasPermission);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s on the server.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param fadeIn      The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay        The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut     The time in milliseconds for the title to fade out. (default: 1000)
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, (TagResolver) null, sender, permissions);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s on the server.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcastTitle(title, subtitle, null, null, null, tagResolver, sender, permissions);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s on the server.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcastTitle(title, subtitle, null, null, null, (TagResolver) null, sender, permissions);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    WORLD BROADCAST    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Broadcasts a title to all {@link Player}s in a world.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param fadeIn      The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay        The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut     The time in milliseconds for the title to fade out. (default: 1000)
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @param world       The world to send the title to.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    @SuppressWarnings("PatternValidation")
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull World world) {
+        Preconditions.checkArgument((title == null && subtitle != null) || (title != null && subtitle == null), "Both title and subtitle cannot be null simultaneously");
+        Preconditions.checkNotNull(world, "World cannot be null");
+
+        Audience audience = audiences.world(Key.key(world.getKey().toString()));
+
+        if (title != null) audience.sendTitlePart(TitlePart.TITLE, deserialize(title, tagResolver));
+        if (subtitle != null) audience.sendTitlePart(TitlePart.SUBTITLE, deserialize(subtitle, tagResolver));
+        audience.sendTitlePart(TitlePart.TIMES, Title.Times.times(
+                Duration.of(fadeIn != null ? fadeIn : 1000, ChronoUnit.MILLIS),
+                Duration.of(stay != null ? stay : 3000, ChronoUnit.MILLIS),
+                Duration.of(fadeOut != null ? fadeOut : 1000, ChronoUnit.MILLIS)
+        ));
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s in a world.
+     * The text is deserialized before being sent.
+     *
+     * @param title    The title to send.
+     * @param subtitle The subtitle to send.
+     * @param fadeIn   The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay     The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut  The time in milliseconds for the title to fade out. (default: 1000)
+     * @param world    The world to send the title to.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull World world) {
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, world);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s in a world.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @param world       The world to send the title to.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull World world) {
+        broadcastTitle(title, subtitle, null, null, null, tagResolver, world);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s in a world.
+     * The text is deserialized before being sent.
+     *
+     * @param title    The title to send.
+     * @param subtitle The subtitle to send.
+     * @param world    The world to send the title to.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, @NotNull World world) {
+        broadcastTitle(title, subtitle, null, null, null, null, world);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    WORLD BROADCAST STRIP FORMATTING    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Broadcasts a title to all {@link Player}s in a world.
+     * The text is deserialized before being sent.
+     *
+     * @param title           The title to send.
+     * @param subtitle        The subtitle to send.
+     * @param fadeIn          The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay            The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut         The time in milliseconds for the title to fade out. (default: 1000)
+     * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
+     * @param world           The world to send the title to.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull World world, boolean stripFormatting) {
+        if (stripFormatting) {
+            broadcastTitle(stripFormatting(title, tagResolver), stripFormatting(subtitle, tagResolver), fadeIn, stay, fadeOut, tagResolver, world);
+        } else {
+            broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, tagResolver, world);
+        }
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s in a world.
+     * The text is deserialized before being sent.
+     *
+     * @param title           The title to send.
+     * @param subtitle        The subtitle to send.
+     * @param fadeIn          The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay            The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut         The time in milliseconds for the title to fade out. (default: 1000)
+     * @param world           The world to send the title to.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull World world, boolean stripFormatting) {
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, world, stripFormatting);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s in a world.
+     * The text is deserialized before being sent.
+     *
+     * @param title           The title to send.
+     * @param subtitle        The subtitle to send.
+     * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
+     * @param world           The world to send the title to.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull World world, boolean stripFormatting) {
+        broadcastTitle(title, subtitle, null, null, null, tagResolver, world, stripFormatting);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s in a world.
+     * The text is deserialized before being sent.
+     *
+     * @param title           The title to send.
+     * @param subtitle        The subtitle to send.
+     * @param world           The world to send the title to.
+     * @param stripFormatting Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, @NotNull World world, boolean stripFormatting) {
+        broadcastTitle(title, subtitle, null, null, null, null, world, stripFormatting);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    WORLD BROADCAST PERMISSIONS    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Broadcasts a title to all {@link Player}s in a world.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param fadeIn      The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay        The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut     The time in milliseconds for the title to fade out. (default: 1000)
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @param world       The world to send the title to.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
+        Preconditions.checkNotNull(sender, "Sender cannot be null");
+        Preconditions.checkNotNull(permissions, "Permissions cannot be null");
+
+        boolean hasPermission = false;
+        for (String permission : permissions) {
+            if (permission == null) continue;
+            if (sender.hasPermission(permission)) {
+                hasPermission = true;
+                break;
+            }
+        }
+
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, tagResolver, world, !hasPermission);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s in a world.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param fadeIn      The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay        The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut     The time in milliseconds for the title to fade out. (default: 1000)
+     * @param world       The world to send the title to.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, world, sender, permissions);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s in a world.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @param world       The world to send the title to.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcastTitle(title, subtitle, null, null, null, tagResolver, world, sender, permissions);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s in a world.
+     * The text is deserialized before being sent.
+     *
+     * @param title       The title to send.
+     * @param subtitle    The subtitle to send.
+     * @param world       The world to send the title to.
+     * @param sender      The sender of the text.
+     * @param permissions The permissions to check.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcastTitle(title, subtitle, null, null, null, null, world, sender, permissions);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    PERMISSION BROADCAST    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title            The title to send.
+     * @param subtitle         The subtitle to send.
+     * @param fadeIn           The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay             The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut          The time in milliseconds for the title to fade out. (default: 1000)
+     * @param tagResolver      The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermission The permission needed to receive the broadcast.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull String neededPermission) {
+        Preconditions.checkArgument((title == null && subtitle != null) || (title != null && subtitle == null), "Both title and subtitle cannot be null simultaneously");
+        Preconditions.checkNotNull(neededPermission, "Needed permission cannot be null");
+
+        Audience audience = audiences.permission(neededPermission);
+
+        if (title != null) audience.sendTitlePart(TitlePart.TITLE, deserialize(title, tagResolver));
+        if (subtitle != null) audience.sendTitlePart(TitlePart.SUBTITLE, deserialize(subtitle, tagResolver));
+        audience.sendTitlePart(TitlePart.TIMES, Title.Times.times(
+                Duration.of(fadeIn != null ? fadeIn : 1000, ChronoUnit.MILLIS),
+                Duration.of(stay != null ? stay : 3000, ChronoUnit.MILLIS),
+                Duration.of(fadeOut != null ? fadeOut : 1000, ChronoUnit.MILLIS)
+        ));
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title            The title to send.
+     * @param subtitle         The subtitle to send.
+     * @param fadeIn           The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay             The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut          The time in milliseconds for the title to fade out. (default: 1000)
+     * @param neededPermission The permission needed to receive the broadcast.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull String neededPermission) {
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, neededPermission);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title            The title to send.
+     * @param subtitle         The subtitle to send.
+     * @param tagResolver      The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermission The permission needed to receive the broadcast.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull String neededPermission) {
+        broadcastTitle(title, subtitle, null, null, null, tagResolver, neededPermission);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title            The title to send.
+     * @param subtitle         The subtitle to send.
+     * @param neededPermission The permission needed to receive the broadcast.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, @NotNull String neededPermission) {
+        broadcastTitle(title, subtitle, null, null, null, null, neededPermission);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    PERMISSION BROADCAST STRIP FORMATTING    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title            The title to send.
+     * @param subtitle         The subtitle to send.
+     * @param fadeIn           The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay             The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut          The time in milliseconds for the title to fade out. (default: 1000)
+     * @param tagResolver      The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermission The permission needed to receive the broadcast.
+     * @param stripFormatting  Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull String neededPermission, boolean stripFormatting) {
+        if (stripFormatting) {
+            broadcastTitle(stripFormatting(title, tagResolver), stripFormatting(subtitle, tagResolver), fadeIn, stay, fadeOut, tagResolver, neededPermission);
+        } else {
+            broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, tagResolver, neededPermission);
+        }
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title            The title to send.
+     * @param subtitle         The subtitle to send.
+     * @param fadeIn           The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay             The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut          The time in milliseconds for the title to fade out. (default: 1000)
+     * @param neededPermission The permission needed to receive the broadcast.
+     * @param stripFormatting  Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull String neededPermission, boolean stripFormatting) {
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, neededPermission, stripFormatting);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title            The title to send.
+     * @param subtitle         The subtitle to send.
+     * @param tagResolver      The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermission The permission needed to receive the broadcast.
+     * @param stripFormatting  Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull String neededPermission, boolean stripFormatting) {
+        broadcastTitle(title, subtitle, null, null, null, tagResolver, neededPermission, stripFormatting);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title            The title to send.
+     * @param subtitle         The subtitle to send.
+     * @param neededPermission The permission needed to receive the broadcast.
+     * @param stripFormatting  Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, @NotNull String neededPermission, boolean stripFormatting) {
+        broadcastTitle(title, subtitle, null, null, null, null, neededPermission, stripFormatting);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    PERMISSION BROADCAST PERMISSIONS    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title            The title to send.
+     * @param subtitle         The subtitle to send.
+     * @param fadeIn           The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay             The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut          The time in milliseconds for the title to fade out. (default: 1000)
+     * @param tagResolver      The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermission The permission needed to receive the broadcast.
+     * @param sender           The sender of the text.
+     * @param permissions      The permissions to check.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull String neededPermission, @NotNull CommandSender sender, @NotNull String... permissions) {
+        Preconditions.checkNotNull(sender, "Sender cannot be null");
+        Preconditions.checkNotNull(permissions, "Permissions cannot be null");
+
+        boolean hasPermission = false;
+        for (String permission : permissions) {
+            if (permission == null) continue;
+            if (sender.hasPermission(permission)) {
+                hasPermission = true;
+                break;
+            }
+        }
+
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, tagResolver, neededPermission, !hasPermission);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title            The title to send.
+     * @param subtitle         The subtitle to send.
+     * @param fadeIn           The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay             The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut          The time in milliseconds for the title to fade out. (default: 1000)
+     * @param neededPermission The permission needed to receive the broadcast.
+     * @param sender           The sender of the text.
+     * @param permissions      The permissions to check.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull String neededPermission, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, neededPermission, sender, permissions);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title            The title to send.
+     * @param subtitle         The subtitle to send.
+     * @param tagResolver      The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermission The permission needed to receive the broadcast.
+     * @param sender           The sender of the text.
+     * @param permissions      The permissions to check.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull String neededPermission, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcastTitle(title, subtitle, null, null, null, tagResolver, neededPermission, sender, permissions);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title            The title to send.
+     * @param subtitle         The subtitle to send.
+     * @param neededPermission The permission needed to receive the broadcast.
+     * @param sender           The sender of the text.
+     * @param permissions      The permissions to check.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, @NotNull String neededPermission, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcastTitle(title, subtitle, null, null, null, null, neededPermission, sender, permissions);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    PERMISSIONS (ARRAY) BROADCAST    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title             The title to send.
+     * @param subtitle          The subtitle to send.
+     * @param fadeIn            The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay              The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut           The time in milliseconds for the title to fade out. (default: 1000)
+     * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull String[] neededPermissions) {
+        Preconditions.checkArgument((title == null && subtitle != null) || (title != null && subtitle == null), "Both title and subtitle cannot be null simultaneously");
+        Preconditions.checkNotNull(neededPermissions, "Needed permission cannot be null");
+
+        for (String permission : neededPermissions) {
+            if (permission == null) continue;
+            Audience audience = audiences.permission(permission);
+            if (title != null) audience.sendTitlePart(TitlePart.TITLE, deserialize(title, tagResolver));
+            if (subtitle != null) audience.sendTitlePart(TitlePart.SUBTITLE, deserialize(subtitle, tagResolver));
+            audience.sendTitlePart(TitlePart.TIMES, Title.Times.times(
+                    Duration.of(fadeIn != null ? fadeIn : 1000, ChronoUnit.MILLIS),
+                    Duration.of(stay != null ? stay : 3000, ChronoUnit.MILLIS),
+                    Duration.of(fadeOut != null ? fadeOut : 1000, ChronoUnit.MILLIS)
+            ));
+        }
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title             The title to send.
+     * @param subtitle          The subtitle to send.
+     * @param fadeIn            The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay              The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut           The time in milliseconds for the title to fade out. (default: 1000)
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull String[] neededPermissions) {
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, (TagResolver) null, neededPermissions);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title             The title to send.
+     * @param subtitle          The subtitle to send.
+     * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull String[] neededPermissions) {
+        broadcastTitle(title, subtitle, null, null, null, tagResolver, neededPermissions);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title             The title to send.
+     * @param subtitle          The subtitle to send.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, @NotNull String[] neededPermissions) {
+        broadcastTitle(title, subtitle, null, null, null, (TagResolver) null, neededPermissions);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    PERMISSIONS (ARRAY) BROADCAST STRIP FORMATTING    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title             The title to send.
+     * @param subtitle          The subtitle to send.
+     * @param fadeIn            The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay              The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut           The time in milliseconds for the title to fade out. (default: 1000)
+     * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @param stripFormatting   Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull String[] neededPermissions, boolean stripFormatting) {
+        if (stripFormatting) {
+            broadcastTitle(stripFormatting(title, tagResolver), stripFormatting(subtitle, tagResolver), fadeIn, stay, fadeOut, tagResolver, neededPermissions);
+        } else {
+            broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, tagResolver, neededPermissions);
+        }
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title             The title to send.
+     * @param subtitle          The subtitle to send.
+     * @param fadeIn            The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay              The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut           The time in milliseconds for the title to fade out. (default: 1000)
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @param stripFormatting   Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull String[] neededPermissions, boolean stripFormatting) {
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, neededPermissions, stripFormatting);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title             The title to send.
+     * @param subtitle          The subtitle to send.
+     * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @param stripFormatting   Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull String[] neededPermissions, boolean stripFormatting) {
+        broadcastTitle(title, subtitle, null, null, null, tagResolver, neededPermissions, stripFormatting);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title             The title to send.
+     * @param subtitle          The subtitle to send.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @param stripFormatting   Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, @NotNull String[] neededPermissions, boolean stripFormatting) {
+        broadcastTitle(title, subtitle, null, null, null, null, neededPermissions, stripFormatting);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    PERMISSIONS (ARRAY) BROADCAST PERMISSION    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title             The title to send.
+     * @param subtitle          The subtitle to send.
+     * @param fadeIn            The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay              The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut           The time in milliseconds for the title to fade out. (default: 1000)
+     * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @param sender            The sender of the text.
+     * @param permissions       The permissions to check.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull String[] neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+        Preconditions.checkNotNull(sender, "Sender cannot be null");
+        Preconditions.checkNotNull(permissions, "Permissions cannot be null");
+
+        boolean hasPermission = false;
+        for (String permission : permissions) {
+            if (permission == null) continue;
+            if (sender.hasPermission(permission)) {
+                hasPermission = true;
+                break;
+            }
+        }
+
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, tagResolver, neededPermissions, !hasPermission);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title             The title to send.
+     * @param subtitle          The subtitle to send.
+     * @param fadeIn            The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay              The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut           The time in milliseconds for the title to fade out. (default: 1000)
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @param sender            The sender of the text.
+     * @param permissions       The permissions to check.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull String[] neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, neededPermissions, sender, permissions);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title             The title to send.
+     * @param subtitle          The subtitle to send.
+     * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @param sender            The sender of the text.
+     * @param permissions       The permissions to check.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull String[] neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcastTitle(title, subtitle, null, null, null, tagResolver, neededPermissions, sender, permissions);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title             The title to send.
+     * @param subtitle          The subtitle to send.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @param sender            The sender of the text.
+     * @param permissions       The permissions to check.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public void broadcastTitle(String title, String subtitle, @NotNull String[] neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcastTitle(title, subtitle, null, null, null, null, neededPermissions, sender, permissions);
+    }
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    PERMISSIONS (COLLECTION) BROADCAST    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title             The title to send.
+     * @param subtitle          The subtitle to send.
+     * @param fadeIn            The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay              The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut           The time in milliseconds for the title to fade out. (default: 1000)
+     * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public <P extends Collection<String>> void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull P neededPermissions) {
+        Preconditions.checkArgument((title == null && subtitle != null) || (title != null && subtitle == null), "Both title and subtitle cannot be null simultaneously");
+        Preconditions.checkNotNull(neededPermissions, "Needed permission cannot be null");
+
+        for (String permission : neededPermissions) {
+            if (permission == null) continue;
+            Audience audience = audiences.permission(permission);
+            if (title != null) audience.sendTitlePart(TitlePart.TITLE, deserialize(title, tagResolver));
+            if (subtitle != null) audience.sendTitlePart(TitlePart.SUBTITLE, deserialize(subtitle, tagResolver));
+            audience.sendTitlePart(TitlePart.TIMES, Title.Times.times(
+                    Duration.of(fadeIn != null ? fadeIn : 1000, ChronoUnit.MILLIS),
+                    Duration.of(stay != null ? stay : 3000, ChronoUnit.MILLIS),
+                    Duration.of(fadeOut != null ? fadeOut : 1000, ChronoUnit.MILLIS)
+            ));
+        }
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title             The title to send.
+     * @param subtitle          The subtitle to send.
+     * @param fadeIn            The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay              The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut           The time in milliseconds for the title to fade out. (default: 1000)
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public <P extends Collection<String>> void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull P neededPermissions) {
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, (TagResolver) null, neededPermissions);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title             The title to send.
+     * @param subtitle          The subtitle to send.
+     * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public <P extends Collection<String>> void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull P neededPermissions) {
+        broadcastTitle(title, subtitle, null, null, null, tagResolver, neededPermissions);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title             The title to send.
+     * @param subtitle          The subtitle to send.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public <P extends Collection<String>> void broadcastTitle(String title, String subtitle, @NotNull P neededPermissions) {
+        broadcastTitle(title, subtitle, null, null, null, (TagResolver) null, neededPermissions);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    PERMISSIONS (COLLECTION) BROADCAST STRIP FORMATTING    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title             The title to send.
+     * @param subtitle          The subtitle to send.
+     * @param fadeIn            The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay              The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut           The time in milliseconds for the title to fade out. (default: 1000)
+     * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @param stripFormatting   Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public <P extends Collection<String>> void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull P neededPermissions, boolean stripFormatting) {
+        if (stripFormatting) {
+            broadcastTitle(stripFormatting(title, tagResolver), stripFormatting(subtitle, tagResolver), fadeIn, stay, fadeOut, tagResolver, neededPermissions);
+        } else {
+            broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, tagResolver, neededPermissions);
+        }
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title             The title to send.
+     * @param subtitle          The subtitle to send.
+     * @param fadeIn            The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay              The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut           The time in milliseconds for the title to fade out. (default: 1000)
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @param stripFormatting   Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public <P extends Collection<String>> void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull P neededPermissions, boolean stripFormatting) {
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, neededPermissions, stripFormatting);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title             The title to send.
+     * @param subtitle          The subtitle to send.
+     * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @param stripFormatting   Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public <P extends Collection<String>> void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull P neededPermissions, boolean stripFormatting) {
+        broadcastTitle(title, subtitle, null, null, null, tagResolver, neededPermissions, stripFormatting);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title             The title to send.
+     * @param subtitle          The subtitle to send.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @param stripFormatting   Whether to strip formatting from the text before sending it.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public <P extends Collection<String>> void broadcastTitle(String title, String subtitle, @NotNull P neededPermissions, boolean stripFormatting) {
+        broadcastTitle(title, subtitle, null, null, null, null, neededPermissions, stripFormatting);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+    /*    PERMISSIONS (COLLECTION) BROADCAST PERMISSION    */
+    /* -------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title             The title to send.
+     * @param subtitle          The subtitle to send.
+     * @param fadeIn            The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay              The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut           The time in milliseconds for the title to fade out. (default: 1000)
+     * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @param sender            The sender of the text.
+     * @param permissions       The permissions to check.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public <P extends Collection<String>> void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull P neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+        Preconditions.checkNotNull(sender, "Sender cannot be null");
+        Preconditions.checkNotNull(permissions, "Permissions cannot be null");
+
+        boolean hasPermission = false;
+        for (String permission : permissions) {
+            if (permission == null) continue;
+            if (sender.hasPermission(permission)) {
+                hasPermission = true;
+                break;
+            }
+        }
+
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, tagResolver, neededPermissions, !hasPermission);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title             The title to send.
+     * @param subtitle          The subtitle to send.
+     * @param fadeIn            The time in milliseconds for the title to fade in. (default: 1000)
+     * @param stay              The time in milliseconds for the title to stay on screen. (default: 3000)
+     * @param fadeOut           The time in milliseconds for the title to fade out. (default: 1000)
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @param sender            The sender of the text.
+     * @param permissions       The permissions to check.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public <P extends Collection<String>> void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull P neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, neededPermissions, sender, permissions);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title             The title to send.
+     * @param subtitle          The subtitle to send.
+     * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @param sender            The sender of the text.
+     * @param permissions       The permissions to check.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public <P extends Collection<String>> void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull P neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcastTitle(title, subtitle, null, null, null, tagResolver, neededPermissions, sender, permissions);
+    }
+
+    /**
+     * Broadcasts a title to all {@link Player}s with some permissions.
+     * The text is deserialized before being sent.
+     *
+     * @param title             The title to send.
+     * @param subtitle          The subtitle to send.
+     * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
+     * @param sender            The sender of the text.
+     * @param permissions       The permissions to check.
+     * @throws NullPointerException     if the receiver is null.
+     * @throws IllegalArgumentException if both title and subtitle are null.
+     */
+    public <P extends Collection<String>> void broadcastTitle(String title, String subtitle, @NotNull P neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcastTitle(title, subtitle, null, null, null, null, neededPermissions, sender, permissions);
     }
 }
