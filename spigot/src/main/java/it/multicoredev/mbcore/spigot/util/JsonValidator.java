@@ -1,6 +1,6 @@
-package it.multicoredev.mbcore.spigot.socket;
+package it.multicoredev.mbcore.spigot.util;
 
-import org.bukkit.Bukkit;
+import com.google.gson.Gson;
 
 /**
  * Copyright © 2021 by Lorenzo Magni
@@ -22,34 +22,14 @@ import org.bukkit.Bukkit;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class DefLogger implements ILogger {
-    private static DefLogger instance;
+public class JsonValidator {
 
-    private DefLogger() {
-    }
-
-    public static DefLogger getInstance() {
-        if (instance == null) instance = new DefLogger();
-        return instance;
-    }
-
-    @Override
-    public void info(String info) {
-        Bukkit.getServer().getLogger().info(info);
-    }
-
-    @Override
-    public void warning(String warning) {
-        Bukkit.getServer().getLogger().warning(warning);
-    }
-
-    @Override
-    public void severe(String severe) {
-        Bukkit.getServer().getLogger().severe(severe);
-    }
-
-    @Override
-    public void exception(Throwable t) {
-        t.printStackTrace();
+    public static boolean validateJson(String json) {
+        try {
+            new Gson().fromJson(json, Object.class);
+            return true;
+        } catch (Exception ignored) {
+            return false;
+        }
     }
 }

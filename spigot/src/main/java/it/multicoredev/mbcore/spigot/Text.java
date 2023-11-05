@@ -57,7 +57,7 @@ import java.util.List;
 public class Text {
     private static final MiniMessage miniMessage = MiniMessage.miniMessage();
     private static final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.legacyAmpersand();
-    private static Text instance;
+    private static Text instance = null;
     private final BukkitAudiences audiences;
 
     private Text(Plugin plugin) {
@@ -84,7 +84,7 @@ public class Text {
      *                               you must destroy the previous instance first.
      */
     public static Text create(Plugin plugin) {
-        if (instance == null) throw new IllegalStateException("Text instance already created. Destroy the previous instance first.");
+        if (instance != null) throw new IllegalStateException("Text instance already created. Destroy the previous instance first.");
         instance = new Text(plugin);
         return instance;
     }

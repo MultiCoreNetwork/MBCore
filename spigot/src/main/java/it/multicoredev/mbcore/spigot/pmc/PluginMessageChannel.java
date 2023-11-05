@@ -3,7 +3,6 @@ package it.multicoredev.mbcore.spigot.pmc;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import it.multicoredev.mbcore.spigot.Chat;
 import it.multicoredev.mbcore.spigot.pmc.events.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -314,7 +313,7 @@ public class PluginMessageChannel implements PluginMessageListener {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Message");
         out.writeUTF(target);
-        out.writeUTF(translateChatColors ? Chat.getTranslated(message) : message);
+        out.writeUTF(/*translateChatColors ? Chat.getTranslated(message) :*/ message);
         sendMessage(out);
     }
 
@@ -435,7 +434,7 @@ public class PluginMessageChannel implements PluginMessageListener {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("KickPlayer");
         out.writeUTF(player);
-        out.writeUTF(translateChatColors ? Chat.getTranslated(reason) : reason);
+        out.writeUTF(/*translateChatColors ? Chat.getTranslated(reason) : */reason);
         sendMessage(out);
     }
 

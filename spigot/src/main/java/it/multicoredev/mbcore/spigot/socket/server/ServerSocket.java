@@ -6,7 +6,7 @@ import it.multicoredev.mbcore.spigot.socket.Disconnect;
 import it.multicoredev.mbcore.spigot.socket.ILogger;
 import it.multicoredev.mbcore.spigot.socket.server.events.ServerSockStartedEvent;
 import it.multicoredev.mbcore.spigot.socket.server.events.ServerSockStoppedEvent;
-import it.multicoredev.mbcore.spigot.util.Utils;
+import it.multicoredev.mbcore.spigot.util.JsonValidator;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
@@ -110,7 +110,7 @@ public class ServerSocket implements Runnable {
 
     public void broadcast(@NotNull String json) {
         if (json == null || json.trim().isEmpty()) throw new IllegalArgumentException("Argument cannot be null or empty.");
-        if (!Utils.validateJson(json)) throw new IllegalArgumentException("Argument is not a valid json string.");
+        if (!JsonValidator.validateJson(json)) throw new IllegalArgumentException("Argument is not a valid json string.");
 
         clients.forEach(client -> {
             try {
