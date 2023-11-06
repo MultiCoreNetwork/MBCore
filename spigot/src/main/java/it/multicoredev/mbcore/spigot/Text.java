@@ -325,6 +325,7 @@ public class Text {
      */
     public static Component deserialize(String text, TagResolver tagResolver) {
         if (text == null) return null;
+        if (tagResolver == null) return miniMessage.deserialize(text);
         return miniMessage.deserialize(text, tagResolver);
     }
 
