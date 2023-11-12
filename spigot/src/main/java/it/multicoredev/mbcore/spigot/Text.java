@@ -21,8 +21,9 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * BSD 3-Clause License
@@ -57,6 +58,8 @@ import java.util.List;
 public class Text {
     private static final MiniMessage miniMessage = MiniMessage.miniMessage();
     private static final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.legacyAmpersand();
+    private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)[§&][0-9A-FK-ORX]");
+
     private static Text instance = null;
     private final BukkitAudiences audiences;
 
@@ -84,7 +87,8 @@ public class Text {
      *                               you must destroy the previous instance first.
      */
     public static Text create(Plugin plugin) {
-        if (instance != null) throw new IllegalStateException("Text instance already created. Destroy the previous instance first.");
+        if (instance != null)
+            throw new IllegalStateException("Text instance already created. Destroy the previous instance first.");
         instance = new Text(plugin);
         return instance;
     }
@@ -205,12 +209,13 @@ public class Text {
     public static <C extends Collection<String>> C stripFormatting(C collection, TagResolver tagResolver) {
         if (collection == null) return null;
 
-        Iterator<String> iterator = collection.iterator();
-        while (iterator.hasNext()) {
-            String text = iterator.next();
-            iterator.remove();
-            collection.add(stripFormatting(text, tagResolver));
+        List<String> texts = new ArrayList<>();
+        for (String text : collection) {
+            texts.add(stripFormatting(text, tagResolver));
         }
+
+        collection.clear();
+        collection.addAll(texts);
 
         return collection;
     }
@@ -228,7 +233,63 @@ public class Text {
     }
 
     /**
-     * Serialize a text to a legacy ampersand string.
+     * Removes all legacy formatting tag in the input text, so that they are ignored in deserialization.
+     *
+     * @param text The text with tags to remove.
+     * @return The text without tags. null if the input text is null.
+     */
+    public static String stripLegacyFormatting(String text) {
+        if (text == null) return null;
+
+        /*for (char c : legacyChars) {
+            text = text.replaceAll(c + legacyColorCodes, "");
+        }*/
+
+        return text;
+    }
+
+    /**
+     * Removes all legacy formatting tag in the input texts, so that they are ignored in deserialization.
+     *
+     * @param texts The texts with tags to remove.
+     * @return An array of texts without tags or an empty array if no texts are provided.
+     * null if the input texts array is null.
+     */
+    public static String[] stripLegacyFormatting(String[] texts) {
+        if (texts == null) return null;
+
+        for (int i = 0; i < texts.length; i++) {
+            texts[i] = stripLegacyFormatting(texts[i]);
+        }
+
+        return texts;
+    }
+
+    /**
+     * Removes all legacy formatting tag in the input texts, so that they are ignored in deserialization.
+     *
+     * @param collection The collection of texts with tags to remove.
+     * @param <C>        The type of the collection.
+     * @return A collection of texts without tags or an empty iterable if no texts are provided.
+     * null if the input iterable is null.
+     */
+    public static <C extends Collection<String>> C stripLegacyFormatting(C collection) {
+        if (collection == null) return null;
+
+        List<String> texts = new ArrayList<>();
+
+        for (String text : collection) {
+            texts.add(stripLegacyFormatting(text));
+        }
+
+        collection.clear();
+        collection.addAll(texts);
+
+        return collection;
+    }
+
+    /**
+     * Serializes a text to a legacy ampersand string.
      *
      * @param text        The text to serialize.
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
@@ -238,11 +299,12 @@ public class Text {
     public static String toLegacyText(String text, TagResolver tagResolver) {
         if (text == null) return null;
 
+        if (tagResolver == null) return legacySerializer.serialize(miniMessage.deserialize(text));
         return legacySerializer.serialize(miniMessage.deserialize(text, tagResolver));
     }
 
     /**
-     * Serialize a text to a legacy ampersand string.
+     * Serializes a text to a legacy ampersand string.
      *
      * @param text The text to serialize.
      * @return The serialized text.
@@ -253,7 +315,7 @@ public class Text {
     }
 
     /**
-     * Serialize texts to a legacy ampersand string.
+     * Serializes texts to a legacy ampersand string.
      *
      * @param texts       The texts to serialize.
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
@@ -271,7 +333,7 @@ public class Text {
     }
 
     /**
-     * Serialize texts to a legacy ampersand string.
+     * Serializes texts to a legacy ampersand string.
      *
      * @param texts The texts to serialize.
      * @return An array of serialized texts or an empty array if no texts are provided.
@@ -282,7 +344,7 @@ public class Text {
     }
 
     /**
-     * Serialize texts to a legacy ampersand string.
+     * Serializes texts to a legacy ampersand string.
      *
      * @param collection  The collection of texts to serialize.
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
@@ -293,18 +355,20 @@ public class Text {
     public static <C extends Collection<String>> C toLegacyText(C collection, TagResolver tagResolver) {
         if (collection == null) return null;
 
-        Iterator<String> iterator = collection.iterator();
-        while (iterator.hasNext()) {
-            String text = iterator.next();
-            iterator.remove();
-            collection.add(toLegacyText(text, tagResolver));
+        List<String> texts = new ArrayList<>();
+
+        for (String text : collection) {
+            texts.add(toLegacyText(text, tagResolver));
         }
+
+        collection.clear();
+        collection.addAll(texts);
 
         return collection;
     }
 
     /**
-     * Serialize texts to a legacy ampersand string.
+     * Serializes texts to a legacy ampersand string.
      *
      * @param collection The collection of texts to serialize.
      * @param <C>        The type of the collection.
@@ -316,7 +380,48 @@ public class Text {
     }
 
     /**
-     * Deserialize a MiniMessage text.
+     * Converts a legacy text to a MiniMessage text.
+     *
+     * @param text The text to convert.
+     * @return the converted text or null if the input text is null.
+     */
+    public static String toMiniMessage(String text) {
+        if (text == null) return null;
+
+        StringBuilder builder = new StringBuilder(text);
+        Matcher matcher = STRIP_COLOR_PATTERN.matcher(builder);
+
+        while (matcher.find()) {
+            builder.replace(matcher.start(), matcher.end(), builder.substring(matcher.start(), matcher.end()).toLowerCase().replace("§", "&"));
+        }
+
+        return builder.toString()
+                .replace("&0", "<black>")
+                .replace("&1", "<dark_blue>")
+                .replace("&2", "<dark_green>")
+                .replace("&3", "<dark_aqua>")
+                .replace("&4", "<dark_red>")
+                .replace("&5", "<dark_purple>")
+                .replace("&6", "<gold>")
+                .replace("&7", "<grey>")
+                .replace("&8", "<dark_grey>")
+                .replace("&9", "<blue>")
+                .replace("&a", "<green>")
+                .replace("&b", "<aqua>")
+                .replace("&c", "<red>")
+                .replace("&d", "<light_purple>")
+                .replace("&e", "<yellow>")
+                .replace("&f", "<white>")
+                .replace("&k", "<obf>")
+                .replace("&l", "<b>")
+                .replace("&m", "<st>")
+                .replace("&n", "<u>")
+                .replace("&o", "<i>")
+                .replace("&r", "<r>");
+    }
+
+    /**
+     * Deserializes a MiniMessage text.
      *
      * @param text        The text to deserialize.
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
@@ -330,7 +435,7 @@ public class Text {
     }
 
     /**
-     * Deserialize a MiniMessage text.
+     * Deserializes a MiniMessage text.
      *
      * @param text The text to deserialize.
      * @return The deserialized text.
@@ -341,7 +446,7 @@ public class Text {
     }
 
     /**
-     * Deserialize MiniMessage texts.
+     * Deserializes MiniMessage texts.
      *
      * @param texts       The texts to deserialize.
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
@@ -361,7 +466,7 @@ public class Text {
     }
 
     /**
-     * Deserialize MiniMessage texts.
+     * Deserializes MiniMessage texts.
      *
      * @param texts The texts to deserialize.
      * @return An array of deserialized texts or an empty array if no texts are provided.
@@ -372,7 +477,7 @@ public class Text {
     }
 
     /**
-     * Deserialize MiniMessage texts.
+     * Deserializes MiniMessage texts.
      *
      * @param collection  The collection of texts to deserialize.
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
@@ -392,7 +497,7 @@ public class Text {
     }
 
     /**
-     * Deserialize MiniMessage texts.
+     * Deserializes MiniMessage texts.
      *
      * @param collection The collection of texts to deserialize.
      * @param <C>        The type of the collection.
@@ -401,6 +506,56 @@ public class Text {
      */
     public static <C extends Collection<String>> List<Component> deserialize(C collection) {
         return deserialize(collection, null);
+    }
+
+    /**
+     * Deserializes a legacy formatted text.
+     *
+     * @param text The text to deserialize.
+     * @return The deserialized text.
+     * null if the input text is null.
+     */
+    public static Component deserializeLegacy(String text) {
+        if (text == null) return null;
+        return legacySerializer.deserialize(text);
+    }
+
+    /**
+     * Deserializes legacy formatted texts.
+     *
+     * @param texts The texts to deserialize.
+     * @return An array of deserialized texts or an empty array if no texts are provided.
+     * null if the input texts array is null.
+     */
+    public static Component[] deserializeLegacy(String[] texts) {
+        if (texts == null) return null;
+
+        Component[] components = new Component[texts.length];
+
+        for (int i = 0; i < texts.length; i++) {
+            components[i] = deserializeLegacy(texts[i]);
+        }
+
+        return components;
+    }
+
+    /**
+     * Deserializes legacy formatted texts.
+     *
+     * @param collection The collection of texts to deserialize.
+     * @param <C>        The type of the collection.
+     * @return A collection of deserialized texts or an empty iterable if no texts are provided.
+     * null if the input iterable is null.
+     */
+    public static <C extends Collection<String>> List<Component> deserializeLegacy(C collection) {
+        if (collection == null) return null;
+
+        List<Component> components = new ArrayList<>();
+        for (String text : collection) {
+            components.add(deserializeLegacy(text));
+        }
+
+        return components;
     }
 
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
