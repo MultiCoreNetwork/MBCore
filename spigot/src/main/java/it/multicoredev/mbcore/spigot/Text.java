@@ -417,7 +417,7 @@ public class Text {
                 .replace("&m", "<st>")
                 .replace("&n", "<u>")
                 .replace("&o", "<i>")
-                .replace("&r", "<r>");
+                .replace("&r", "<reset>");
     }
 
     /**
