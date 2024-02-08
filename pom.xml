@@ -63,7 +63,7 @@
     <modules>
         <module>spigot</module>
         <module>bungeecord</module>
-        <module>velocity</module>
+        <!--<module>velocity</module>-->
     </modules>
 
     <dependencies>
