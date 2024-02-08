@@ -8,7 +8,7 @@ import it.multicoredev.mbcore.spigot.socket.client.events.ClientSockConnectedEve
 import it.multicoredev.mbcore.spigot.socket.client.events.ClientSockDisconnectedEvent;
 import it.multicoredev.mbcore.spigot.socket.client.events.SockMessageReceivedEvent;
 import it.multicoredev.mbcore.spigot.socket.client.events.SockMessageSentEvent;
-import it.multicoredev.mbcore.spigot.util.Utils;
+import it.multicoredev.mbcore.spigot.util.JsonValidator;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
@@ -129,7 +129,7 @@ public class ClientSocket implements Runnable {
     public void write(@NotNull String json) throws ExecutionException, InterruptedException {
         if (!connected) throw new IllegalStateException("Connection not ready");
         if (json == null || json.trim().isEmpty()) throw new IllegalArgumentException("Argument cannot be null or empty.");
-        if (!Utils.validateJson(json)) throw new IllegalArgumentException("Argument is not a valid json string.");
+        if (!JsonValidator.validateJson(json)) throw new IllegalArgumentException("Argument is not a valid json string.");
 
         try {
             ByteBuffer outputBuffer = ByteBuffer.wrap(json.getBytes());

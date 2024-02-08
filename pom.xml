@@ -6,7 +6,7 @@
 
     <groupId>it.multicoredev.mbcore</groupId>
     <artifactId>MBCore</artifactId>
-    <version>7.5.2</version>
+    <version>8.0.0</version>
     <packaging>pom</packaging>
 
     <name>MBCore</name>
@@ -15,10 +15,11 @@
     <inceptionYear>2019</inceptionYear>
 
     <properties>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <kiori.version>4.14.0</kiori.version>
     </properties>
 
     <organization>
@@ -29,7 +30,7 @@
     <licenses>
         <license>
             <name>The BSD 3-Clause License</name>
-            <url>http://opensource.org/licenses/BSD-3-Clause</url>
+            <url>https://github.com/MultiCoreNetwork/MBCore/blob/main/LICENSE</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -69,14 +70,22 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>22.0.0</version>
-            <scope>compile</scope>
+            <version>24.0.1</version>
         </dependency>
         <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.8.9</version>
-            <scope>compile</scope>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-api</artifactId>
+            <version>${kiori.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-text-minimessage</artifactId>
+            <version>${kiori.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-text-serializer-legacy</artifactId>
+            <version>${kiori.version}</version>
         </dependency>
     </dependencies>
 </project>

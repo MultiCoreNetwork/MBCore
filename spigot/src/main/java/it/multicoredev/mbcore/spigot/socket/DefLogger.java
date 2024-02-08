@@ -1,6 +1,6 @@
 package it.multicoredev.mbcore.spigot.socket;
 
-import it.multicoredev.mbcore.spigot.Chat;
+import org.bukkit.Bukkit;
 
 /**
  * Copyright © 2021 by Lorenzo Magni
@@ -35,17 +35,17 @@ public class DefLogger implements ILogger {
 
     @Override
     public void info(String info) {
-        Chat.info(info);
+        Bukkit.getServer().getLogger().info(info);
     }
 
     @Override
     public void warning(String warning) {
-        Chat.warning(warning);
+        Bukkit.getServer().getLogger().warning(warning);
     }
 
     @Override
     public void severe(String severe) {
-        Chat.severe(severe);
+        Bukkit.getServer().getLogger().severe(severe);
     }
 
     @Override

@@ -1,6 +1,6 @@
-package it.multicoredev.mbcore.spigot.config;
+package it.multicoredev.mbcore.spigot.util;
 
-import java.lang.reflect.Field;
+import com.google.gson.Gson;
 
 /**
  * Copyright © 2021 by Lorenzo Magni
@@ -22,34 +22,14 @@ import java.lang.reflect.Field;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
+public class JsonValidator {
 
-public abstract class JsonConfig {
-
-    /**
-     * Use this method to initialize all the parameters of the config.
-     */
-    protected abstract void init();
-
-    /**
-     * This method reinitialize all the null parameters with the default value
-     *
-     * @return true if there's at least a value reinitialized
-     */
-    public boolean completeMissing() {
-        boolean completed = false;
-        for (Field field : getClass().getDeclaredFields()) {
-            try {
-                Object obj = field.get(this);
-                if (obj == null) {
-                    completed = true;
-                } else if (JsonConfig.class.isAssignableFrom(field.getType())) {
-                    if (((JsonConfig) obj).completeMissing()) completed = true;
-                }
-            } catch (IllegalAccessException ignored) {
-            }
+    public static boolean validateJson(String json) {
+        try {
+            new Gson().fromJson(json, Object.class);
+            return true;
+        } catch (Exception ignored) {
+            return false;
         }
-
-        if (completed) init();
-        return completed;
     }
 }
