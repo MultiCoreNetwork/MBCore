@@ -7,13 +7,13 @@
     <parent>
         <groupId>it.multicoredev.mbcore</groupId>
         <artifactId>MBCore</artifactId>
-        <version>8.0.0</version>
+        <version>8.0.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.multicoredev.mbcore.spigot</groupId>
     <artifactId>MBCore-spigot</artifactId>
-    <version>8.0.0</version>
+    <version>8.0.1</version>
     <packaging>jar</packaging>
 
     <name>MBCore-spigot</name>
@@ -83,7 +83,7 @@
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-platform-bukkit</artifactId>
-            <version>4.3.1</version>
+            <version>4.3.2</version>
         </dependency>
     </dependencies>
 

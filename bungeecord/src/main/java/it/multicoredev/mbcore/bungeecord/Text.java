@@ -1,19 +1,18 @@
-package it.multicoredev.mbcore.spigot;
+package it.multicoredev.mbcore.bungeecord;
 
 import com.google.common.base.Preconditions;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.TitlePart;
-import org.bukkit.World;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.config.ServerInfo;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,10 +60,10 @@ public class Text {
     private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)[§&][0-9A-FK-ORX]");
 
     private static Text instance = null;
-    private final BukkitAudiences audiences;
+    private final BungeeAudiences audiences;
 
     private Text(Plugin plugin) {
-        audiences = BukkitAudiences.create(plugin);
+        audiences = BungeeAudiences.create(plugin);
     }
 
     /**
@@ -560,7 +559,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a text to a {@link CommandSender} or a {@link Player}.
+     * Sends a text to a {@link CommandSender} or a {@link ProxiedPlayer}.
      * The text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -573,14 +572,14 @@ public class Text {
         Preconditions.checkNotNull(receiver, "Receiver cannot be null");
 
         Audience audience;
-        if (receiver instanceof Player) audience = audiences.player((Player) receiver);
+        if (receiver instanceof ProxiedPlayer) audience = audiences.player((ProxiedPlayer) receiver);
         else audience = audiences.sender(receiver);
 
         audience.sendMessage(deserialize(text, tagResolver));
     }
 
     /**
-     * Sends a text to a {@link CommandSender} or a {@link Player}.
+     * Sends a text to a {@link CommandSender} or a {@link ProxiedPlayer}.
      * The text is deserialized before being sent.
      *
      * @param text     The text to send.
@@ -592,7 +591,7 @@ public class Text {
     }
 
     /**
-     * Sends a text to a {@link CommandSender} or a {@link Player}.
+     * Sends a text to a {@link CommandSender} or a {@link ProxiedPlayer}.
      *
      * @param text            The text to send.
      * @param receiver        The receiver of the text.
@@ -609,7 +608,7 @@ public class Text {
     }
 
     /**
-     * Sends a text to a {@link CommandSender} or a {@link Player}.
+     * Sends a text to a {@link CommandSender} or a {@link ProxiedPlayer}.
      *
      * @param text            The text to send.
      * @param receiver        The receiver of the text.
@@ -621,7 +620,7 @@ public class Text {
     }
 
     /**
-     * Sends a text to a {@link CommandSender} or a {@link Player}.
+     * Sends a text to a {@link CommandSender} or a {@link ProxiedPlayer}.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -648,7 +647,7 @@ public class Text {
     }
 
     /**
-     * Sends a text to a {@link CommandSender} or a {@link Player}.
+     * Sends a text to a {@link CommandSender} or a {@link ProxiedPlayer}.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -666,7 +665,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a text to a group of {@link CommandSender} or {@link Player}.
+     * Sends a text to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      * The text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -684,7 +683,7 @@ public class Text {
     }
 
     /**
-     * Sends a text to a group of {@link CommandSender} or {@link Player}.
+     * Sends a text to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      * The text is deserialized before being sent.
      *
      * @param text      The text to send.
@@ -696,7 +695,7 @@ public class Text {
     }
 
     /**
-     * Sends a text to a group of {@link CommandSender} or {@link Player}.
+     * Sends a text to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      *
      * @param text            The text to send.
      * @param receivers       The receivers of the text.
@@ -713,7 +712,7 @@ public class Text {
     }
 
     /**
-     * Sends a text to a group of {@link CommandSender} or {@link Player}.
+     * Sends a text to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      *
      * @param text            The text to send.
      * @param receivers       The receivers of the text.
@@ -725,7 +724,7 @@ public class Text {
     }
 
     /**
-     * Sends a text to a group of {@link CommandSender} or {@link Player}.
+     * Sends a text to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -752,7 +751,7 @@ public class Text {
     }
 
     /**
-     * Sends a text to a group of {@link CommandSender} or {@link Player}.
+     * Sends a text to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -770,7 +769,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a text to a group of {@link CommandSender} or {@link Player}.
+     * Sends a text to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      * The text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -788,7 +787,7 @@ public class Text {
     }
 
     /**
-     * Sends a text to a group of {@link CommandSender} or {@link Player}.
+     * Sends a text to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      * The text is deserialized before being sent.
      *
      * @param text      The text to send.
@@ -800,7 +799,7 @@ public class Text {
     }
 
     /**
-     * Sends a text to a group of {@link CommandSender} or {@link Player}.
+     * Sends a text to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      *
      * @param text            The text to send.
      * @param receivers       The receivers of the text.
@@ -817,7 +816,7 @@ public class Text {
     }
 
     /**
-     * Sends a text to a group of {@link CommandSender} or {@link Player}.
+     * Sends a text to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      *
      * @param text            The text to send.
      * @param receivers       The receivers of the text.
@@ -829,7 +828,7 @@ public class Text {
     }
 
     /**
-     * Sends a text to a group of {@link CommandSender} or {@link Player}.
+     * Sends a text to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -856,7 +855,7 @@ public class Text {
     }
 
     /**
-     * Sends a text to a group of {@link CommandSender} or {@link Player}.
+     * Sends a text to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -874,7 +873,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a list texts to a {@link CommandSender} or a {@link Player}.
+     * Sends a list texts to a {@link CommandSender} or a {@link ProxiedPlayer}.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -889,7 +888,7 @@ public class Text {
         if (texts.length == 0) return;
 
         Audience audience;
-        if (receiver instanceof Player) audience = audiences.player((Player) receiver);
+        if (receiver instanceof ProxiedPlayer) audience = audiences.player((ProxiedPlayer) receiver);
         else audience = audiences.sender(receiver);
 
         for (String text : texts) {
@@ -899,7 +898,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a {@link CommandSender} or a {@link Player}.
+     * Sends a list texts to a {@link CommandSender} or a {@link ProxiedPlayer}.
      * The texts are deserialized before being sent.
      *
      * @param texts    The texts to send.
@@ -911,7 +910,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a {@link CommandSender} or a {@link Player}.
+     * Sends a list texts to a {@link CommandSender} or a {@link ProxiedPlayer}.
      *
      * @param texts           The texts to send.
      * @param receiver        The receiver of the text.
@@ -928,7 +927,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a {@link CommandSender} or a {@link Player}.
+     * Sends a list texts to a {@link CommandSender} or a {@link ProxiedPlayer}.
      *
      * @param texts           The texts to send.
      * @param receiver        The receiver of the text.
@@ -940,7 +939,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a {@link CommandSender} or a {@link Player}.
+     * Sends a list texts to a {@link CommandSender} or a {@link ProxiedPlayer}.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -967,7 +966,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a {@link CommandSender} or a {@link Player}.
+     * Sends a list texts to a {@link CommandSender} or a {@link ProxiedPlayer}.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -985,7 +984,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1002,7 +1001,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      * The texts are deserialized before being sent.
      *
      * @param texts     The texts to send.
@@ -1014,7 +1013,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      *
      * @param texts           The texts to send.
      * @param receivers       The receivers of the text.
@@ -1031,7 +1030,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      *
      * @param texts           The texts to send.
      * @param receivers       The receivers of the text.
@@ -1043,7 +1042,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1070,7 +1069,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1088,7 +1087,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1106,7 +1105,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      * The texts are deserialized before being sent.
      *
      * @param texts     The texts to send.
@@ -1118,7 +1117,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      *
      * @param texts           The texts to send.
      * @param receivers       The receivers of the text.
@@ -1135,7 +1134,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      *
      * @param texts           The texts to send.
      * @param receivers       The receivers of the text.
@@ -1147,7 +1146,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1174,7 +1173,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1192,7 +1191,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a list texts to a {@link CommandSender} or a {@link Player}.
+     * Sends a list texts to a {@link CommandSender} or a {@link ProxiedPlayer}.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1207,7 +1206,7 @@ public class Text {
         if (texts.isEmpty()) return;
 
         Audience audience;
-        if (receiver instanceof Player) audience = audiences.player((Player) receiver);
+        if (receiver instanceof ProxiedPlayer) audience = audiences.player((ProxiedPlayer) receiver);
         else audience = audiences.sender(receiver);
 
         for (String text : texts) {
@@ -1217,7 +1216,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a {@link CommandSender} or a {@link Player}.
+     * Sends a list texts to a {@link CommandSender} or a {@link ProxiedPlayer}.
      * The texts are deserialized before being sent.
      *
      * @param texts    The texts to send.
@@ -1229,7 +1228,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a {@link CommandSender} or a {@link Player}.
+     * Sends a list texts to a {@link CommandSender} or a {@link ProxiedPlayer}.
      *
      * @param texts           The texts to send.
      * @param receiver        The receiver of the text.
@@ -1246,7 +1245,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a {@link CommandSender} or a {@link Player}.
+     * Sends a list texts to a {@link CommandSender} or a {@link ProxiedPlayer}.
      *
      * @param texts           The texts to send.
      * @param receiver        The receiver of the text.
@@ -1258,7 +1257,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a {@link CommandSender} or a {@link Player}.
+     * Sends a list texts to a {@link CommandSender} or a {@link ProxiedPlayer}.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1285,7 +1284,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a {@link CommandSender} or a {@link Player}.
+     * Sends a list texts to a {@link CommandSender} or a {@link ProxiedPlayer}.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1303,7 +1302,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1321,7 +1320,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      * The texts are deserialized before being sent.
      *
      * @param texts     The texts to send.
@@ -1333,7 +1332,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      *
      * @param texts           The texts to send.
      * @param receivers       The receivers of the text.
@@ -1350,7 +1349,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      *
      * @param texts           The texts to send.
      * @param receivers       The receivers of the text.
@@ -1362,7 +1361,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1389,7 +1388,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1407,7 +1406,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1425,7 +1424,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      * The texts are deserialized before being sent.
      *
      * @param texts     The texts to send.
@@ -1437,7 +1436,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      *
      * @param texts           The texts to send.
      * @param receivers       The receivers of the text.
@@ -1454,7 +1453,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      *
      * @param texts           The texts to send.
      * @param receivers       The receivers of the text.
@@ -1466,7 +1465,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1493,7 +1492,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSender} or {@link ProxiedPlayer}.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1511,7 +1510,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link ProxiedPlayer}s on the server.
      * The text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -1525,7 +1524,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link ProxiedPlayer}s on the server.
      * The text is deserialized before being sent.
      *
      * @param text The text to send.
@@ -1536,7 +1535,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link ProxiedPlayer}s on the server.
      *
      * @param text            The text to send.
      * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
@@ -1552,7 +1551,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link ProxiedPlayer}s on the server.
      *
      * @param text            The text to send.
      * @param stripFormatting Whether to strip formatting from the text before sending it.
@@ -1563,7 +1562,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link ProxiedPlayer}s on the server.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -1589,7 +1588,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link ProxiedPlayer}s on the server.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -1606,7 +1605,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s on the server.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1626,7 +1625,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s on the server.
      * The texts are deserialized before being sent.
      *
      * @param texts The texts to send.
@@ -1637,7 +1636,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s on the server.
      *
      * @param texts           The texts to send.
      * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
@@ -1653,7 +1652,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s on the server.
      *
      * @param texts           The texts to send.
      * @param stripFormatting Whether to strip formatting from the texts before sending it.
@@ -1664,7 +1663,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s on the server.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1690,7 +1689,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s on the server.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1707,7 +1706,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s on the server.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1727,7 +1726,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s on the server.
      * The texts are deserialized before being sent.
      *
      * @param texts The texts to send.
@@ -1738,7 +1737,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s on the server.
      *
      * @param texts           The texts to send.
      * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
@@ -1754,7 +1753,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s on the server.
      *
      * @param texts           The texts to send.
      * @param stripFormatting Whether to strip formatting from the texts before sending it.
@@ -1765,7 +1764,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s on the server.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1791,7 +1790,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s on the server.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1804,79 +1803,79 @@ public class Text {
     }
 
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
-    /*    WORLD BROADCAST    */
+    /*    SERVER BROADCAST    */
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a text to all {@link Player}s in a world.
+     * Broadcasts a text to all {@link ProxiedPlayer}s in a server.
      * The text is deserialized before being sent.
      *
      * @param text        The text to send.
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
-     * @param world       The {@link World} to send the text to.
-     * @throws NullPointerException if the text or the world is null.
+     * @param server      The {@link ServerInfo} to send the text to.
+     * @throws NullPointerException if the text or the server is null.
      */
     @SuppressWarnings("PatternValidation")
-    public void broadcast(@NotNull String text, TagResolver tagResolver, @NotNull World world) {
+    public void broadcast(@NotNull String text, TagResolver tagResolver, @NotNull ServerInfo server) {
         Preconditions.checkNotNull(text, "Text cannot be null");
-        Preconditions.checkNotNull(world, "World cannot be null");
+        Preconditions.checkNotNull(server, "World cannot be null");
 
-        audiences.world(Key.key(world.getKey().toString())).sendMessage(deserialize(text, tagResolver));
+        audiences.server(server.getName()).sendMessage(deserialize(text, tagResolver));
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link ProxiedPlayer}s on the server.
      * The text is deserialized before being sent.
      *
-     * @param text  The text to send.
-     * @param world The {@link World} to send the text to.
-     * @throws NullPointerException if the text or the world is null.
+     * @param text   The text to send.
+     * @param server The {@link ServerInfo} to send the text to.
+     * @throws NullPointerException if the text or the server is null.
      */
-    public void broadcast(@NotNull String text, @NotNull World world) {
-        broadcast(text, null, world);
+    public void broadcast(@NotNull String text, @NotNull ServerInfo server) {
+        broadcast(text, null, server);
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link ProxiedPlayer}s on the server.
      *
      * @param text            The text to send.
      * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
-     * @param world           The {@link World} to send the text to.
+     * @param server          The {@link ServerInfo} to send the text to.
      * @param stripFormatting Whether to strip formatting from the text before sending it.
-     * @throws NullPointerException if the text or the world is null.
+     * @throws NullPointerException if the text or the server is null.
      */
-    public void broadcast(@NotNull String text, TagResolver tagResolver, @NotNull World world, boolean stripFormatting) {
+    public void broadcast(@NotNull String text, TagResolver tagResolver, @NotNull ServerInfo server, boolean stripFormatting) {
         if (stripFormatting) {
-            broadcast(stripFormatting(text, tagResolver), tagResolver, world);
+            broadcast(stripFormatting(text, tagResolver), tagResolver, server);
         } else {
-            broadcast(text, tagResolver, world);
+            broadcast(text, tagResolver, server);
         }
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link ProxiedPlayer}s on the server.
      *
      * @param text            The text to send.
-     * @param world           The {@link World} to send the text to.
+     * @param server          The {@link ServerInfo} to send the text to.
      * @param stripFormatting Whether to strip formatting from the text before sending it.
-     * @throws NullPointerException if the text or the world is null.
+     * @throws NullPointerException if the text or the server is null.
      */
-    public void broadcast(@NotNull String text, @NotNull World world, boolean stripFormatting) {
-        broadcast(text, null, world, stripFormatting);
+    public void broadcast(@NotNull String text, @NotNull ServerInfo server, boolean stripFormatting) {
+        broadcast(text, null, server, stripFormatting);
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link ProxiedPlayer}s on the server.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
-     * @param world       The {@link World} to send the text to.
+     * @param server      The {@link ServerInfo} to send the text to.
      * @param sender      The sender of the text.
      * @param permissions The permissions to check.
-     * @throws NullPointerException if the text, the world, the sender or the permissions is null.
+     * @throws NullPointerException if the text, the server, the sender or the permissions is null.
      */
-    public void broadcast(@NotNull String text, TagResolver tagResolver, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcast(@NotNull String text, TagResolver tagResolver, @NotNull ServerInfo server, @NotNull CommandSender sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -1889,29 +1888,29 @@ public class Text {
             }
         }
 
-        broadcast(text, tagResolver, world, !hasPermission);
+        broadcast(text, tagResolver, server, !hasPermission);
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s on the server.
+     * Broadcasts a text to all {@link ProxiedPlayer}s on the server.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
-     * @param world       The {@link World} to send the text to.
+     * @param server      The {@link ServerInfo} to send the text to.
      * @param sender      The sender of the text.
      * @param permissions The permissions to check.
-     * @throws NullPointerException if the text, the world, the sender or the permissions is null.
+     * @throws NullPointerException if the text, the server, the sender or the permissions is null.
      */
-    public void broadcast(@NotNull String text, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
-        broadcast(text, null, world, sender, permissions);
+    public void broadcast(@NotNull String text, @NotNull ServerInfo server, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcast(text, null, server, sender, permissions);
     }
 
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
-    /*    WORLD BROADCAST MULTIPLE TEXTS (ARRAY)    */
+    /*    SERVER BROADCAST MULTIPLE TEXTS (ARRAY)    */
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s on the server.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1919,13 +1918,13 @@ public class Text {
      * @throws NullPointerException if the texts or the receiver is null.
      */
     @SuppressWarnings("PatternValidation")
-    public void broadcast(@NotNull String[] texts, TagResolver tagResolver, @NotNull World world) {
+    public void broadcast(@NotNull String[] texts, TagResolver tagResolver, @NotNull ServerInfo server) {
         Preconditions.checkNotNull(texts, "Texts cannot be null");
-        Preconditions.checkNotNull(world, "World cannot be null");
+        Preconditions.checkNotNull(server, "World cannot be null");
 
         if (texts.length == 0) return;
 
-        Audience audience = audiences.world(Key.key(world.getKey().toString()));
+        Audience audience = audiences.server(server.getName());
         for (String text : texts) {
             if (text == null) continue;
             audience.sendMessage(deserialize(text, tagResolver));
@@ -1933,57 +1932,57 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s on the server.
      * The texts are deserialized before being sent.
      *
-     * @param texts The texts to send.
-     * @param world The {@link World} to send the text to.
+     * @param texts  The texts to send.
+     * @param server The {@link ServerInfo} to send the text to.
      * @throws NullPointerException if the texts or the receiver is null.
      */
-    public void broadcast(@NotNull String[] texts, @NotNull World world) {
-        broadcast(texts, null, world);
+    public void broadcast(@NotNull String[] texts, @NotNull ServerInfo server) {
+        broadcast(texts, null, server);
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s on the server.
      *
      * @param texts           The texts to send.
      * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
-     * @param world           The {@link World} to send the text to.
+     * @param server          The {@link ServerInfo} to send the text to.
      * @param stripFormatting Whether to strip formatting from the texts before sending it.
-     * @throws NullPointerException if the texts or the world is null.
+     * @throws NullPointerException if the texts or the server is null.
      */
-    public void broadcast(@NotNull String[] texts, TagResolver tagResolver, @NotNull World world, boolean stripFormatting) {
+    public void broadcast(@NotNull String[] texts, TagResolver tagResolver, @NotNull ServerInfo server, boolean stripFormatting) {
         if (stripFormatting) {
-            broadcast(stripFormatting(texts, tagResolver), tagResolver, world);
+            broadcast(stripFormatting(texts, tagResolver), tagResolver, server);
         } else {
-            broadcast(texts, tagResolver, world);
+            broadcast(texts, tagResolver, server);
         }
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s on the server.
      *
      * @param texts           The texts to send.
-     * @param world           The {@link World} to send the text to.
+     * @param server          The {@link ServerInfo} to send the text to.
      * @param stripFormatting Whether to strip formatting from the texts before sending it.
      */
-    public void broadcast(@NotNull String[] texts, @NotNull World world, boolean stripFormatting) {
-        broadcast(texts, null, world, stripFormatting);
+    public void broadcast(@NotNull String[] texts, @NotNull ServerInfo server, boolean stripFormatting) {
+        broadcast(texts, null, server, stripFormatting);
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s on the server.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
-     * @param world       The {@link World} to send the text to.
+     * @param server      The {@link ServerInfo} to send the text to.
      * @param sender      The sender of the text.
      * @param permissions The permissions to check.
-     * @throws NullPointerException if the texts, the world, the sender or the permissions is null.
+     * @throws NullPointerException if the texts, the server, the sender or the permissions is null.
      */
-    public void broadcast(@NotNull String[] texts, TagResolver tagResolver, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcast(@NotNull String[] texts, TagResolver tagResolver, @NotNull ServerInfo server, @NotNull CommandSender sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -1996,28 +1995,28 @@ public class Text {
             }
         }
 
-        broadcast(texts, tagResolver, world, !hasPermission);
+        broadcast(texts, tagResolver, server, !hasPermission);
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s on the server.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
      * @param sender      The sender of the text.
      * @param permissions The permissions to check.
-     * @throws NullPointerException if the texts, the world, the sender or the permissions is null.
+     * @throws NullPointerException if the texts, the server, the sender or the permissions is null.
      */
-    public void broadcast(@NotNull String[] texts, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
-        broadcast(texts, null, world, sender, permissions);
+    public void broadcast(@NotNull String[] texts, @NotNull ServerInfo server, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcast(texts, null, server, sender, permissions);
     }
 
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
-    /*    WORLD BROADCAST MULTIPLE TEXTS (COLLECTION)    */
+    /*    SERVER BROADCAST MULTIPLE TEXTS (COLLECTION)    */
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s on the server.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -2025,13 +2024,13 @@ public class Text {
      * @throws NullPointerException if the texts or the receiver is null.
      */
     @SuppressWarnings("PatternValidation")
-    public <T extends Collection<String>> void broadcast(@NotNull T texts, TagResolver tagResolver, @NotNull World world) {
+    public <T extends Collection<String>> void broadcast(@NotNull T texts, TagResolver tagResolver, @NotNull ServerInfo server) {
         Preconditions.checkNotNull(texts, "Texts cannot be null");
-        Preconditions.checkNotNull(world, "World cannot be null");
+        Preconditions.checkNotNull(server, "World cannot be null");
 
         if (texts.isEmpty()) return;
 
-        Audience audience = audiences.world(Key.key(world.getKey().toString()));
+        Audience audience = audiences.server(server.getName());
         for (String text : texts) {
             if (text == null) continue;
             audience.sendMessage(deserialize(text, tagResolver));
@@ -2039,57 +2038,57 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s on the server.
      * The texts are deserialized before being sent.
      *
-     * @param texts The texts to send.
-     * @param world The {@link World} to send the text to.
+     * @param texts  The texts to send.
+     * @param server The {@link ServerInfo} to send the text to.
      * @throws NullPointerException if the texts or the receiver is null.
      */
-    public <T extends Collection<String>> void broadcast(@NotNull T texts, @NotNull World world) {
-        broadcast(texts, null, world);
+    public <T extends Collection<String>> void broadcast(@NotNull T texts, @NotNull ServerInfo server) {
+        broadcast(texts, null, server);
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s on the server.
      *
      * @param texts           The texts to send.
      * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
-     * @param world           The {@link World} to send the text to.
+     * @param server          The {@link ServerInfo} to send the text to.
      * @param stripFormatting Whether to strip formatting from the texts before sending it.
-     * @throws NullPointerException if the texts or the world is null.
+     * @throws NullPointerException if the texts or the server is null.
      */
-    public <T extends Collection<String>> void broadcast(@NotNull T texts, TagResolver tagResolver, @NotNull World world, boolean stripFormatting) {
+    public <T extends Collection<String>> void broadcast(@NotNull T texts, TagResolver tagResolver, @NotNull ServerInfo server, boolean stripFormatting) {
         if (stripFormatting) {
-            broadcast(stripFormatting(texts, tagResolver), tagResolver, world);
+            broadcast(stripFormatting(texts, tagResolver), tagResolver, server);
         } else {
-            broadcast(texts, tagResolver, world);
+            broadcast(texts, tagResolver, server);
         }
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s on the server.
      *
      * @param texts           The texts to send.
-     * @param world           The {@link World} to send the text to.
+     * @param server          The {@link ServerInfo} to send the text to.
      * @param stripFormatting Whether to strip formatting from the texts before sending it.
      */
-    public <T extends Collection<String>> void broadcast(@NotNull T texts, @NotNull World world, boolean stripFormatting) {
-        broadcast(texts, null, world, stripFormatting);
+    public <T extends Collection<String>> void broadcast(@NotNull T texts, @NotNull ServerInfo server, boolean stripFormatting) {
+        broadcast(texts, null, server, stripFormatting);
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s on the server.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
-     * @param world       The {@link World} to send the text to.
+     * @param server      The {@link ServerInfo} to send the text to.
      * @param sender      The sender of the text.
      * @param permissions The permissions to check.
-     * @throws NullPointerException if the texts, the world, the sender or the permissions is null.
+     * @throws NullPointerException if the texts, the server, the sender or the permissions is null.
      */
-    public <T extends Collection<String>> void broadcast(@NotNull T texts, TagResolver tagResolver, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <T extends Collection<String>> void broadcast(@NotNull T texts, TagResolver tagResolver, @NotNull ServerInfo server, @NotNull CommandSender sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -2102,20 +2101,20 @@ public class Text {
             }
         }
 
-        broadcast(texts, tagResolver, world, !hasPermission);
+        broadcast(texts, tagResolver, server, !hasPermission);
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s on the server.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s on the server.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
      * @param sender      The sender of the text.
      * @param permissions The permissions to check.
-     * @throws NullPointerException if the texts, the world, the sender or the permissions is null.
+     * @throws NullPointerException if the texts, the server, the sender or the permissions is null.
      */
-    public <T extends Collection<String>> void broadcast(@NotNull T texts, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
-        broadcast(texts, null, world, sender, permissions);
+    public <T extends Collection<String>> void broadcast(@NotNull T texts, @NotNull ServerInfo server, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcast(texts, null, server, sender, permissions);
     }
 
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -2123,7 +2122,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a text to all {@link Player}s with some permissions.
+     * Broadcasts a text to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param text             The text to send.
@@ -2139,7 +2138,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s with some permissions.
+     * Broadcasts a text to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param text             The text to send.
@@ -2151,7 +2150,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s with some permissions.
+     * Broadcasts a text to all {@link ProxiedPlayer}s with some permissions.
      *
      * @param text             The text to send.
      * @param tagResolver      The {@link TagResolver} for any additional tags to handle.
@@ -2168,7 +2167,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s with some permissions.
+     * Broadcasts a text to all {@link ProxiedPlayer}s with some permissions.
      *
      * @param text             The text to send.
      * @param neededPermission The permission needed to receive the broadcast.
@@ -2180,7 +2179,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s with some permissions.
+     * Broadcasts a text to all {@link ProxiedPlayer}s with some permissions.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text             The text to send.
@@ -2207,7 +2206,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s with some permissions.
+     * Broadcasts a text to all {@link ProxiedPlayer}s with some permissions.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text             The text to send.
@@ -2225,7 +2224,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -2246,7 +2245,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      * The texts are deserialized before being sent.
      *
      * @param texts            The texts to send.
@@ -2258,7 +2257,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      *
      * @param texts            The texts to send.
      * @param tagResolver      The {@link TagResolver} for any additional tags to handle.
@@ -2275,7 +2274,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      *
      * @param texts            The texts to send.
      * @param neededPermission The permission needed to receive the broadcast.
@@ -2286,7 +2285,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts            The texts to send.
@@ -2313,7 +2312,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -2330,7 +2329,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -2351,7 +2350,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      * The texts are deserialized before being sent.
      *
      * @param texts            The texts to send.
@@ -2363,7 +2362,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      *
      * @param texts            The texts to send.
      * @param tagResolver      The {@link TagResolver} for any additional tags to handle.
@@ -2380,7 +2379,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      *
      * @param texts            The texts to send.
      * @param neededPermission The permission needed to receive the broadcast.
@@ -2391,7 +2390,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts            The texts to send.
@@ -2418,7 +2417,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -2435,7 +2434,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a text to all {@link Player}s with some permissions.
+     * Broadcasts a text to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param text              The text to send.
@@ -2454,7 +2453,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s with some permissions.
+     * Broadcasts a text to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param text              The text to send.
@@ -2466,7 +2465,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s with some permissions.
+     * Broadcasts a text to all {@link ProxiedPlayer}s with some permissions.
      *
      * @param text              The text to send.
      * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
@@ -2483,7 +2482,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s with some permissions.
+     * Broadcasts a text to all {@link ProxiedPlayer}s with some permissions.
      *
      * @param text              The text to send.
      * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
@@ -2495,7 +2494,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s with some permissions.
+     * Broadcasts a text to all {@link ProxiedPlayer}s with some permissions.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text              The text to send.
@@ -2522,7 +2521,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s with some permissions.
+     * Broadcasts a text to all {@link ProxiedPlayer}s with some permissions.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text              The text to send.
@@ -2540,7 +2539,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -2565,7 +2564,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      * The texts are deserialized before being sent.
      *
      * @param texts             The texts to send.
@@ -2577,7 +2576,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      *
      * @param texts             The texts to send.
      * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
@@ -2594,7 +2593,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      *
      * @param texts             The texts to send.
      * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
@@ -2605,7 +2604,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts             The texts to send.
@@ -2632,7 +2631,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -2649,7 +2648,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -2674,7 +2673,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      * The texts are deserialized before being sent.
      *
      * @param texts             The texts to send.
@@ -2686,7 +2685,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      *
      * @param texts             The texts to send.
      * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
@@ -2703,7 +2702,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      *
      * @param texts             The texts to send.
      * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
@@ -2714,7 +2713,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts             The texts to send.
@@ -2741,7 +2740,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -2758,7 +2757,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a text to all {@link Player}s with some permissions.
+     * Broadcasts a text to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param text              The text to send.
@@ -2777,7 +2776,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s with some permissions.
+     * Broadcasts a text to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param text              The text to send.
@@ -2789,7 +2788,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s with some permissions.
+     * Broadcasts a text to all {@link ProxiedPlayer}s with some permissions.
      *
      * @param text              The text to send.
      * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
@@ -2806,7 +2805,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s with some permissions.
+     * Broadcasts a text to all {@link ProxiedPlayer}s with some permissions.
      *
      * @param text              The text to send.
      * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
@@ -2818,7 +2817,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s with some permissions.
+     * Broadcasts a text to all {@link ProxiedPlayer}s with some permissions.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text              The text to send.
@@ -2845,7 +2844,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a text to all {@link Player}s with some permissions.
+     * Broadcasts a text to all {@link ProxiedPlayer}s with some permissions.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text              The text to send.
@@ -2863,7 +2862,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -2888,7 +2887,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      * The texts are deserialized before being sent.
      *
      * @param texts             The texts to send.
@@ -2900,7 +2899,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      *
      * @param texts             The texts to send.
      * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
@@ -2917,7 +2916,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      *
      * @param texts             The texts to send.
      * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
@@ -2928,7 +2927,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts             The texts to send.
@@ -2955,7 +2954,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -2972,7 +2971,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -2997,7 +2996,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      * The texts are deserialized before being sent.
      *
      * @param texts             The texts to send.
@@ -3009,7 +3008,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      *
      * @param texts             The texts to send.
      * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
@@ -3026,7 +3025,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      *
      * @param texts             The texts to send.
      * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
@@ -3037,7 +3036,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts             The texts to send.
@@ -3064,7 +3063,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a list of texts to all {@link Player}s with some permissions.
+     * Broadcasts a list of texts to all {@link ProxiedPlayer}s with some permissions.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -3081,7 +3080,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends an action bar text to a {@link Player}.
+     * Sends an action bar text to a {@link ProxiedPlayer}.
      * The text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -3089,31 +3088,31 @@ public class Text {
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
      * @throws NullPointerException if the text or the receiver is null.
      */
-    public void sendActionBar(@NotNull String text, @NotNull Player receiver, TagResolver tagResolver) {
+    public void sendActionBar(@NotNull String text, @NotNull ProxiedPlayer receiver, TagResolver tagResolver) {
         Preconditions.checkNotNull(text, "Text cannot be null");
         Preconditions.checkNotNull(receiver, "Receiver cannot be null");
 
         Audience audience;
-        if (receiver instanceof Player) audience = audiences.player((Player) receiver);
+        if (receiver instanceof ProxiedPlayer) audience = audiences.player((ProxiedPlayer) receiver);
         else audience = audiences.sender(receiver);
 
         audience.sendActionBar(deserialize(text, tagResolver));
     }
 
     /**
-     * Sends an action bar text to a {@link Player}.
+     * Sends an action bar text to a {@link ProxiedPlayer}.
      * The text is deserialized before being sent.
      *
      * @param text     The text to send.
      * @param receiver The receiver of the text.
      * @throws NullPointerException if the text or the receiver is null.
      */
-    public void sendActionBar(@NotNull String text, @NotNull Player receiver) {
+    public void sendActionBar(@NotNull String text, @NotNull ProxiedPlayer receiver) {
         sendActionBar(text, receiver, null);
     }
 
     /**
-     * Sends an action bar text to a {@link Player}.
+     * Sends an action bar text to a {@link ProxiedPlayer}.
      *
      * @param text            The text to send.
      * @param receiver        The receiver of the text.
@@ -3121,7 +3120,7 @@ public class Text {
      * @param stripFormatting Whether to strip formatting from the text before sending it.
      * @throws NullPointerException if the text or the receiver is null.
      */
-    public void sendActionBar(@NotNull String text, @NotNull Player receiver, TagResolver tagResolver, boolean stripFormatting) {
+    public void sendActionBar(@NotNull String text, @NotNull ProxiedPlayer receiver, TagResolver tagResolver, boolean stripFormatting) {
         if (stripFormatting) {
             sendActionBar(stripFormatting(text, tagResolver), receiver, tagResolver);
         } else {
@@ -3130,19 +3129,19 @@ public class Text {
     }
 
     /**
-     * Sends an action bar text to a {@link Player}.
+     * Sends an action bar text to a {@link ProxiedPlayer}.
      *
      * @param text            The text to send.
      * @param receiver        The receiver of the text.
      * @param stripFormatting Whether to strip formatting from the text before sending it.
      * @throws NullPointerException if the text or the receiver is null.
      */
-    public void sendActionBar(@NotNull String text, @NotNull Player receiver, boolean stripFormatting) {
+    public void sendActionBar(@NotNull String text, @NotNull ProxiedPlayer receiver, boolean stripFormatting) {
         sendActionBar(text, receiver, null, stripFormatting);
     }
 
     /**
-     * Sends an action bar text to a {@link Player}.
+     * Sends an action bar text to a {@link ProxiedPlayer}.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -3152,7 +3151,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receiver, the sender or the permissions is null.
      */
-    public void sendActionBar(@NotNull String text, @NotNull Player receiver, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void sendActionBar(@NotNull String text, @NotNull ProxiedPlayer receiver, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -3169,7 +3168,7 @@ public class Text {
     }
 
     /**
-     * Sends an action bar text to a {@link Player}.
+     * Sends an action bar text to a {@link ProxiedPlayer}.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -3178,7 +3177,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receiver or the sender or the permissions is null.
      */
-    public void sendActionBar(@NotNull String text, @NotNull Player receiver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void sendActionBar(@NotNull String text, @NotNull ProxiedPlayer receiver, @NotNull CommandSender sender, @NotNull String... permissions) {
         sendActionBar(text, receiver, null, sender, permissions);
     }
 
@@ -3187,7 +3186,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends an action bar text to a group of {@link Player}s.
+     * Sends an action bar text to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -3195,29 +3194,29 @@ public class Text {
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
      * @throws NullPointerException if the text or the receivers is null.
      */
-    public void sendActionBar(@NotNull String text, @NotNull Player[] receivers, TagResolver tagResolver) {
+    public void sendActionBar(@NotNull String text, @NotNull ProxiedPlayer[] receivers, TagResolver tagResolver) {
         Preconditions.checkNotNull(receivers, "Receivers cannot be null");
 
-        for (Player receiver : receivers) {
+        for (ProxiedPlayer receiver : receivers) {
             if (receiver == null) continue;
             sendActionBar(text, receiver, tagResolver);
         }
     }
 
     /**
-     * Sends an action bar text to a group of {@link Player}s.
+     * Sends an action bar text to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param text      The text to send.
      * @param receivers The receivers of the text.
      * @throws NullPointerException if the text or the receivers is null.
      */
-    public void sendActionBar(@NotNull String text, @NotNull Player[] receivers) {
+    public void sendActionBar(@NotNull String text, @NotNull ProxiedPlayer[] receivers) {
         sendActionBar(text, receivers, null);
     }
 
     /**
-     * Sends an action bar text to a group of {@link Player}s.
+     * Sends an action bar text to a group of {@link ProxiedPlayer}s.
      *
      * @param text            The text to send.
      * @param receivers       The receivers of the text.
@@ -3225,7 +3224,7 @@ public class Text {
      * @param stripFormatting Whether to strip formatting from the text before sending it.
      * @throws NullPointerException if the text or the receivers is null.
      */
-    public void sendActionBar(@NotNull String text, @NotNull Player[] receivers, TagResolver tagResolver, boolean stripFormatting) {
+    public void sendActionBar(@NotNull String text, @NotNull ProxiedPlayer[] receivers, TagResolver tagResolver, boolean stripFormatting) {
         if (stripFormatting) {
             sendActionBar(stripFormatting(text, tagResolver), receivers, tagResolver);
         } else {
@@ -3234,19 +3233,19 @@ public class Text {
     }
 
     /**
-     * Sends an action bar text to a group of {@link Player}s.
+     * Sends an action bar text to a group of {@link ProxiedPlayer}s.
      *
      * @param text            The text to send.
      * @param receivers       The receivers of the text.
      * @param stripFormatting Whether to strip formatting from the text before sending it.
      * @throws NullPointerException if the text or the receivers is null.
      */
-    public void sendActionBar(@NotNull String text, @NotNull Player[] receivers, boolean stripFormatting) {
+    public void sendActionBar(@NotNull String text, @NotNull ProxiedPlayer[] receivers, boolean stripFormatting) {
         sendActionBar(text, receivers, null, stripFormatting);
     }
 
     /**
-     * Sends an action bar text to a group of {@link Player}s.
+     * Sends an action bar text to a group of {@link ProxiedPlayer}s.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -3256,7 +3255,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receivers or the sender or the permissions is null.
      */
-    public void sendActionBar(@NotNull String text, @NotNull Player[] receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void sendActionBar(@NotNull String text, @NotNull ProxiedPlayer[] receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -3273,7 +3272,7 @@ public class Text {
     }
 
     /**
-     * Sends an action bar text to a group of {@link Player}s.
+     * Sends an action bar text to a group of {@link ProxiedPlayer}s.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -3282,7 +3281,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receivers, the sender or the permissions is null.
      */
-    public void sendActionBar(@NotNull String text, @NotNull Player[] receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void sendActionBar(@NotNull String text, @NotNull ProxiedPlayer[] receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
         sendActionBar(text, receivers, null, sender, permissions);
     }
 
@@ -3291,7 +3290,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends an action bar text to a group of {@link Player}s.
+     * Sends an action bar text to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -3299,29 +3298,29 @@ public class Text {
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
      * @throws NullPointerException if the text or the receivers is null.
      */
-    public <R extends Collection<Player>> void sendActionBar(@NotNull String text, @NotNull R receivers, TagResolver tagResolver) {
+    public <R extends Collection<ProxiedPlayer>> void sendActionBar(@NotNull String text, @NotNull R receivers, TagResolver tagResolver) {
         Preconditions.checkNotNull(receivers, "Receivers cannot be null");
 
-        for (Player receiver : receivers) {
+        for (ProxiedPlayer receiver : receivers) {
             if (receiver == null) continue;
             sendActionBar(text, receiver, tagResolver);
         }
     }
 
     /**
-     * Sends an action bar text to a group of {@link Player}s.
+     * Sends an action bar text to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param text      The text to send.
      * @param receivers The receivers of the text.
      * @throws NullPointerException if the text or the receivers is null.
      */
-    public <R extends Collection<Player>> void sendActionBar(@NotNull String text, @NotNull R receivers) {
+    public <R extends Collection<ProxiedPlayer>> void sendActionBar(@NotNull String text, @NotNull R receivers) {
         sendActionBar(text, receivers, null);
     }
 
     /**
-     * Sends an action bar text to a group of {@link Player}s.
+     * Sends an action bar text to a group of {@link ProxiedPlayer}s.
      *
      * @param text            The text to send.
      * @param receivers       The receivers of the text.
@@ -3329,7 +3328,7 @@ public class Text {
      * @param stripFormatting Whether to strip formatting from the text before sending it.
      * @throws NullPointerException if the text or the receivers is null.
      */
-    public <R extends Collection<Player>> void sendActionBar(@NotNull String text, @NotNull R receivers, TagResolver tagResolver, boolean stripFormatting) {
+    public <R extends Collection<ProxiedPlayer>> void sendActionBar(@NotNull String text, @NotNull R receivers, TagResolver tagResolver, boolean stripFormatting) {
         if (stripFormatting) {
             sendActionBar(stripFormatting(text, tagResolver), receivers, tagResolver);
         } else {
@@ -3338,19 +3337,19 @@ public class Text {
     }
 
     /**
-     * Sends an action bar text to a group of {@link Player}s.
+     * Sends an action bar text to a group of {@link ProxiedPlayer}s.
      *
      * @param text            The text to send.
      * @param receivers       The receivers of the text.
      * @param stripFormatting Whether to strip formatting from the text before sending it.
      * @throws NullPointerException if the text or the receivers is null.
      */
-    public <R extends Collection<Player>> void sendActionBar(@NotNull String text, @NotNull R receivers, boolean stripFormatting) {
+    public <R extends Collection<ProxiedPlayer>> void sendActionBar(@NotNull String text, @NotNull R receivers, boolean stripFormatting) {
         sendActionBar(text, receivers, null, stripFormatting);
     }
 
     /**
-     * Sends an action bar text to a group of {@link Player}s.
+     * Sends an action bar text to a group of {@link ProxiedPlayer}s.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -3360,7 +3359,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receivers, the sender or the permissions is null.
      */
-    public <R extends Collection<Player>> void sendActionBar(@NotNull String text, @NotNull R receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <R extends Collection<ProxiedPlayer>> void sendActionBar(@NotNull String text, @NotNull R receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -3377,7 +3376,7 @@ public class Text {
     }
 
     /**
-     * Sends an action bar text to a group of {@link Player}s.
+     * Sends an action bar text to a group of {@link ProxiedPlayer}s.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -3386,7 +3385,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receivers, the sender or the permissions is null.
      */
-    public <R extends Collection<Player>> void sendActionBar(@NotNull String text, @NotNull R receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <R extends Collection<ProxiedPlayer>> void sendActionBar(@NotNull String text, @NotNull R receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
         sendActionBar(text, receivers, null, sender, permissions);
     }
 
@@ -3395,7 +3394,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s on the server.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s on the server.
      * The text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -3409,7 +3408,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s on the server.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s on the server.
      * The text is deserialized before being sent.
      *
      * @param text The text to send.
@@ -3420,7 +3419,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s on the server.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s on the server.
      *
      * @param text            The text to send.
      * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
@@ -3436,7 +3435,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s on the server.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s on the server.
      *
      * @param text            The text to send.
      * @param stripFormatting Whether to strip formatting from the text before sending it.
@@ -3447,7 +3446,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s on the server.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s on the server.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -3473,7 +3472,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s on the server.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s on the server.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -3487,79 +3486,79 @@ public class Text {
 
 
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
-    /*    WORLD BROADCAST    */
+    /*    SERVER BROADCAST    */
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s in a world.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s in a server.
      * The text is deserialized before being sent.
      *
      * @param text        The text to send.
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
-     * @param world       The {@link World} to send the text to.
-     * @throws NullPointerException if the text or the world is null.
+     * @param server      The {@link ServerInfo} to send the text to.
+     * @throws NullPointerException if the text or the server is null.
      */
     @SuppressWarnings("PatternValidation")
-    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull World world) {
+    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull ServerInfo server) {
         Preconditions.checkNotNull(text, "Text cannot be null");
-        Preconditions.checkNotNull(world, "World cannot be null");
+        Preconditions.checkNotNull(server, "World cannot be null");
 
-        audiences.world(Key.key(world.getKey().toString())).sendActionBar(deserialize(text, tagResolver));
+        audiences.server(server.getName()).sendActionBar(deserialize(text, tagResolver));
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s on the server.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s on the server.
      * The text is deserialized before being sent.
      *
-     * @param text  The text to send.
-     * @param world The {@link World} to send the text to.
-     * @throws NullPointerException if the text or the world is null.
+     * @param text   The text to send.
+     * @param server The {@link ServerInfo} to send the text to.
+     * @throws NullPointerException if the text or the server is null.
      */
-    public void broadcastActionBar(@NotNull String text, @NotNull World world) {
-        broadcastActionBar(text, null, world);
+    public void broadcastActionBar(@NotNull String text, @NotNull ServerInfo server) {
+        broadcastActionBar(text, null, server);
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s on the server.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s on the server.
      *
      * @param text            The text to send.
      * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
-     * @param world           The {@link World} to send the text to.
+     * @param server          The {@link ServerInfo} to send the text to.
      * @param stripFormatting Whether to strip formatting from the text before sending it.
-     * @throws NullPointerException if the text or the world is null.
+     * @throws NullPointerException if the text or the server is null.
      */
-    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull World world, boolean stripFormatting) {
+    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull ServerInfo server, boolean stripFormatting) {
         if (stripFormatting) {
-            broadcastActionBar(stripFormatting(text, tagResolver), tagResolver, world);
+            broadcastActionBar(stripFormatting(text, tagResolver), tagResolver, server);
         } else {
-            broadcastActionBar(text, tagResolver, world);
+            broadcastActionBar(text, tagResolver, server);
         }
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s on the server.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s on the server.
      *
      * @param text            The text to send.
-     * @param world           The {@link World} to send the text to.
+     * @param server          The {@link ServerInfo} to send the text to.
      * @param stripFormatting Whether to strip formatting from the text before sending it.
-     * @throws NullPointerException if the text or the world is null.
+     * @throws NullPointerException if the text or the server is null.
      */
-    public void broadcastActionBar(@NotNull String text, @NotNull World world, boolean stripFormatting) {
-        broadcastActionBar(text, null, world, stripFormatting);
+    public void broadcastActionBar(@NotNull String text, @NotNull ServerInfo server, boolean stripFormatting) {
+        broadcastActionBar(text, null, server, stripFormatting);
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s on the server.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s on the server.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
-     * @param world       The {@link World} to send the text to.
+     * @param server      The {@link ServerInfo} to send the text to.
      * @param sender      The sender of the text.
      * @param permissions The permissions to check.
-     * @throws NullPointerException if the text, the world, the sender or the permissions is null.
+     * @throws NullPointerException if the text, the server, the sender or the permissions is null.
      */
-    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull ServerInfo server, @NotNull CommandSender sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -3572,21 +3571,21 @@ public class Text {
             }
         }
 
-        broadcastActionBar(text, tagResolver, world, !hasPermission);
+        broadcastActionBar(text, tagResolver, server, !hasPermission);
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s on the server.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s on the server.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
-     * @param world       The {@link World} to send the text to.
+     * @param server      The {@link ServerInfo} to send the text to.
      * @param sender      The sender of the text.
      * @param permissions The permissions to check.
-     * @throws NullPointerException if the text, the world, the sender or the permissions is null.
+     * @throws NullPointerException if the text, the server, the sender or the permissions is null.
      */
-    public void broadcastActionBar(@NotNull String text, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
-        broadcastActionBar(text, null, world, sender, permissions);
+    public void broadcastActionBar(@NotNull String text, @NotNull ServerInfo server, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcastActionBar(text, null, server, sender, permissions);
     }
 
 
@@ -3595,7 +3594,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param text             The text to send.
@@ -3611,7 +3610,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param text             The text to send.
@@ -3623,7 +3622,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s with some permissions.
      *
      * @param text             The text to send.
      * @param tagResolver      The {@link TagResolver} for any additional tags to handle.
@@ -3640,7 +3639,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s with some permissions.
      *
      * @param text             The text to send.
      * @param neededPermission The permission needed to receive the broadcast.
@@ -3652,7 +3651,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s with some permissions.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text             The text to send.
@@ -3679,7 +3678,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s with some permissions.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text             The text to send.
@@ -3697,7 +3696,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param text              The text to send.
@@ -3716,7 +3715,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param text              The text to send.
@@ -3728,7 +3727,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s with some permissions.
      *
      * @param text              The text to send.
      * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
@@ -3745,7 +3744,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s with some permissions.
      *
      * @param text              The text to send.
      * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
@@ -3757,7 +3756,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s with some permissions.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text              The text to send.
@@ -3784,7 +3783,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s with some permissions.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text              The text to send.
@@ -3802,7 +3801,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param text              The text to send.
@@ -3821,7 +3820,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param text              The text to send.
@@ -3833,7 +3832,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s with some permissions.
      *
      * @param text              The text to send.
      * @param tagResolver       The {@link TagResolver} for any additional tags to handle.
@@ -3850,7 +3849,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s with some permissions.
      *
      * @param text              The text to send.
      * @param neededPermissions The receiver must have one of these permissions to receive the broadcast.
@@ -3862,7 +3861,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s with some permissions.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text              The text to send.
@@ -3889,7 +3888,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s with some permissions.
+     * Broadcasts an action bar text to all {@link ProxiedPlayer}s with some permissions.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text              The text to send.
@@ -3907,7 +3906,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a title to a {@link Player}.
+     * Sends a title to a {@link ProxiedPlayer}.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -3920,12 +3919,12 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player receiver, TagResolver tagResolver) {
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull ProxiedPlayer receiver, TagResolver tagResolver) {
         Preconditions.checkArgument((title == null && subtitle != null) || (title != null && subtitle == null), "Both title and subtitle cannot be null simultaneously");
         Preconditions.checkNotNull(receiver, "Receiver cannot be null");
 
         Audience audience;
-        if (receiver instanceof Player) audience = audiences.player((Player) receiver);
+        if (receiver instanceof ProxiedPlayer) audience = audiences.player((ProxiedPlayer) receiver);
         else audience = audiences.sender(receiver);
 
         if (title != null) audience.sendTitlePart(TitlePart.TITLE, deserialize(title, tagResolver));
@@ -3938,7 +3937,7 @@ public class Text {
     }
 
     /**
-     * Sends a title to a {@link Player}.
+     * Sends a title to a {@link ProxiedPlayer}.
      * The text is deserialized before being sent.
      *
      * @param title    The title to send.
@@ -3950,12 +3949,12 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player receiver) {
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull ProxiedPlayer receiver) {
         sendTitle(title, subtitle, fadeIn, stay, fadeOut, receiver, null);
     }
 
     /**
-     * Sends a title to a {@link Player}.
+     * Sends a title to a {@link ProxiedPlayer}.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -3965,12 +3964,12 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, @NotNull Player receiver, TagResolver tagResolver) {
+    public void sendTitle(String title, String subtitle, @NotNull ProxiedPlayer receiver, TagResolver tagResolver) {
         sendTitle(title, subtitle, null, null, null, receiver, tagResolver);
     }
 
     /**
-     * Sends a title to a {@link Player}.
+     * Sends a title to a {@link ProxiedPlayer}.
      * The text is deserialized before being sent.
      *
      * @param title    The title to send.
@@ -3979,7 +3978,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, @NotNull Player receiver) {
+    public void sendTitle(String title, String subtitle, @NotNull ProxiedPlayer receiver) {
         sendTitle(title, subtitle, null, null, null, receiver, null);
     }
 
@@ -3988,7 +3987,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a title to a {@link Player}.
+     * Sends a title to a {@link ProxiedPlayer}.
      * The text is deserialized before being sent.
      *
      * @param title           The title to send.
@@ -4002,7 +4001,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player receiver, TagResolver tagResolver, boolean stripFormatting) {
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull ProxiedPlayer receiver, TagResolver tagResolver, boolean stripFormatting) {
         if (stripFormatting) {
             sendTitle(stripFormatting(title, tagResolver), stripFormatting(subtitle, tagResolver), fadeIn, stay, fadeOut, receiver, tagResolver);
         } else {
@@ -4011,7 +4010,7 @@ public class Text {
     }
 
     /**
-     * Sends a title to a {@link Player}.
+     * Sends a title to a {@link ProxiedPlayer}.
      * The text is deserialized before being sent.
      *
      * @param title           The title to send.
@@ -4024,12 +4023,12 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player receiver, boolean stripFormatting) {
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull ProxiedPlayer receiver, boolean stripFormatting) {
         sendTitle(title, subtitle, fadeIn, stay, fadeOut, receiver, null, stripFormatting);
     }
 
     /**
-     * Sends a title to a {@link Player}.
+     * Sends a title to a {@link ProxiedPlayer}.
      * The text is deserialized before being sent.
      *
      * @param title           The title to send.
@@ -4040,12 +4039,12 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, @NotNull Player receiver, TagResolver tagResolver, boolean stripFormatting) {
+    public void sendTitle(String title, String subtitle, @NotNull ProxiedPlayer receiver, TagResolver tagResolver, boolean stripFormatting) {
         sendTitle(title, subtitle, null, null, null, receiver, tagResolver, stripFormatting);
     }
 
     /**
-     * Sends a title to a {@link Player}.
+     * Sends a title to a {@link ProxiedPlayer}.
      * The text is deserialized before being sent.
      *
      * @param title           The title to send.
@@ -4055,7 +4054,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, @NotNull Player receiver, boolean stripFormatting) {
+    public void sendTitle(String title, String subtitle, @NotNull ProxiedPlayer receiver, boolean stripFormatting) {
         sendTitle(title, subtitle, null, null, null, receiver, null, stripFormatting);
     }
 
@@ -4064,7 +4063,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a title to a {@link Player}.
+     * Sends a title to a {@link ProxiedPlayer}.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -4079,7 +4078,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player receiver, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull ProxiedPlayer receiver, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -4096,7 +4095,7 @@ public class Text {
     }
 
     /**
-     * Sends a title to a {@link Player}.
+     * Sends a title to a {@link ProxiedPlayer}.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -4110,12 +4109,12 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player receiver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull ProxiedPlayer receiver, @NotNull CommandSender sender, @NotNull String... permissions) {
         sendTitle(title, subtitle, fadeIn, stay, fadeOut, receiver, null, sender, permissions);
     }
 
     /**
-     * Sends a title to a {@link Player}.
+     * Sends a title to a {@link ProxiedPlayer}.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -4127,12 +4126,12 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, @NotNull Player receiver, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void sendTitle(String title, String subtitle, @NotNull ProxiedPlayer receiver, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
         sendTitle(title, subtitle, null, null, null, receiver, tagResolver, sender, permissions);
     }
 
     /**
-     * Sends a title to a {@link Player}.
+     * Sends a title to a {@link ProxiedPlayer}.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -4143,7 +4142,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, @NotNull Player receiver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void sendTitle(String title, String subtitle, @NotNull ProxiedPlayer receiver, @NotNull CommandSender sender, @NotNull String... permissions) {
         sendTitle(title, subtitle, null, null, null, receiver, null, sender, permissions);
     }
 
@@ -4152,7 +4151,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a title to a group of {@link Player}s.
+     * Sends a title to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -4165,18 +4164,18 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player[] receivers, TagResolver tagResolver) {
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull ProxiedPlayer[] receivers, TagResolver tagResolver) {
         Preconditions.checkArgument((title == null && subtitle != null) || (title != null && subtitle == null), "Both title and subtitle cannot be null simultaneously");
         Preconditions.checkNotNull(receivers, "Receiver cannot be null");
 
-        for (Player receiver : receivers) {
+        for (ProxiedPlayer receiver : receivers) {
             if (receiver == null) continue;
             sendTitle(title, subtitle, fadeIn, stay, fadeOut, receiver, tagResolver);
         }
     }
 
     /**
-     * Sends a title to a group of {@link Player}s.
+     * Sends a title to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param title     The title to send.
@@ -4188,12 +4187,12 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player[] receivers) {
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull ProxiedPlayer[] receivers) {
         sendTitle(title, subtitle, fadeIn, stay, fadeOut, receivers, null);
     }
 
     /**
-     * Sends a title to a group of {@link Player}s.
+     * Sends a title to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -4203,12 +4202,12 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, @NotNull Player[] receivers, TagResolver tagResolver) {
+    public void sendTitle(String title, String subtitle, @NotNull ProxiedPlayer[] receivers, TagResolver tagResolver) {
         sendTitle(title, subtitle, null, null, null, receivers, tagResolver);
     }
 
     /**
-     * Sends a title to a group of {@link Player}s.
+     * Sends a title to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param title     The title to send.
@@ -4217,7 +4216,7 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, @NotNull Player[] receivers) {
+    public void sendTitle(String title, String subtitle, @NotNull ProxiedPlayer[] receivers) {
         sendTitle(title, subtitle, null, null, null, receivers, null);
     }
 
@@ -4226,7 +4225,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a title to a group of {@link Player}s.
+     * Sends a title to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param title           The title to send.
@@ -4240,7 +4239,7 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player[] receivers, TagResolver tagResolver, boolean stripFormatting) {
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull ProxiedPlayer[] receivers, TagResolver tagResolver, boolean stripFormatting) {
         if (stripFormatting) {
             sendTitle(stripFormatting(title, tagResolver), stripFormatting(subtitle, tagResolver), fadeIn, stay, fadeOut, receivers, tagResolver);
         } else {
@@ -4249,7 +4248,7 @@ public class Text {
     }
 
     /**
-     * Sends a title to a group of {@link Player}s.
+     * Sends a title to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param title           The title to send.
@@ -4262,12 +4261,12 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player[] receivers, boolean stripFormatting) {
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull ProxiedPlayer[] receivers, boolean stripFormatting) {
         sendTitle(title, subtitle, fadeIn, stay, fadeOut, receivers, null, stripFormatting);
     }
 
     /**
-     * Sends a title to a group of {@link Player}s.
+     * Sends a title to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param title           The title to send.
@@ -4278,12 +4277,12 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, @NotNull Player[] receivers, TagResolver tagResolver, boolean stripFormatting) {
+    public void sendTitle(String title, String subtitle, @NotNull ProxiedPlayer[] receivers, TagResolver tagResolver, boolean stripFormatting) {
         sendTitle(title, subtitle, null, null, null, receivers, tagResolver, stripFormatting);
     }
 
     /**
-     * Sends a title to a group of {@link Player}s.
+     * Sends a title to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param title           The title to send.
@@ -4293,7 +4292,7 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, @NotNull Player[] receivers, boolean stripFormatting) {
+    public void sendTitle(String title, String subtitle, @NotNull ProxiedPlayer[] receivers, boolean stripFormatting) {
         sendTitle(title, subtitle, null, null, null, receivers, null, stripFormatting);
     }
 
@@ -4302,7 +4301,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a title to a group of {@link Player}s.
+     * Sends a title to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -4317,7 +4316,7 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player[] receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull ProxiedPlayer[] receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -4334,7 +4333,7 @@ public class Text {
     }
 
     /**
-     * Sends a title to a group of {@link Player}s.
+     * Sends a title to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -4348,12 +4347,12 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player[] receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull ProxiedPlayer[] receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
         sendTitle(title, subtitle, fadeIn, stay, fadeOut, receivers, null, sender, permissions);
     }
 
     /**
-     * Sends a title to a group of {@link Player}s.
+     * Sends a title to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -4365,12 +4364,12 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, @NotNull Player[] receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void sendTitle(String title, String subtitle, @NotNull ProxiedPlayer[] receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
         sendTitle(title, subtitle, null, null, null, receivers, tagResolver, sender, permissions);
     }
 
     /**
-     * Sends a title to a group of {@link Player}s.
+     * Sends a title to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -4381,7 +4380,7 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, @NotNull Player[] receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void sendTitle(String title, String subtitle, @NotNull ProxiedPlayer[] receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
         sendTitle(title, subtitle, null, null, null, receivers, null, sender, permissions);
     }
 
@@ -4390,7 +4389,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a title to a group of {@link Player}s.
+     * Sends a title to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -4403,18 +4402,18 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull R receivers, TagResolver tagResolver) {
+    public <R extends Collection<ProxiedPlayer>> void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull R receivers, TagResolver tagResolver) {
         Preconditions.checkArgument((title == null && subtitle != null) || (title != null && subtitle == null), "Both title and subtitle cannot be null simultaneously");
         Preconditions.checkNotNull(receivers, "Receiver cannot be null");
 
-        for (Player receiver : receivers) {
+        for (ProxiedPlayer receiver : receivers) {
             if (receiver == null) continue;
             sendTitle(title, subtitle, fadeIn, stay, fadeOut, receiver, tagResolver);
         }
     }
 
     /**
-     * Sends a title to a group of {@link Player}s.
+     * Sends a title to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param title     The title to send.
@@ -4426,12 +4425,12 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull R receivers) {
+    public <R extends Collection<ProxiedPlayer>> void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull R receivers) {
         sendTitle(title, subtitle, fadeIn, stay, fadeOut, receivers, null);
     }
 
     /**
-     * Sends a title to a group of {@link Player}s.
+     * Sends a title to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -4441,12 +4440,12 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, @NotNull R receivers, TagResolver tagResolver) {
+    public <R extends Collection<ProxiedPlayer>> void sendTitle(String title, String subtitle, @NotNull R receivers, TagResolver tagResolver) {
         sendTitle(title, subtitle, null, null, null, receivers, tagResolver);
     }
 
     /**
-     * Sends a title to a group of {@link Player}s.
+     * Sends a title to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param title     The title to send.
@@ -4455,7 +4454,7 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, @NotNull R receivers) {
+    public <R extends Collection<ProxiedPlayer>> void sendTitle(String title, String subtitle, @NotNull R receivers) {
         sendTitle(title, subtitle, null, null, null, receivers, null);
     }
 
@@ -4464,7 +4463,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a title to a group of {@link Player}s.
+     * Sends a title to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param title           The title to send.
@@ -4478,7 +4477,7 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull R receivers, TagResolver tagResolver, boolean stripFormatting) {
+    public <R extends Collection<ProxiedPlayer>> void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull R receivers, TagResolver tagResolver, boolean stripFormatting) {
         if (stripFormatting) {
             sendTitle(stripFormatting(title, tagResolver), stripFormatting(subtitle, tagResolver), fadeIn, stay, fadeOut, receivers, tagResolver);
         } else {
@@ -4487,7 +4486,7 @@ public class Text {
     }
 
     /**
-     * Sends a title to a group of {@link Player}s.
+     * Sends a title to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param title           The title to send.
@@ -4500,12 +4499,12 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull R receivers, boolean stripFormatting) {
+    public <R extends Collection<ProxiedPlayer>> void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull R receivers, boolean stripFormatting) {
         sendTitle(title, subtitle, fadeIn, stay, fadeOut, receivers, null, stripFormatting);
     }
 
     /**
-     * Sends a title to a group of {@link Player}s.
+     * Sends a title to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param title           The title to send.
@@ -4516,12 +4515,12 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, @NotNull R receivers, TagResolver tagResolver, boolean stripFormatting) {
+    public <R extends Collection<ProxiedPlayer>> void sendTitle(String title, String subtitle, @NotNull R receivers, TagResolver tagResolver, boolean stripFormatting) {
         sendTitle(title, subtitle, null, null, null, receivers, tagResolver, stripFormatting);
     }
 
     /**
-     * Sends a title to a group of {@link Player}s.
+     * Sends a title to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param title           The title to send.
@@ -4531,7 +4530,7 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, @NotNull R receivers, boolean stripFormatting) {
+    public <R extends Collection<ProxiedPlayer>> void sendTitle(String title, String subtitle, @NotNull R receivers, boolean stripFormatting) {
         sendTitle(title, subtitle, null, null, null, receivers, null, stripFormatting);
     }
 
@@ -4540,7 +4539,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a title to a group of {@link Player}s.
+     * Sends a title to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -4555,7 +4554,7 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull R receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <R extends Collection<ProxiedPlayer>> void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull R receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -4572,7 +4571,7 @@ public class Text {
     }
 
     /**
-     * Sends a title to a group of {@link Player}s.
+     * Sends a title to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -4586,12 +4585,12 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull R receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <R extends Collection<ProxiedPlayer>> void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull R receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
         sendTitle(title, subtitle, fadeIn, stay, fadeOut, receivers, null, sender, permissions);
     }
 
     /**
-     * Sends a title to a group of {@link Player}s.
+     * Sends a title to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -4603,12 +4602,12 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, @NotNull R receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <R extends Collection<ProxiedPlayer>> void sendTitle(String title, String subtitle, @NotNull R receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
         sendTitle(title, subtitle, null, null, null, receivers, tagResolver, sender, permissions);
     }
 
     /**
-     * Sends a title to a group of {@link Player}s.
+     * Sends a title to a group of {@link ProxiedPlayer}s.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -4619,7 +4618,7 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, @NotNull R receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <R extends Collection<ProxiedPlayer>> void sendTitle(String title, String subtitle, @NotNull R receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
         sendTitle(title, subtitle, null, null, null, receivers, null, sender, permissions);
     }
 
@@ -4628,7 +4627,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a title to all {@link Player}s on the server.
+     * Broadcasts a title to all {@link ProxiedPlayer}s on the server.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -4655,7 +4654,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s on the server.
+     * Broadcasts a title to all {@link ProxiedPlayer}s on the server.
      * The text is deserialized before being sent.
      *
      * @param title    The title to send.
@@ -4671,7 +4670,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s on the server.
+     * Broadcasts a title to all {@link ProxiedPlayer}s on the server.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -4685,7 +4684,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s on the server.
+     * Broadcasts a title to all {@link ProxiedPlayer}s on the server.
      * The text is deserialized before being sent.
      *
      * @param title    The title to send.
@@ -4702,7 +4701,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a title to all {@link Player}s on the server.
+     * Broadcasts a title to all {@link ProxiedPlayer}s on the server.
      * The text is deserialized before being sent.
      *
      * @param title           The title to send.
@@ -4724,7 +4723,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s on the server.
+     * Broadcasts a title to all {@link ProxiedPlayer}s on the server.
      * The text is deserialized before being sent.
      *
      * @param title           The title to send.
@@ -4741,7 +4740,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s on the server.
+     * Broadcasts a title to all {@link ProxiedPlayer}s on the server.
      * The text is deserialized before being sent.
      *
      * @param title           The title to send.
@@ -4756,7 +4755,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s on the server.
+     * Broadcasts a title to all {@link ProxiedPlayer}s on the server.
      * The text is deserialized before being sent.
      *
      * @param title           The title to send.
@@ -4774,7 +4773,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a title to all {@link Player}s on the server.
+     * Broadcasts a title to all {@link ProxiedPlayer}s on the server.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -4805,7 +4804,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s on the server.
+     * Broadcasts a title to all {@link ProxiedPlayer}s on the server.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -4823,7 +4822,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s on the server.
+     * Broadcasts a title to all {@link ProxiedPlayer}s on the server.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -4839,7 +4838,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s on the server.
+     * Broadcasts a title to all {@link ProxiedPlayer}s on the server.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -4858,7 +4857,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a title to all {@link Player}s in a world.
+     * Broadcasts a title to all {@link ProxiedPlayer}s in a server.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -4867,16 +4866,16 @@ public class Text {
      * @param stay        The time in milliseconds for the title to stay on screen. (default: 3000)
      * @param fadeOut     The time in milliseconds for the title to fade out. (default: 1000)
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
-     * @param world       The {@link World} to send the title to.
+     * @param server      The {@link ServerInfo} to send the title to.
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
     @SuppressWarnings("PatternValidation")
-    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull World world) {
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull ServerInfo server) {
         Preconditions.checkArgument((title == null && subtitle != null) || (title != null && subtitle == null), "Both title and subtitle cannot be null simultaneously");
-        Preconditions.checkNotNull(world, "World cannot be null");
+        Preconditions.checkNotNull(server, "World cannot be null");
 
-        Audience audience = audiences.world(Key.key(world.getKey().toString()));
+        Audience audience = audiences.server(server.getName());
 
         if (title != null) audience.sendTitlePart(TitlePart.TITLE, deserialize(title, tagResolver));
         if (subtitle != null) audience.sendTitlePart(TitlePart.SUBTITLE, deserialize(subtitle, tagResolver));
@@ -4888,7 +4887,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s in a world.
+     * Broadcasts a title to all {@link ProxiedPlayer}s in a server.
      * The text is deserialized before being sent.
      *
      * @param title    The title to send.
@@ -4896,41 +4895,41 @@ public class Text {
      * @param fadeIn   The time in milliseconds for the title to fade in. (default: 1000)
      * @param stay     The time in milliseconds for the title to stay on screen. (default: 3000)
      * @param fadeOut  The time in milliseconds for the title to fade out. (default: 1000)
-     * @param world    The {@link World} to send the title to.
+     * @param server   The {@link ServerInfo} to send the title to.
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull World world) {
-        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, world);
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull ServerInfo server) {
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, server);
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s in a world.
+     * Broadcasts a title to all {@link ProxiedPlayer}s in a server.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
      * @param subtitle    The subtitle to send.
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
-     * @param world       The {@link World} to send the title to.
+     * @param server      The {@link ServerInfo} to send the title to.
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull World world) {
-        broadcastTitle(title, subtitle, null, null, null, tagResolver, world);
+    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull ServerInfo server) {
+        broadcastTitle(title, subtitle, null, null, null, tagResolver, server);
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s in a world.
+     * Broadcasts a title to all {@link ProxiedPlayer}s in a server.
      * The text is deserialized before being sent.
      *
      * @param title    The title to send.
      * @param subtitle The subtitle to send.
-     * @param world    The {@link World} to send the title to.
+     * @param server   The {@link ServerInfo} to send the title to.
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, @NotNull World world) {
-        broadcastTitle(title, subtitle, null, null, null, null, world);
+    public void broadcastTitle(String title, String subtitle, @NotNull ServerInfo server) {
+        broadcastTitle(title, subtitle, null, null, null, null, server);
     }
 
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -4938,7 +4937,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a title to all {@link Player}s in a world.
+     * Broadcasts a title to all {@link ProxiedPlayer}s in a server.
      * The text is deserialized before being sent.
      *
      * @param title           The title to send.
@@ -4947,21 +4946,21 @@ public class Text {
      * @param stay            The time in milliseconds for the title to stay on screen. (default: 3000)
      * @param fadeOut         The time in milliseconds for the title to fade out. (default: 1000)
      * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
-     * @param world           The {@link World} to send the title to.
+     * @param server          The {@link ServerInfo} to send the title to.
      * @param stripFormatting Whether to strip formatting from the text before sending it.
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull World world, boolean stripFormatting) {
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull ServerInfo server, boolean stripFormatting) {
         if (stripFormatting) {
-            broadcastTitle(stripFormatting(title, tagResolver), stripFormatting(subtitle, tagResolver), fadeIn, stay, fadeOut, tagResolver, world);
+            broadcastTitle(stripFormatting(title, tagResolver), stripFormatting(subtitle, tagResolver), fadeIn, stay, fadeOut, tagResolver, server);
         } else {
-            broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, tagResolver, world);
+            broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, tagResolver, server);
         }
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s in a world.
+     * Broadcasts a title to all {@link ProxiedPlayer}s in a server.
      * The text is deserialized before being sent.
      *
      * @param title           The title to send.
@@ -4969,44 +4968,44 @@ public class Text {
      * @param fadeIn          The time in milliseconds for the title to fade in. (default: 1000)
      * @param stay            The time in milliseconds for the title to stay on screen. (default: 3000)
      * @param fadeOut         The time in milliseconds for the title to fade out. (default: 1000)
-     * @param world           The {@link World} to send the title to.
+     * @param server          The {@link ServerInfo} to send the title to.
      * @param stripFormatting Whether to strip formatting from the text before sending it.
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull World world, boolean stripFormatting) {
-        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, world, stripFormatting);
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull ServerInfo server, boolean stripFormatting) {
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, server, stripFormatting);
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s in a world.
+     * Broadcasts a title to all {@link ProxiedPlayer}s in a server.
      * The text is deserialized before being sent.
      *
      * @param title           The title to send.
      * @param subtitle        The subtitle to send.
      * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
-     * @param world           The {@link World} to send the title to.
+     * @param server          The {@link ServerInfo} to send the title to.
      * @param stripFormatting Whether to strip formatting from the text before sending it.
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull World world, boolean stripFormatting) {
-        broadcastTitle(title, subtitle, null, null, null, tagResolver, world, stripFormatting);
+    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull ServerInfo server, boolean stripFormatting) {
+        broadcastTitle(title, subtitle, null, null, null, tagResolver, server, stripFormatting);
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s in a world.
+     * Broadcasts a title to all {@link ProxiedPlayer}s in a server.
      * The text is deserialized before being sent.
      *
      * @param title           The title to send.
      * @param subtitle        The subtitle to send.
-     * @param world           The {@link World} to send the title to.
+     * @param server          The {@link ServerInfo} to send the title to.
      * @param stripFormatting Whether to strip formatting from the text before sending it.
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, @NotNull World world, boolean stripFormatting) {
-        broadcastTitle(title, subtitle, null, null, null, null, world, stripFormatting);
+    public void broadcastTitle(String title, String subtitle, @NotNull ServerInfo server, boolean stripFormatting) {
+        broadcastTitle(title, subtitle, null, null, null, null, server, stripFormatting);
     }
 
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -5014,7 +5013,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a title to all {@link Player}s in a world.
+     * Broadcasts a title to all {@link ProxiedPlayer}s in a server.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -5023,13 +5022,13 @@ public class Text {
      * @param stay        The time in milliseconds for the title to stay on screen. (default: 3000)
      * @param fadeOut     The time in milliseconds for the title to fade out. (default: 1000)
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
-     * @param world       The {@link World} to send the title to.
+     * @param server      The {@link ServerInfo} to send the title to.
      * @param sender      The sender of the text.
      * @param permissions The permissions to check.
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull ServerInfo server, @NotNull CommandSender sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -5042,11 +5041,11 @@ public class Text {
             }
         }
 
-        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, tagResolver, world, !hasPermission);
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, tagResolver, server, !hasPermission);
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s in a world.
+     * Broadcasts a title to all {@link ProxiedPlayer}s in a server.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -5054,47 +5053,47 @@ public class Text {
      * @param fadeIn      The time in milliseconds for the title to fade in. (default: 1000)
      * @param stay        The time in milliseconds for the title to stay on screen. (default: 3000)
      * @param fadeOut     The time in milliseconds for the title to fade out. (default: 1000)
-     * @param world       The {@link World} to send the title to.
+     * @param server      The {@link ServerInfo} to send the title to.
      * @param sender      The sender of the text.
      * @param permissions The permissions to check.
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
-        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, world, sender, permissions);
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull ServerInfo server, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, server, sender, permissions);
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s in a world.
+     * Broadcasts a title to all {@link ProxiedPlayer}s in a server.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
      * @param subtitle    The subtitle to send.
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
-     * @param world       The {@link World} to send the title to.
+     * @param server      The {@link ServerInfo} to send the title to.
      * @param sender      The sender of the text.
      * @param permissions The permissions to check.
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
-        broadcastTitle(title, subtitle, null, null, null, tagResolver, world, sender, permissions);
+    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull ServerInfo server, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcastTitle(title, subtitle, null, null, null, tagResolver, server, sender, permissions);
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s in a world.
+     * Broadcasts a title to all {@link ProxiedPlayer}s in a server.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
      * @param subtitle    The subtitle to send.
-     * @param world       The {@link World} to send the title to.
+     * @param server      The {@link ServerInfo} to send the title to.
      * @param sender      The sender of the text.
      * @param permissions The permissions to check.
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
-        broadcastTitle(title, subtitle, null, null, null, null, world, sender, permissions);
+    public void broadcastTitle(String title, String subtitle, @NotNull ServerInfo server, @NotNull CommandSender sender, @NotNull String... permissions) {
+        broadcastTitle(title, subtitle, null, null, null, null, server, sender, permissions);
     }
 
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -5102,7 +5101,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title            The title to send.
@@ -5131,7 +5130,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title            The title to send.
@@ -5148,7 +5147,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title            The title to send.
@@ -5163,7 +5162,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title            The title to send.
@@ -5181,7 +5180,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title            The title to send.
@@ -5204,7 +5203,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title            The title to send.
@@ -5222,7 +5221,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title            The title to send.
@@ -5238,7 +5237,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title            The title to send.
@@ -5257,7 +5256,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title            The title to send.
@@ -5289,7 +5288,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title            The title to send.
@@ -5308,7 +5307,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title            The title to send.
@@ -5325,7 +5324,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title            The title to send.
@@ -5345,7 +5344,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title             The title to send.
@@ -5376,7 +5375,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title             The title to send.
@@ -5393,7 +5392,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title             The title to send.
@@ -5408,7 +5407,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title             The title to send.
@@ -5426,7 +5425,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title             The title to send.
@@ -5449,7 +5448,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title             The title to send.
@@ -5467,7 +5466,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title             The title to send.
@@ -5483,7 +5482,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title             The title to send.
@@ -5502,7 +5501,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title             The title to send.
@@ -5534,7 +5533,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title             The title to send.
@@ -5553,7 +5552,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title             The title to send.
@@ -5570,7 +5569,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title             The title to send.
@@ -5589,7 +5588,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title             The title to send.
@@ -5620,7 +5619,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title             The title to send.
@@ -5637,7 +5636,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title             The title to send.
@@ -5652,7 +5651,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title             The title to send.
@@ -5670,7 +5669,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title             The title to send.
@@ -5693,7 +5692,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title             The title to send.
@@ -5711,7 +5710,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title             The title to send.
@@ -5727,7 +5726,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title             The title to send.
@@ -5746,7 +5745,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title             The title to send.
@@ -5778,7 +5777,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title             The title to send.
@@ -5797,7 +5796,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title             The title to send.
@@ -5814,7 +5813,7 @@ public class Text {
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s with some permissions.
+     * Broadcasts a title to all {@link ProxiedPlayer}s with some permissions.
      * The text is deserialized before being sent.
      *
      * @param title             The title to send.

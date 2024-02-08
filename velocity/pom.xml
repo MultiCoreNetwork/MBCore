@@ -7,13 +7,13 @@
     <parent>
         <groupId>it.multicoredev.mbcore</groupId>
         <artifactId>MBCore</artifactId>
-        <version>8.0.0</version>
+        <version>8.0.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.multicoredev.mbcore.velocity</groupId>
     <artifactId>MBCore-velocity</artifactId>
-    <version>8.0.0</version>
+    <version>8.0.1</version>
     <packaging>jar</packaging>
 
     <name>MBCore-velocity</name>

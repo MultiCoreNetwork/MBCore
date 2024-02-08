@@ -6,7 +6,7 @@
 
     <groupId>it.multicoredev.mbcore</groupId>
     <artifactId>MBCore</artifactId>
-    <version>8.0.0</version>
+    <version>8.0.1</version>
     <packaging>pom</packaging>
 
     <name>MBCore</name>
@@ -17,10 +17,18 @@
     <properties>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <kiori.version>4.14.0</kiori.version>
+
+        <kiori.version>4.15.0</kiori.version>
     </properties>
+
+    <modules>
+        <module>spigot</module>
+        <module>bungeecord</module>
+        <module>velocity</module>
+    </modules>
 
     <organization>
         <name>MultiCore Network</name>
@@ -60,17 +68,11 @@
         </repository>
     </distributionManagement>
 
-    <modules>
-        <module>spigot</module>
-        <module>bungeecord</module>
-        <!--<module>velocity</module>-->
-    </modules>
-
     <dependencies>
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>24.0.1</version>
+            <version>24.1.0</version>
         </dependency>
         <dependency>
             <groupId>net.kyori</groupId>

@@ -1,19 +1,16 @@
-package it.multicoredev.mbcore.spigot;
+package it.multicoredev.mbcore.velocity;
 
 import com.google.common.base.Preconditions;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.proxy.Player;
+import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.TitlePart;
-import org.bukkit.World;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,10 +58,10 @@ public class Text {
     private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)[§&][0-9A-FK-ORX]");
 
     private static Text instance = null;
-    private final BukkitAudiences audiences;
+    private final ProxyServer server;
 
-    private Text(Plugin plugin) {
-        audiences = BukkitAudiences.create(plugin);
+    private Text(ProxyServer server) {
+        this.server = server;
     }
 
     /**
@@ -79,34 +76,16 @@ public class Text {
 
     /**
      * Creates an instance of the Text class with the provided Plugin.
-     * WARNING! Remember to destroy the instance of this class when the plugin is disabled or reloaded with {@link Text#destroy()}.
      *
-     * @param plugin The {@link Plugin} to associate with the Text instance.
+     * @param server The {@link ProxyServer} instance.
      * @return The created Text instance.
      * @throws IllegalStateException if a Text instance has already been created. To create a new instance,
      *                               you must destroy the previous instance first.
      */
-    public static Text create(Plugin plugin) {
-        if (instance != null)
-            throw new IllegalStateException("Text instance already created. Destroy the previous instance first.");
-        instance = new Text(plugin);
+    public static Text create(ProxyServer server) {
+        if (instance != null) throw new IllegalStateException("Text instance already created. Destroy the previous instance first.");
+        instance = new Text(server);
         return instance;
-    }
-
-    /**
-     * Destroys the existing instance of the Text class, if it has been created.
-     * This method releases any associated resources and sets the instance to null, making it eligible for garbage collection.
-     *
-     * @throws IllegalStateException if no Text instance has been created to destroy.
-     */
-    public static void destroy() {
-        if (instance == null) throw new IllegalStateException("Text instance not created.");
-
-        if (instance.audiences != null) {
-            instance.audiences.close();
-        }
-
-        instance = null;
     }
 
     /**
@@ -560,7 +539,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a text to a {@link CommandSender} or a {@link Player}.
+     * Sends a text to a {@link CommandSource} or a {@link Player}.
      * The text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -568,31 +547,27 @@ public class Text {
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
      * @throws NullPointerException if the text or the receiver is null.
      */
-    public void send(@NotNull String text, @NotNull CommandSender receiver, TagResolver tagResolver) {
+    public void send(@NotNull String text, @NotNull CommandSource receiver, TagResolver tagResolver) {
         Preconditions.checkNotNull(text, "Text cannot be null");
         Preconditions.checkNotNull(receiver, "Receiver cannot be null");
 
-        Audience audience;
-        if (receiver instanceof Player) audience = audiences.player((Player) receiver);
-        else audience = audiences.sender(receiver);
-
-        audience.sendMessage(deserialize(text, tagResolver));
+        receiver.sendMessage(deserialize(text, tagResolver));
     }
 
     /**
-     * Sends a text to a {@link CommandSender} or a {@link Player}.
+     * Sends a text to a {@link CommandSource} or a {@link Player}.
      * The text is deserialized before being sent.
      *
      * @param text     The text to send.
      * @param receiver The receiver of the text.
      * @throws NullPointerException if the text or the receiver is null.
      */
-    public void send(@NotNull String text, @NotNull CommandSender receiver) {
+    public void send(@NotNull String text, @NotNull CommandSource receiver) {
         send(text, receiver, null);
     }
 
     /**
-     * Sends a text to a {@link CommandSender} or a {@link Player}.
+     * Sends a text to a {@link CommandSource} or a {@link Player}.
      *
      * @param text            The text to send.
      * @param receiver        The receiver of the text.
@@ -600,7 +575,7 @@ public class Text {
      * @param stripFormatting Whether to strip formatting from the text before sending it.
      * @throws NullPointerException if the text or the receiver is null.
      */
-    public void send(@NotNull String text, @NotNull CommandSender receiver, TagResolver tagResolver, boolean stripFormatting) {
+    public void send(@NotNull String text, @NotNull CommandSource receiver, TagResolver tagResolver, boolean stripFormatting) {
         if (stripFormatting) {
             send(stripFormatting(text, tagResolver), receiver, tagResolver);
         } else {
@@ -609,19 +584,19 @@ public class Text {
     }
 
     /**
-     * Sends a text to a {@link CommandSender} or a {@link Player}.
+     * Sends a text to a {@link CommandSource} or a {@link Player}.
      *
      * @param text            The text to send.
      * @param receiver        The receiver of the text.
      * @param stripFormatting Whether to strip formatting from the text before sending it.
      * @throws NullPointerException if the text or the receiver is null.
      */
-    public void send(@NotNull String text, @NotNull CommandSender receiver, boolean stripFormatting) {
+    public void send(@NotNull String text, @NotNull CommandSource receiver, boolean stripFormatting) {
         send(text, receiver, null, stripFormatting);
     }
 
     /**
-     * Sends a text to a {@link CommandSender} or a {@link Player}.
+     * Sends a text to a {@link CommandSource} or a {@link Player}.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -631,7 +606,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receiver, the sender or the permissions is null.
      */
-    public void send(@NotNull String text, @NotNull CommandSender receiver, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void send(@NotNull String text, @NotNull CommandSource receiver, TagResolver tagResolver, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -648,7 +623,7 @@ public class Text {
     }
 
     /**
-     * Sends a text to a {@link CommandSender} or a {@link Player}.
+     * Sends a text to a {@link CommandSource} or a {@link Player}.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -657,7 +632,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receiver or the sender or the permissions is null.
      */
-    public void send(@NotNull String text, @NotNull CommandSender receiver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void send(@NotNull String text, @NotNull CommandSource receiver, @NotNull CommandSource sender, @NotNull String... permissions) {
         send(text, receiver, null, sender, permissions);
     }
 
@@ -666,7 +641,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a text to a group of {@link CommandSender} or {@link Player}.
+     * Sends a text to a group of {@link CommandSource} or {@link Player}.
      * The text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -674,29 +649,29 @@ public class Text {
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
      * @throws NullPointerException if the text or the receivers is null.
      */
-    public void send(@NotNull String text, @NotNull CommandSender[] receivers, TagResolver tagResolver) {
+    public void send(@NotNull String text, @NotNull CommandSource[] receivers, TagResolver tagResolver) {
         Preconditions.checkNotNull(receivers, "Receivers cannot be null");
 
-        for (CommandSender receiver : receivers) {
+        for (CommandSource receiver : receivers) {
             if (receiver == null) continue;
             send(text, receiver, tagResolver);
         }
     }
 
     /**
-     * Sends a text to a group of {@link CommandSender} or {@link Player}.
+     * Sends a text to a group of {@link CommandSource} or {@link Player}.
      * The text is deserialized before being sent.
      *
      * @param text      The text to send.
      * @param receivers The receivers of the text.
      * @throws NullPointerException if the text or the receivers is null.
      */
-    public void send(@NotNull String text, @NotNull CommandSender[] receivers) {
+    public void send(@NotNull String text, @NotNull CommandSource[] receivers) {
         send(text, receivers, null);
     }
 
     /**
-     * Sends a text to a group of {@link CommandSender} or {@link Player}.
+     * Sends a text to a group of {@link CommandSource} or {@link Player}.
      *
      * @param text            The text to send.
      * @param receivers       The receivers of the text.
@@ -704,7 +679,7 @@ public class Text {
      * @param stripFormatting Whether to strip formatting from the text before sending it.
      * @throws NullPointerException if the text or the receivers is null.
      */
-    public void send(@NotNull String text, @NotNull CommandSender[] receivers, TagResolver tagResolver, boolean stripFormatting) {
+    public void send(@NotNull String text, @NotNull CommandSource[] receivers, TagResolver tagResolver, boolean stripFormatting) {
         if (stripFormatting) {
             send(stripFormatting(text, tagResolver), receivers, tagResolver);
         } else {
@@ -713,19 +688,19 @@ public class Text {
     }
 
     /**
-     * Sends a text to a group of {@link CommandSender} or {@link Player}.
+     * Sends a text to a group of {@link CommandSource} or {@link Player}.
      *
      * @param text            The text to send.
      * @param receivers       The receivers of the text.
      * @param stripFormatting Whether to strip formatting from the text before sending it.
      * @throws NullPointerException if the text or the receivers is null.
      */
-    public void send(@NotNull String text, @NotNull CommandSender[] receivers, boolean stripFormatting) {
+    public void send(@NotNull String text, @NotNull CommandSource[] receivers, boolean stripFormatting) {
         send(text, receivers, null, stripFormatting);
     }
 
     /**
-     * Sends a text to a group of {@link CommandSender} or {@link Player}.
+     * Sends a text to a group of {@link CommandSource} or {@link Player}.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -735,7 +710,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receivers or the sender or the permissions is null.
      */
-    public void send(@NotNull String text, @NotNull CommandSender[] receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void send(@NotNull String text, @NotNull CommandSource[] receivers, TagResolver tagResolver, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -752,7 +727,7 @@ public class Text {
     }
 
     /**
-     * Sends a text to a group of {@link CommandSender} or {@link Player}.
+     * Sends a text to a group of {@link CommandSource} or {@link Player}.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -761,7 +736,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receivers, the sender or the permissions is null.
      */
-    public void send(@NotNull String text, @NotNull CommandSender[] receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void send(@NotNull String text, @NotNull CommandSource[] receivers, @NotNull CommandSource sender, @NotNull String... permissions) {
         send(text, receivers, null, sender, permissions);
     }
 
@@ -770,7 +745,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a text to a group of {@link CommandSender} or {@link Player}.
+     * Sends a text to a group of {@link CommandSource} or {@link Player}.
      * The text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -778,29 +753,29 @@ public class Text {
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
      * @throws NullPointerException if the text or the receivers is null.
      */
-    public <R extends Collection<? extends CommandSender>> void send(@NotNull String text, @NotNull R receivers, TagResolver tagResolver) {
+    public <R extends Collection<? extends CommandSource>> void send(@NotNull String text, @NotNull R receivers, TagResolver tagResolver) {
         Preconditions.checkNotNull(receivers, "Receivers cannot be null");
 
-        for (CommandSender receiver : receivers) {
+        for (CommandSource receiver : receivers) {
             if (receiver == null) continue;
             send(text, receiver, tagResolver);
         }
     }
 
     /**
-     * Sends a text to a group of {@link CommandSender} or {@link Player}.
+     * Sends a text to a group of {@link CommandSource} or {@link Player}.
      * The text is deserialized before being sent.
      *
      * @param text      The text to send.
      * @param receivers The receivers of the text.
      * @throws NullPointerException if the text or the receivers is null.
      */
-    public <R extends Collection<? extends CommandSender>> void send(@NotNull String text, @NotNull R receivers) {
+    public <R extends Collection<? extends CommandSource>> void send(@NotNull String text, @NotNull R receivers) {
         send(text, receivers, null);
     }
 
     /**
-     * Sends a text to a group of {@link CommandSender} or {@link Player}.
+     * Sends a text to a group of {@link CommandSource} or {@link Player}.
      *
      * @param text            The text to send.
      * @param receivers       The receivers of the text.
@@ -808,7 +783,7 @@ public class Text {
      * @param stripFormatting Whether to strip formatting from the text before sending it.
      * @throws NullPointerException if the text or the receivers is null.
      */
-    public <R extends Collection<? extends CommandSender>> void send(@NotNull String text, @NotNull R receivers, TagResolver tagResolver, boolean stripFormatting) {
+    public <R extends Collection<? extends CommandSource>> void send(@NotNull String text, @NotNull R receivers, TagResolver tagResolver, boolean stripFormatting) {
         if (stripFormatting) {
             send(stripFormatting(text, tagResolver), receivers, tagResolver);
         } else {
@@ -817,19 +792,19 @@ public class Text {
     }
 
     /**
-     * Sends a text to a group of {@link CommandSender} or {@link Player}.
+     * Sends a text to a group of {@link CommandSource} or {@link Player}.
      *
      * @param text            The text to send.
      * @param receivers       The receivers of the text.
      * @param stripFormatting Whether to strip formatting from the text before sending it.
      * @throws NullPointerException if the text or the receivers is null.
      */
-    public <R extends Collection<? extends CommandSender>> void send(@NotNull String text, @NotNull R receivers, boolean stripFormatting) {
+    public <R extends Collection<? extends CommandSource>> void send(@NotNull String text, @NotNull R receivers, boolean stripFormatting) {
         send(text, receivers, null, stripFormatting);
     }
 
     /**
-     * Sends a text to a group of {@link CommandSender} or {@link Player}.
+     * Sends a text to a group of {@link CommandSource} or {@link Player}.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -839,7 +814,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receivers, the sender or the permissions is null.
      */
-    public <R extends Collection<? extends CommandSender>> void send(@NotNull String text, @NotNull R receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <R extends Collection<? extends CommandSource>> void send(@NotNull String text, @NotNull R receivers, TagResolver tagResolver, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -856,7 +831,7 @@ public class Text {
     }
 
     /**
-     * Sends a text to a group of {@link CommandSender} or {@link Player}.
+     * Sends a text to a group of {@link CommandSource} or {@link Player}.
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
@@ -865,7 +840,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receivers, the sender or the permissions is null.
      */
-    public <R extends Collection<? extends CommandSender>> void send(@NotNull String text, @NotNull R receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <R extends Collection<? extends CommandSource>> void send(@NotNull String text, @NotNull R receivers, @NotNull CommandSource sender, @NotNull String... permissions) {
         send(text, receivers, null, sender, permissions);
     }
 
@@ -874,7 +849,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a list texts to a {@link CommandSender} or a {@link Player}.
+     * Sends a list texts to a {@link CommandSource} or a {@link Player}.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -882,36 +857,32 @@ public class Text {
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
      * @throws NullPointerException if the texts or the receiver is null.
      */
-    public void send(@NotNull String[] texts, @NotNull CommandSender receiver, TagResolver tagResolver) {
+    public void send(@NotNull String[] texts, @NotNull CommandSource receiver, TagResolver tagResolver) {
         Preconditions.checkNotNull(texts, "Texts cannot be null");
         Preconditions.checkNotNull(receiver, "Receiver cannot be null");
 
         if (texts.length == 0) return;
 
-        Audience audience;
-        if (receiver instanceof Player) audience = audiences.player((Player) receiver);
-        else audience = audiences.sender(receiver);
-
         for (String text : texts) {
             if (text == null) continue;
-            audience.sendMessage(deserialize(text, tagResolver));
+            receiver.sendMessage(deserialize(text, tagResolver));
         }
     }
 
     /**
-     * Sends a list texts to a {@link CommandSender} or a {@link Player}.
+     * Sends a list texts to a {@link CommandSource} or a {@link Player}.
      * The texts are deserialized before being sent.
      *
      * @param texts    The texts to send.
      * @param receiver The receiver of the text.
      * @throws NullPointerException if the texts or the receiver is null.
      */
-    public void send(@NotNull String[] texts, @NotNull CommandSender receiver) {
+    public void send(@NotNull String[] texts, @NotNull CommandSource receiver) {
         send(texts, receiver, null);
     }
 
     /**
-     * Sends a list texts to a {@link CommandSender} or a {@link Player}.
+     * Sends a list texts to a {@link CommandSource} or a {@link Player}.
      *
      * @param texts           The texts to send.
      * @param receiver        The receiver of the text.
@@ -919,7 +890,7 @@ public class Text {
      * @param stripFormatting Whether to strip formatting from the texts before sending it.
      * @throws NullPointerException if the texts or the receiver is null.
      */
-    public void send(@NotNull String[] texts, @NotNull CommandSender receiver, TagResolver tagResolver, boolean stripFormatting) {
+    public void send(@NotNull String[] texts, @NotNull CommandSource receiver, TagResolver tagResolver, boolean stripFormatting) {
         if (stripFormatting) {
             send(stripFormatting(texts, tagResolver), receiver, tagResolver);
         } else {
@@ -928,19 +899,19 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a {@link CommandSender} or a {@link Player}.
+     * Sends a list texts to a {@link CommandSource} or a {@link Player}.
      *
      * @param texts           The texts to send.
      * @param receiver        The receiver of the text.
      * @param stripFormatting Whether to strip formatting from the texts before sending it.
      * @throws NullPointerException if the texts or the receiver is null.
      */
-    public void send(@NotNull String[] texts, @NotNull CommandSender receiver, boolean stripFormatting) {
+    public void send(@NotNull String[] texts, @NotNull CommandSource receiver, boolean stripFormatting) {
         send(texts, receiver, null, stripFormatting);
     }
 
     /**
-     * Sends a list texts to a {@link CommandSender} or a {@link Player}.
+     * Sends a list texts to a {@link CommandSource} or a {@link Player}.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -950,7 +921,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the texts, the receiver, the sender or the permissions is null.
      */
-    public void send(@NotNull String[] texts, @NotNull CommandSender receiver, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void send(@NotNull String[] texts, @NotNull CommandSource receiver, TagResolver tagResolver, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -967,7 +938,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a {@link CommandSender} or a {@link Player}.
+     * Sends a list texts to a {@link CommandSource} or a {@link Player}.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -976,7 +947,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the texts, the receiver, the sender or the permissions is null.
      */
-    public void send(@NotNull String[] texts, @NotNull CommandSender receiver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void send(@NotNull String[] texts, @NotNull CommandSource receiver, @NotNull CommandSource sender, @NotNull String... permissions) {
         send(texts, receiver, null, sender, permissions);
     }
 
@@ -985,7 +956,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSource} or {@link Player}.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -993,28 +964,28 @@ public class Text {
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
      * @throws NullPointerException if the texts or the receivers is null.
      */
-    public void send(@NotNull String[] texts, @NotNull CommandSender[] receivers, TagResolver tagResolver) {
+    public void send(@NotNull String[] texts, @NotNull CommandSource[] receivers, TagResolver tagResolver) {
         Preconditions.checkNotNull(receivers, "Receivers cannot be null");
 
-        for (CommandSender receiver : receivers) {
+        for (CommandSource receiver : receivers) {
             send(texts, receiver, tagResolver);
         }
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSource} or {@link Player}.
      * The texts are deserialized before being sent.
      *
      * @param texts     The texts to send.
      * @param receivers The receivers of the text.
      * @throws NullPointerException if the texts or the receivers is null.
      */
-    public void send(@NotNull String[] texts, @NotNull CommandSender[] receivers) {
+    public void send(@NotNull String[] texts, @NotNull CommandSource[] receivers) {
         send(texts, receivers, null);
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSource} or {@link Player}.
      *
      * @param texts           The texts to send.
      * @param receivers       The receivers of the text.
@@ -1022,7 +993,7 @@ public class Text {
      * @param stripFormatting Whether to strip formatting from the texts before sending it.
      * @throws NullPointerException if the texts or the receivers is null.
      */
-    public void send(@NotNull String[] texts, @NotNull CommandSender[] receivers, TagResolver tagResolver, boolean stripFormatting) {
+    public void send(@NotNull String[] texts, @NotNull CommandSource[] receivers, TagResolver tagResolver, boolean stripFormatting) {
         if (stripFormatting) {
             send(stripFormatting(texts, tagResolver), receivers, tagResolver);
         } else {
@@ -1031,19 +1002,19 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSource} or {@link Player}.
      *
      * @param texts           The texts to send.
      * @param receivers       The receivers of the text.
      * @param stripFormatting Whether to strip formatting from the texts before sending it.
      * @throws NullPointerException if the texts or the receivers is null.
      */
-    public void send(@NotNull String[] texts, @NotNull CommandSender[] receivers, boolean stripFormatting) {
+    public void send(@NotNull String[] texts, @NotNull CommandSource[] receivers, boolean stripFormatting) {
         send(texts, receivers, null, stripFormatting);
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSource} or {@link Player}.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1053,7 +1024,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receivers, the sender or the permissions is null.
      */
-    public void send(@NotNull String[] texts, @NotNull CommandSender[] receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void send(@NotNull String[] texts, @NotNull CommandSource[] receivers, TagResolver tagResolver, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -1070,7 +1041,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSource} or {@link Player}.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1079,7 +1050,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receivers, the sender or the permissions is null.
      */
-    public void send(@NotNull String[] texts, @NotNull CommandSender[] receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void send(@NotNull String[] texts, @NotNull CommandSource[] receivers, @NotNull CommandSource sender, @NotNull String... permissions) {
         send(texts, receivers, null, sender, permissions);
     }
 
@@ -1088,7 +1059,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSource} or {@link Player}.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1096,29 +1067,29 @@ public class Text {
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
      * @throws NullPointerException if the texts or the receivers is null.
      */
-    public <R extends Collection<? extends CommandSender>> void send(@NotNull String[] texts, @NotNull R receivers, TagResolver tagResolver) {
+    public <R extends Collection<? extends CommandSource>> void send(@NotNull String[] texts, @NotNull R receivers, TagResolver tagResolver) {
         Preconditions.checkNotNull(receivers, "Receivers cannot be null");
 
-        for (CommandSender receiver : receivers) {
+        for (CommandSource receiver : receivers) {
             if (receiver == null) continue;
             send(texts, receiver, tagResolver);
         }
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSource} or {@link Player}.
      * The texts are deserialized before being sent.
      *
      * @param texts     The texts to send.
      * @param receivers The receivers of the text.
      * @throws NullPointerException if the texts or the receivers is null.
      */
-    public <R extends Collection<? extends CommandSender>> void send(@NotNull String[] texts, @NotNull R receivers) {
+    public <R extends Collection<? extends CommandSource>> void send(@NotNull String[] texts, @NotNull R receivers) {
         send(texts, receivers, null);
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSource} or {@link Player}.
      *
      * @param texts           The texts to send.
      * @param receivers       The receivers of the text.
@@ -1126,7 +1097,7 @@ public class Text {
      * @param stripFormatting Whether to strip formatting from the texts before sending it.
      * @throws NullPointerException if the texts or the receivers is null.
      */
-    public <R extends Collection<? extends CommandSender>> void send(@NotNull String[] texts, @NotNull R receivers, TagResolver tagResolver, boolean stripFormatting) {
+    public <R extends Collection<? extends CommandSource>> void send(@NotNull String[] texts, @NotNull R receivers, TagResolver tagResolver, boolean stripFormatting) {
         if (stripFormatting) {
             send(stripFormatting(texts, tagResolver), receivers, tagResolver);
         } else {
@@ -1135,19 +1106,19 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSource} or {@link Player}.
      *
      * @param texts           The texts to send.
      * @param receivers       The receivers of the text.
      * @param stripFormatting Whether to strip formatting from the texts before sending it.
      * @throws NullPointerException if the texts or the receivers is null.
      */
-    public <R extends Collection<? extends CommandSender>> void send(@NotNull String[] texts, @NotNull R receivers, boolean stripFormatting) {
+    public <R extends Collection<? extends CommandSource>> void send(@NotNull String[] texts, @NotNull R receivers, boolean stripFormatting) {
         send(texts, receivers, null, stripFormatting);
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSource} or {@link Player}.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1157,7 +1128,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receivers, the sender or the permissions is null.
      */
-    public <R extends Collection<? extends CommandSender>> void send(@NotNull String[] texts, @NotNull R receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <R extends Collection<? extends CommandSource>> void send(@NotNull String[] texts, @NotNull R receivers, TagResolver tagResolver, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -1174,7 +1145,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSource} or {@link Player}.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1183,7 +1154,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receivers, the sender or the permissions is null.
      */
-    public <R extends Collection<? extends CommandSender>> void send(@NotNull String[] texts, @NotNull R receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <R extends Collection<? extends CommandSource>> void send(@NotNull String[] texts, @NotNull R receivers, @NotNull CommandSource sender, @NotNull String... permissions) {
         send(texts, receivers, null, sender, permissions);
     }
 
@@ -1192,7 +1163,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a list texts to a {@link CommandSender} or a {@link Player}.
+     * Sends a list texts to a {@link CommandSource} or a {@link Player}.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1200,36 +1171,32 @@ public class Text {
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
      * @throws NullPointerException if the texts or the receiver is null.
      */
-    public <T extends Collection<String>> void send(@NotNull T texts, @NotNull CommandSender receiver, TagResolver tagResolver) {
+    public <T extends Collection<String>> void send(@NotNull T texts, @NotNull CommandSource receiver, TagResolver tagResolver) {
         Preconditions.checkNotNull(texts, "Texts cannot be null");
         Preconditions.checkNotNull(receiver, "Receiver cannot be null");
 
         if (texts.isEmpty()) return;
 
-        Audience audience;
-        if (receiver instanceof Player) audience = audiences.player((Player) receiver);
-        else audience = audiences.sender(receiver);
-
         for (String text : texts) {
             if (text == null) continue;
-            audience.sendMessage(deserialize(text, tagResolver));
+            receiver.sendMessage(deserialize(text, tagResolver));
         }
     }
 
     /**
-     * Sends a list texts to a {@link CommandSender} or a {@link Player}.
+     * Sends a list texts to a {@link CommandSource} or a {@link Player}.
      * The texts are deserialized before being sent.
      *
      * @param texts    The texts to send.
      * @param receiver The receiver of the text.
      * @throws NullPointerException if the texts or the receiver is null.
      */
-    public <T extends Collection<String>> void send(@NotNull T texts, @NotNull CommandSender receiver) {
+    public <T extends Collection<String>> void send(@NotNull T texts, @NotNull CommandSource receiver) {
         send(texts, receiver, null);
     }
 
     /**
-     * Sends a list texts to a {@link CommandSender} or a {@link Player}.
+     * Sends a list texts to a {@link CommandSource} or a {@link Player}.
      *
      * @param texts           The texts to send.
      * @param receiver        The receiver of the text.
@@ -1237,7 +1204,7 @@ public class Text {
      * @param stripFormatting Whether to strip formatting from the texts before sending it.
      * @throws NullPointerException if the texts or the receiver is null.
      */
-    public <T extends Collection<String>> void send(@NotNull T texts, @NotNull CommandSender receiver, TagResolver tagResolver, boolean stripFormatting) {
+    public <T extends Collection<String>> void send(@NotNull T texts, @NotNull CommandSource receiver, TagResolver tagResolver, boolean stripFormatting) {
         if (stripFormatting) {
             send(stripFormatting(texts, tagResolver), receiver, tagResolver);
         } else {
@@ -1246,19 +1213,19 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a {@link CommandSender} or a {@link Player}.
+     * Sends a list texts to a {@link CommandSource} or a {@link Player}.
      *
      * @param texts           The texts to send.
      * @param receiver        The receiver of the text.
      * @param stripFormatting Whether to strip formatting from the texts before sending it.
      * @throws NullPointerException if the texts or the receiver is null.
      */
-    public <T extends Collection<String>> void send(@NotNull T texts, @NotNull CommandSender receiver, boolean stripFormatting) {
+    public <T extends Collection<String>> void send(@NotNull T texts, @NotNull CommandSource receiver, boolean stripFormatting) {
         send(texts, receiver, null, stripFormatting);
     }
 
     /**
-     * Sends a list texts to a {@link CommandSender} or a {@link Player}.
+     * Sends a list texts to a {@link CommandSource} or a {@link Player}.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1268,7 +1235,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the texts, the receiver, the sender or the permissions is null.
      */
-    public <T extends Collection<String>> void send(@NotNull T texts, @NotNull CommandSender receiver, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <T extends Collection<String>> void send(@NotNull T texts, @NotNull CommandSource receiver, TagResolver tagResolver, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -1285,7 +1252,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a {@link CommandSender} or a {@link Player}.
+     * Sends a list texts to a {@link CommandSource} or a {@link Player}.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1294,7 +1261,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the texts, the receiver, the sender or the permissions is null.
      */
-    public <T extends Collection<String>> void send(@NotNull T texts, @NotNull CommandSender receiver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <T extends Collection<String>> void send(@NotNull T texts, @NotNull CommandSource receiver, @NotNull CommandSource sender, @NotNull String... permissions) {
         send(texts, receiver, null, sender, permissions);
     }
 
@@ -1303,7 +1270,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSource} or {@link Player}.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1311,29 +1278,29 @@ public class Text {
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
      * @throws NullPointerException if the texts or the receivers is null.
      */
-    public <T extends Collection<String>> void send(@NotNull T texts, @NotNull CommandSender[] receivers, TagResolver tagResolver) {
+    public <T extends Collection<String>> void send(@NotNull T texts, @NotNull CommandSource[] receivers, TagResolver tagResolver) {
         Preconditions.checkNotNull(receivers, "Receivers cannot be null");
 
-        for (CommandSender receiver : receivers) {
+        for (CommandSource receiver : receivers) {
             if (receiver == null) continue;
             send(texts, receiver, tagResolver);
         }
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSource} or {@link Player}.
      * The texts are deserialized before being sent.
      *
      * @param texts     The texts to send.
      * @param receivers The receivers of the text.
      * @throws NullPointerException if the texts or the receivers is null.
      */
-    public <T extends Collection<String>> void send(@NotNull T texts, @NotNull CommandSender[] receivers) {
+    public <T extends Collection<String>> void send(@NotNull T texts, @NotNull CommandSource[] receivers) {
         send(texts, receivers, null);
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSource} or {@link Player}.
      *
      * @param texts           The texts to send.
      * @param receivers       The receivers of the text.
@@ -1341,7 +1308,7 @@ public class Text {
      * @param stripFormatting Whether to strip formatting from the texts before sending it.
      * @throws NullPointerException if the texts or the receivers is null.
      */
-    public <T extends Collection<String>> void send(@NotNull T texts, @NotNull CommandSender[] receivers, TagResolver tagResolver, boolean stripFormatting) {
+    public <T extends Collection<String>> void send(@NotNull T texts, @NotNull CommandSource[] receivers, TagResolver tagResolver, boolean stripFormatting) {
         if (stripFormatting) {
             send(stripFormatting(texts, tagResolver), receivers, tagResolver);
         } else {
@@ -1350,19 +1317,19 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSource} or {@link Player}.
      *
      * @param texts           The texts to send.
      * @param receivers       The receivers of the text.
      * @param stripFormatting Whether to strip formatting from the texts before sending it.
      * @throws NullPointerException if the texts or the receivers is null.
      */
-    public <T extends Collection<String>> void send(@NotNull T texts, @NotNull CommandSender[] receivers, boolean stripFormatting) {
+    public <T extends Collection<String>> void send(@NotNull T texts, @NotNull CommandSource[] receivers, boolean stripFormatting) {
         send(texts, receivers, null, stripFormatting);
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSource} or {@link Player}.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1372,7 +1339,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receivers, the sender or the permissions is null.
      */
-    public <T extends Collection<String>> void send(@NotNull T texts, @NotNull CommandSender[] receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <T extends Collection<String>> void send(@NotNull T texts, @NotNull CommandSource[] receivers, TagResolver tagResolver, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -1389,7 +1356,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSource} or {@link Player}.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1398,7 +1365,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receivers, the sender or the permissions is null.
      */
-    public <T extends Collection<String>> void send(@NotNull T texts, @NotNull CommandSender[] receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <T extends Collection<String>> void send(@NotNull T texts, @NotNull CommandSource[] receivers, @NotNull CommandSource sender, @NotNull String... permissions) {
         send(texts, receivers, null, sender, permissions);
     }
 
@@ -1407,7 +1374,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSource} or {@link Player}.
      * The texts are deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1415,29 +1382,29 @@ public class Text {
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
      * @throws NullPointerException if the texts or the receivers is null.
      */
-    public <T extends Collection<String>, R extends Collection<? extends CommandSender>> void send(@NotNull T texts, @NotNull R receivers, TagResolver tagResolver) {
+    public <T extends Collection<String>, R extends Collection<? extends CommandSource>> void send(@NotNull T texts, @NotNull R receivers, TagResolver tagResolver) {
         Preconditions.checkNotNull(receivers, "Receivers cannot be null");
 
-        for (CommandSender receiver : receivers) {
+        for (CommandSource receiver : receivers) {
             if (receiver == null) continue;
             send(texts, receiver, tagResolver);
         }
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSource} or {@link Player}.
      * The texts are deserialized before being sent.
      *
      * @param texts     The texts to send.
      * @param receivers The receivers of the text.
      * @throws NullPointerException if the texts or the receivers is null.
      */
-    public <T extends Collection<String>, R extends Collection<? extends CommandSender>> void send(@NotNull T texts, @NotNull R receivers) {
+    public <T extends Collection<String>, R extends Collection<? extends CommandSource>> void send(@NotNull T texts, @NotNull R receivers) {
         send(texts, receivers, null);
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSource} or {@link Player}.
      *
      * @param texts           The texts to send.
      * @param receivers       The receivers of the text.
@@ -1445,7 +1412,7 @@ public class Text {
      * @param stripFormatting Whether to strip formatting from the texts before sending it.
      * @throws NullPointerException if the texts or the receivers is null.
      */
-    public <T extends Collection<String>, R extends Collection<? extends CommandSender>> void send(@NotNull T texts, @NotNull R receivers, TagResolver tagResolver, boolean stripFormatting) {
+    public <T extends Collection<String>, R extends Collection<? extends CommandSource>> void send(@NotNull T texts, @NotNull R receivers, TagResolver tagResolver, boolean stripFormatting) {
         if (stripFormatting) {
             send(stripFormatting(texts, tagResolver), receivers, tagResolver);
         } else {
@@ -1454,19 +1421,19 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSource} or {@link Player}.
      *
      * @param texts           The texts to send.
      * @param receivers       The receivers of the text.
      * @param stripFormatting Whether to strip formatting from the texts before sending it.
      * @throws NullPointerException if the texts or the receivers is null.
      */
-    public <T extends Collection<String>, R extends Collection<? extends CommandSender>> void send(@NotNull T texts, @NotNull R receivers, boolean stripFormatting) {
+    public <T extends Collection<String>, R extends Collection<? extends CommandSource>> void send(@NotNull T texts, @NotNull R receivers, boolean stripFormatting) {
         send(texts, receivers, null, stripFormatting);
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSource} or {@link Player}.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1476,7 +1443,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receivers, the sender or the permissions is null.
      */
-    public <T extends Collection<String>, R extends Collection<? extends CommandSender>> void send(@NotNull T texts, @NotNull R receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <T extends Collection<String>, R extends Collection<? extends CommandSource>> void send(@NotNull T texts, @NotNull R receivers, TagResolver tagResolver, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -1493,7 +1460,7 @@ public class Text {
     }
 
     /**
-     * Sends a list texts to a group of {@link CommandSender} or {@link Player}.
+     * Sends a list texts to a group of {@link CommandSource} or {@link Player}.
      * If the sender has at least one of the provided permissions, the texts is deserialized before being sent.
      *
      * @param texts       The texts to send.
@@ -1502,7 +1469,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receivers, the sender or the permissions is null.
      */
-    public <T extends Collection<String>, R extends Collection<? extends CommandSender>> void send(@NotNull T texts, @NotNull R receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <T extends Collection<String>, R extends Collection<? extends CommandSource>> void send(@NotNull T texts, @NotNull R receivers, @NotNull CommandSource sender, @NotNull String... permissions) {
         send(texts, receivers, null, sender, permissions);
     }
 
@@ -1521,7 +1488,7 @@ public class Text {
     public void broadcast(@NotNull String text, TagResolver tagResolver) {
         Preconditions.checkNotNull(text, "Text cannot be null");
 
-        audiences.players().sendMessage(deserialize(text, tagResolver));
+        server.getAllPlayers().forEach(p -> p.sendMessage(deserialize(text, tagResolver)));
     }
 
     /**
@@ -1572,7 +1539,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the sender or the permissions is null.
      */
-    public void broadcast(@NotNull String text, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcast(@NotNull String text, TagResolver tagResolver, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -1597,7 +1564,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the sender or the permissions is null.
      */
-    public void broadcast(@NotNull String text, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcast(@NotNull String text, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcast(text, (TagResolver) null, sender, permissions);
     }
 
@@ -1618,10 +1585,9 @@ public class Text {
 
         if (texts.length == 0) return;
 
-        Audience audience = audiences.players();
         for (String text : texts) {
             if (text == null) continue;
-            audience.sendMessage(deserialize(text, tagResolver));
+            server.getAllPlayers().forEach(p -> p.sendMessage(deserialize(text, tagResolver)));
         }
     }
 
@@ -1673,7 +1639,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the texts, the sender or the permissions is null.
      */
-    public void broadcast(@NotNull String[] texts, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcast(@NotNull String[] texts, TagResolver tagResolver, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -1698,7 +1664,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the texts, the sender or the permissions is null.
      */
-    public void broadcast(@NotNull String[] texts, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcast(@NotNull String[] texts, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcast(texts, (TagResolver) null, sender, permissions);
     }
 
@@ -1719,10 +1685,9 @@ public class Text {
 
         if (texts.isEmpty()) return;
 
-        Audience audience = audiences.players();
         for (String text : texts) {
             if (text == null) continue;
-            audience.sendMessage(deserialize(text, tagResolver));
+            server.getAllPlayers().forEach(p -> p.sendMessage(deserialize(text, tagResolver)));
         }
     }
 
@@ -1774,7 +1739,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the texts, the sender or the permissions is null.
      */
-    public <T extends Collection<String>> void broadcast(@NotNull T texts, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <T extends Collection<String>> void broadcast(@NotNull T texts, TagResolver tagResolver, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -1799,41 +1764,41 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the texts, the sender or the permissions is null.
      */
-    public <T extends Collection<String>> void broadcast(@NotNull T texts, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <T extends Collection<String>> void broadcast(@NotNull T texts, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcast(texts, (TagResolver) null, sender, permissions);
     }
 
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
-    /*    WORLD BROADCAST    */
+    /*    SERVER BROADCAST    */
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a text to all {@link Player}s in a world.
+     * Broadcasts a text to all {@link Player}s in a server.
      * The text is deserialized before being sent.
      *
      * @param text        The text to send.
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
-     * @param world       The {@link World} to send the text to.
-     * @throws NullPointerException if the text or the world is null.
+     * @param server      The {@link RegisteredServer} to send the text to.
+     * @throws NullPointerException if the text or the server is null.
      */
     @SuppressWarnings("PatternValidation")
-    public void broadcast(@NotNull String text, TagResolver tagResolver, @NotNull World world) {
+    public void broadcast(@NotNull String text, TagResolver tagResolver, @NotNull RegisteredServer server) {
         Preconditions.checkNotNull(text, "Text cannot be null");
-        Preconditions.checkNotNull(world, "World cannot be null");
+        Preconditions.checkNotNull(server, "World cannot be null");
 
-        audiences.world(Key.key(world.getKey().toString())).sendMessage(deserialize(text, tagResolver));
+        server.getPlayersConnected().forEach(p -> p.sendMessage(deserialize(text, tagResolver)));
     }
 
     /**
      * Broadcasts a text to all {@link Player}s on the server.
      * The text is deserialized before being sent.
      *
-     * @param text  The text to send.
-     * @param world The {@link World} to send the text to.
-     * @throws NullPointerException if the text or the world is null.
+     * @param text   The text to send.
+     * @param server The {@link RegisteredServer} to send the text to.
+     * @throws NullPointerException if the text or the server is null.
      */
-    public void broadcast(@NotNull String text, @NotNull World world) {
-        broadcast(text, null, world);
+    public void broadcast(@NotNull String text, @NotNull RegisteredServer server) {
+        broadcast(text, null, server);
     }
 
     /**
@@ -1841,15 +1806,15 @@ public class Text {
      *
      * @param text            The text to send.
      * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
-     * @param world           The {@link World} to send the text to.
+     * @param server          The {@link RegisteredServer} to send the text to.
      * @param stripFormatting Whether to strip formatting from the text before sending it.
-     * @throws NullPointerException if the text or the world is null.
+     * @throws NullPointerException if the text or the server is null.
      */
-    public void broadcast(@NotNull String text, TagResolver tagResolver, @NotNull World world, boolean stripFormatting) {
+    public void broadcast(@NotNull String text, TagResolver tagResolver, @NotNull RegisteredServer server, boolean stripFormatting) {
         if (stripFormatting) {
-            broadcast(stripFormatting(text, tagResolver), tagResolver, world);
+            broadcast(stripFormatting(text, tagResolver), tagResolver, server);
         } else {
-            broadcast(text, tagResolver, world);
+            broadcast(text, tagResolver, server);
         }
     }
 
@@ -1857,12 +1822,12 @@ public class Text {
      * Broadcasts a text to all {@link Player}s on the server.
      *
      * @param text            The text to send.
-     * @param world           The {@link World} to send the text to.
+     * @param server          The {@link RegisteredServer} to send the text to.
      * @param stripFormatting Whether to strip formatting from the text before sending it.
-     * @throws NullPointerException if the text or the world is null.
+     * @throws NullPointerException if the text or the server is null.
      */
-    public void broadcast(@NotNull String text, @NotNull World world, boolean stripFormatting) {
-        broadcast(text, null, world, stripFormatting);
+    public void broadcast(@NotNull String text, @NotNull RegisteredServer server, boolean stripFormatting) {
+        broadcast(text, null, server, stripFormatting);
     }
 
     /**
@@ -1871,12 +1836,12 @@ public class Text {
      *
      * @param text        The text to send.
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
-     * @param world       The {@link World} to send the text to.
+     * @param server      The {@link RegisteredServer} to send the text to.
      * @param sender      The sender of the text.
      * @param permissions The permissions to check.
-     * @throws NullPointerException if the text, the world, the sender or the permissions is null.
+     * @throws NullPointerException if the text, the server, the sender or the permissions is null.
      */
-    public void broadcast(@NotNull String text, TagResolver tagResolver, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcast(@NotNull String text, TagResolver tagResolver, @NotNull RegisteredServer server, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -1889,7 +1854,7 @@ public class Text {
             }
         }
 
-        broadcast(text, tagResolver, world, !hasPermission);
+        broadcast(text, tagResolver, server, !hasPermission);
     }
 
     /**
@@ -1897,17 +1862,17 @@ public class Text {
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
-     * @param world       The {@link World} to send the text to.
+     * @param server      The {@link RegisteredServer} to send the text to.
      * @param sender      The sender of the text.
      * @param permissions The permissions to check.
-     * @throws NullPointerException if the text, the world, the sender or the permissions is null.
+     * @throws NullPointerException if the text, the server, the sender or the permissions is null.
      */
-    public void broadcast(@NotNull String text, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
-        broadcast(text, null, world, sender, permissions);
+    public void broadcast(@NotNull String text, @NotNull RegisteredServer server, @NotNull CommandSource sender, @NotNull String... permissions) {
+        broadcast(text, null, server, sender, permissions);
     }
 
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
-    /*    WORLD BROADCAST MULTIPLE TEXTS (ARRAY)    */
+    /*    SERVER BROADCAST MULTIPLE TEXTS (ARRAY)    */
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
@@ -1919,16 +1884,15 @@ public class Text {
      * @throws NullPointerException if the texts or the receiver is null.
      */
     @SuppressWarnings("PatternValidation")
-    public void broadcast(@NotNull String[] texts, TagResolver tagResolver, @NotNull World world) {
+    public void broadcast(@NotNull String[] texts, TagResolver tagResolver, @NotNull RegisteredServer server) {
         Preconditions.checkNotNull(texts, "Texts cannot be null");
-        Preconditions.checkNotNull(world, "World cannot be null");
+        Preconditions.checkNotNull(server, "World cannot be null");
 
         if (texts.length == 0) return;
 
-        Audience audience = audiences.world(Key.key(world.getKey().toString()));
         for (String text : texts) {
             if (text == null) continue;
-            audience.sendMessage(deserialize(text, tagResolver));
+            server.getPlayersConnected().forEach(p -> p.sendMessage(deserialize(text, tagResolver)));
         }
     }
 
@@ -1936,12 +1900,12 @@ public class Text {
      * Broadcasts a list of texts to all {@link Player}s on the server.
      * The texts are deserialized before being sent.
      *
-     * @param texts The texts to send.
-     * @param world The {@link World} to send the text to.
+     * @param texts  The texts to send.
+     * @param server The {@link RegisteredServer} to send the text to.
      * @throws NullPointerException if the texts or the receiver is null.
      */
-    public void broadcast(@NotNull String[] texts, @NotNull World world) {
-        broadcast(texts, null, world);
+    public void broadcast(@NotNull String[] texts, @NotNull RegisteredServer server) {
+        broadcast(texts, null, server);
     }
 
     /**
@@ -1949,15 +1913,15 @@ public class Text {
      *
      * @param texts           The texts to send.
      * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
-     * @param world           The {@link World} to send the text to.
+     * @param server          The {@link RegisteredServer} to send the text to.
      * @param stripFormatting Whether to strip formatting from the texts before sending it.
-     * @throws NullPointerException if the texts or the world is null.
+     * @throws NullPointerException if the texts or the server is null.
      */
-    public void broadcast(@NotNull String[] texts, TagResolver tagResolver, @NotNull World world, boolean stripFormatting) {
+    public void broadcast(@NotNull String[] texts, TagResolver tagResolver, @NotNull RegisteredServer server, boolean stripFormatting) {
         if (stripFormatting) {
-            broadcast(stripFormatting(texts, tagResolver), tagResolver, world);
+            broadcast(stripFormatting(texts, tagResolver), tagResolver, server);
         } else {
-            broadcast(texts, tagResolver, world);
+            broadcast(texts, tagResolver, server);
         }
     }
 
@@ -1965,11 +1929,11 @@ public class Text {
      * Broadcasts a list of texts to all {@link Player}s on the server.
      *
      * @param texts           The texts to send.
-     * @param world           The {@link World} to send the text to.
+     * @param server          The {@link RegisteredServer} to send the text to.
      * @param stripFormatting Whether to strip formatting from the texts before sending it.
      */
-    public void broadcast(@NotNull String[] texts, @NotNull World world, boolean stripFormatting) {
-        broadcast(texts, null, world, stripFormatting);
+    public void broadcast(@NotNull String[] texts, @NotNull RegisteredServer server, boolean stripFormatting) {
+        broadcast(texts, null, server, stripFormatting);
     }
 
     /**
@@ -1978,12 +1942,12 @@ public class Text {
      *
      * @param texts       The texts to send.
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
-     * @param world       The {@link World} to send the text to.
+     * @param server      The {@link RegisteredServer} to send the text to.
      * @param sender      The sender of the text.
      * @param permissions The permissions to check.
-     * @throws NullPointerException if the texts, the world, the sender or the permissions is null.
+     * @throws NullPointerException if the texts, the server, the sender or the permissions is null.
      */
-    public void broadcast(@NotNull String[] texts, TagResolver tagResolver, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcast(@NotNull String[] texts, TagResolver tagResolver, @NotNull RegisteredServer server, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -1996,7 +1960,7 @@ public class Text {
             }
         }
 
-        broadcast(texts, tagResolver, world, !hasPermission);
+        broadcast(texts, tagResolver, server, !hasPermission);
     }
 
     /**
@@ -2006,14 +1970,14 @@ public class Text {
      * @param texts       The texts to send.
      * @param sender      The sender of the text.
      * @param permissions The permissions to check.
-     * @throws NullPointerException if the texts, the world, the sender or the permissions is null.
+     * @throws NullPointerException if the texts, the server, the sender or the permissions is null.
      */
-    public void broadcast(@NotNull String[] texts, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
-        broadcast(texts, null, world, sender, permissions);
+    public void broadcast(@NotNull String[] texts, @NotNull RegisteredServer server, @NotNull CommandSource sender, @NotNull String... permissions) {
+        broadcast(texts, null, server, sender, permissions);
     }
 
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
-    /*    WORLD BROADCAST MULTIPLE TEXTS (COLLECTION)    */
+    /*    SERVER BROADCAST MULTIPLE TEXTS (COLLECTION)    */
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
@@ -2025,16 +1989,15 @@ public class Text {
      * @throws NullPointerException if the texts or the receiver is null.
      */
     @SuppressWarnings("PatternValidation")
-    public <T extends Collection<String>> void broadcast(@NotNull T texts, TagResolver tagResolver, @NotNull World world) {
+    public <T extends Collection<String>> void broadcast(@NotNull T texts, TagResolver tagResolver, @NotNull RegisteredServer server) {
         Preconditions.checkNotNull(texts, "Texts cannot be null");
-        Preconditions.checkNotNull(world, "World cannot be null");
+        Preconditions.checkNotNull(server, "World cannot be null");
 
         if (texts.isEmpty()) return;
 
-        Audience audience = audiences.world(Key.key(world.getKey().toString()));
         for (String text : texts) {
             if (text == null) continue;
-            audience.sendMessage(deserialize(text, tagResolver));
+            server.getPlayersConnected().forEach(p -> p.sendMessage(deserialize(text, tagResolver)));
         }
     }
 
@@ -2042,12 +2005,12 @@ public class Text {
      * Broadcasts a list of texts to all {@link Player}s on the server.
      * The texts are deserialized before being sent.
      *
-     * @param texts The texts to send.
-     * @param world The {@link World} to send the text to.
+     * @param texts  The texts to send.
+     * @param server The {@link RegisteredServer} to send the text to.
      * @throws NullPointerException if the texts or the receiver is null.
      */
-    public <T extends Collection<String>> void broadcast(@NotNull T texts, @NotNull World world) {
-        broadcast(texts, null, world);
+    public <T extends Collection<String>> void broadcast(@NotNull T texts, @NotNull RegisteredServer server) {
+        broadcast(texts, null, server);
     }
 
     /**
@@ -2055,15 +2018,15 @@ public class Text {
      *
      * @param texts           The texts to send.
      * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
-     * @param world           The {@link World} to send the text to.
+     * @param server          The {@link RegisteredServer} to send the text to.
      * @param stripFormatting Whether to strip formatting from the texts before sending it.
-     * @throws NullPointerException if the texts or the world is null.
+     * @throws NullPointerException if the texts or the server is null.
      */
-    public <T extends Collection<String>> void broadcast(@NotNull T texts, TagResolver tagResolver, @NotNull World world, boolean stripFormatting) {
+    public <T extends Collection<String>> void broadcast(@NotNull T texts, TagResolver tagResolver, @NotNull RegisteredServer server, boolean stripFormatting) {
         if (stripFormatting) {
-            broadcast(stripFormatting(texts, tagResolver), tagResolver, world);
+            broadcast(stripFormatting(texts, tagResolver), tagResolver, server);
         } else {
-            broadcast(texts, tagResolver, world);
+            broadcast(texts, tagResolver, server);
         }
     }
 
@@ -2071,11 +2034,11 @@ public class Text {
      * Broadcasts a list of texts to all {@link Player}s on the server.
      *
      * @param texts           The texts to send.
-     * @param world           The {@link World} to send the text to.
+     * @param server          The {@link RegisteredServer} to send the text to.
      * @param stripFormatting Whether to strip formatting from the texts before sending it.
      */
-    public <T extends Collection<String>> void broadcast(@NotNull T texts, @NotNull World world, boolean stripFormatting) {
-        broadcast(texts, null, world, stripFormatting);
+    public <T extends Collection<String>> void broadcast(@NotNull T texts, @NotNull RegisteredServer server, boolean stripFormatting) {
+        broadcast(texts, null, server, stripFormatting);
     }
 
     /**
@@ -2084,12 +2047,12 @@ public class Text {
      *
      * @param texts       The texts to send.
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
-     * @param world       The {@link World} to send the text to.
+     * @param server      The {@link RegisteredServer} to send the text to.
      * @param sender      The sender of the text.
      * @param permissions The permissions to check.
-     * @throws NullPointerException if the texts, the world, the sender or the permissions is null.
+     * @throws NullPointerException if the texts, the server, the sender or the permissions is null.
      */
-    public <T extends Collection<String>> void broadcast(@NotNull T texts, TagResolver tagResolver, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <T extends Collection<String>> void broadcast(@NotNull T texts, TagResolver tagResolver, @NotNull RegisteredServer server, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -2102,7 +2065,7 @@ public class Text {
             }
         }
 
-        broadcast(texts, tagResolver, world, !hasPermission);
+        broadcast(texts, tagResolver, server, !hasPermission);
     }
 
     /**
@@ -2112,10 +2075,10 @@ public class Text {
      * @param texts       The texts to send.
      * @param sender      The sender of the text.
      * @param permissions The permissions to check.
-     * @throws NullPointerException if the texts, the world, the sender or the permissions is null.
+     * @throws NullPointerException if the texts, the server, the sender or the permissions is null.
      */
-    public <T extends Collection<String>> void broadcast(@NotNull T texts, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
-        broadcast(texts, null, world, sender, permissions);
+    public <T extends Collection<String>> void broadcast(@NotNull T texts, @NotNull RegisteredServer server, @NotNull CommandSource sender, @NotNull String... permissions) {
+        broadcast(texts, null, server, sender, permissions);
     }
 
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -2135,7 +2098,10 @@ public class Text {
         Preconditions.checkNotNull(text, "Text cannot be null");
         Preconditions.checkNotNull(neededPermission, "Needed permission cannot be null");
 
-        audiences.permission(neededPermission).sendMessage(deserialize(text, tagResolver));
+        server.getAllPlayers().stream()
+                .filter(p -> p.hasPermission(neededPermission))
+                .forEach(p -> p.sendMessage(deserialize(text, tagResolver)));
+
     }
 
     /**
@@ -2190,7 +2156,7 @@ public class Text {
      * @param permissions      The permissions to check.
      * @throws NullPointerException if the text, the neededPermission, the sender or the permissions is null.
      */
-    public void broadcast(@NotNull String text, TagResolver tagResolver, @NotNull String neededPermission, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcast(@NotNull String text, TagResolver tagResolver, @NotNull String neededPermission, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -2216,7 +2182,7 @@ public class Text {
      * @param permissions      The permissions to check.
      * @throws NullPointerException if the text, the neededPermission, the sender or the permissions is null.
      */
-    public void broadcast(@NotNull String text, @NotNull String neededPermission, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcast(@NotNull String text, @NotNull String neededPermission, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcast(text, null, neededPermission, sender, permissions);
     }
 
@@ -2238,10 +2204,12 @@ public class Text {
 
         if (texts.length == 0) return;
 
-        Audience audience = audiences.permission(neededPermission);
         for (String text : texts) {
             if (text == null) continue;
-            audience.sendMessage(deserialize(text, tagResolver));
+
+            server.getAllPlayers().stream()
+                    .filter(p -> p.hasPermission(neededPermission))
+                    .forEach(p -> p.sendMessage(deserialize(text, tagResolver)));
         }
     }
 
@@ -2296,7 +2264,7 @@ public class Text {
      * @param permissions      The permissions to check.
      * @throws NullPointerException if the texts, the neededPermission, the sender or the permissions is null.
      */
-    public void broadcast(@NotNull String[] texts, TagResolver tagResolver, @NotNull String neededPermission, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcast(@NotNull String[] texts, TagResolver tagResolver, @NotNull String neededPermission, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -2321,7 +2289,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the texts, the neededPermission, the sender or the permissions is null.
      */
-    public void broadcast(@NotNull String[] texts, @NotNull String neededPermission, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcast(@NotNull String[] texts, @NotNull String neededPermission, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcast(texts, null, neededPermission, sender, permissions);
     }
 
@@ -2343,10 +2311,12 @@ public class Text {
 
         if (texts.isEmpty()) return;
 
-        Audience audience = audiences.permission(neededPermission);
         for (String text : texts) {
             if (text == null) continue;
-            audience.sendMessage(deserialize(text, tagResolver));
+
+            server.getAllPlayers().stream()
+                    .filter(p -> p.hasPermission(neededPermission))
+                    .forEach(p -> p.sendMessage(deserialize(text, tagResolver)));
         }
     }
 
@@ -2401,7 +2371,7 @@ public class Text {
      * @param permissions      The permissions to check.
      * @throws NullPointerException if the texts, the neededPermission, the sender or the permissions is null.
      */
-    public <T extends Collection<String>> void broadcast(@NotNull T texts, TagResolver tagResolver, @NotNull String neededPermission, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <T extends Collection<String>> void broadcast(@NotNull T texts, TagResolver tagResolver, @NotNull String neededPermission, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -2426,7 +2396,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the texts, the neededPermission, the sender or the permissions is null.
      */
-    public <T extends Collection<String>> void broadcast(@NotNull T texts, @NotNull String neededPermission, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <T extends Collection<String>> void broadcast(@NotNull T texts, @NotNull String neededPermission, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcast(texts, null, neededPermission, sender, permissions);
     }
 
@@ -2449,7 +2419,10 @@ public class Text {
 
         for (String permission : neededPermissions) {
             if (permission == null) continue;
-            audiences.permission(permission).sendMessage(deserialize(text, tagResolver));
+
+            server.getAllPlayers().stream()
+                    .filter(p -> p.hasPermission(permission))
+                    .forEach(p -> p.sendMessage(deserialize(text, tagResolver)));
         }
     }
 
@@ -2505,7 +2478,7 @@ public class Text {
      * @param permissions       The permissions to check.
      * @throws NullPointerException if the text, the neededPermissions, the sender or The permissions is null.
      */
-    public void broadcast(@NotNull String text, TagResolver tagResolver, @NotNull String[] neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcast(@NotNull String text, TagResolver tagResolver, @NotNull String[] neededPermissions, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -2531,7 +2504,7 @@ public class Text {
      * @param permissions       The permissions to check.
      * @throws NullPointerException if the text, the neededPermissions, the sender or The permissions is null.
      */
-    public void broadcast(@NotNull String text, @NotNull String[] neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcast(@NotNull String text, @NotNull String[] neededPermissions, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcast(text, null, neededPermissions, sender, permissions);
     }
 
@@ -2556,10 +2529,12 @@ public class Text {
         for (String permission : neededPermissions) {
             if (permission == null) continue;
 
-            Audience audience = audiences.permission(permission);
             for (String text : texts) {
                 if (text == null) continue;
-                audience.sendMessage(deserialize(text, tagResolver));
+
+                server.getAllPlayers().stream()
+                        .filter(p -> p.hasPermission(permission))
+                        .forEach(p -> p.sendMessage(deserialize(text, tagResolver)));
             }
         }
     }
@@ -2615,7 +2590,7 @@ public class Text {
      * @param permissions       The permissions to check.
      * @throws NullPointerException if the texts, the neededPermissions, the sender or The permissions is null.
      */
-    public void broadcast(@NotNull String[] texts, TagResolver tagResolver, @NotNull String[] neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcast(@NotNull String[] texts, TagResolver tagResolver, @NotNull String[] neededPermissions, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -2640,7 +2615,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the texts, the neededPermissions, the sender or The permissions is null.
      */
-    public void broadcast(@NotNull String[] texts, @NotNull String[] neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcast(@NotNull String[] texts, @NotNull String[] neededPermissions, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcast(texts, null, neededPermissions, sender, permissions);
     }
 
@@ -2665,10 +2640,13 @@ public class Text {
         for (String permission : neededPermissions) {
             if (permission == null) continue;
 
-            Audience audience = audiences.permission(permission);
+
             for (String text : texts) {
                 if (text == null) continue;
-                audience.sendMessage(deserialize(text, tagResolver));
+
+                server.getAllPlayers().stream()
+                        .filter(p -> p.hasPermission(permission))
+                        .forEach(p -> p.sendMessage(deserialize(text, tagResolver)));
             }
         }
     }
@@ -2724,7 +2702,7 @@ public class Text {
      * @param permissions       The permissions to check.
      * @throws NullPointerException if the texts, the neededPermissions, the sender or The permissions is null.
      */
-    public <T extends Collection<String>> void broadcast(@NotNull T texts, TagResolver tagResolver, @NotNull String[] neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <T extends Collection<String>> void broadcast(@NotNull T texts, TagResolver tagResolver, @NotNull String[] neededPermissions, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -2749,7 +2727,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the texts, the neededPermissions, the sender or The permissions is null.
      */
-    public <T extends Collection<String>> void broadcast(@NotNull T texts, @NotNull String[] neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <T extends Collection<String>> void broadcast(@NotNull T texts, @NotNull String[] neededPermissions, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcast(texts, null, neededPermissions, sender, permissions);
     }
 
@@ -2772,7 +2750,10 @@ public class Text {
 
         for (String permission : neededPermissions) {
             if (permission == null) continue;
-            audiences.permission(permission).sendMessage(deserialize(text, tagResolver));
+
+            server.getAllPlayers().stream()
+                    .filter(p -> p.hasPermission(permission))
+                    .forEach(p -> p.sendMessage(deserialize(text, tagResolver)));
         }
     }
 
@@ -2828,7 +2809,7 @@ public class Text {
      * @param permissions       The permissions to check.
      * @throws NullPointerException if the text, the neededPermissions, the sender or The permissions is null.
      */
-    public <P extends Collection<String>> void broadcast(@NotNull String text, TagResolver tagResolver, @NotNull P neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <P extends Collection<String>> void broadcast(@NotNull String text, TagResolver tagResolver, @NotNull P neededPermissions, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -2854,7 +2835,7 @@ public class Text {
      * @param permissions       The permissions to check.
      * @throws NullPointerException if the text, the neededPermissions, the sender or The permissions is null.
      */
-    public <P extends Collection<String>> void broadcast(@NotNull String text, @NotNull P neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <P extends Collection<String>> void broadcast(@NotNull String text, @NotNull P neededPermissions, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcast(text, null, neededPermissions, sender, permissions);
     }
 
@@ -2879,10 +2860,12 @@ public class Text {
         for (String permission : neededPermissions) {
             if (permission == null) continue;
 
-            Audience audience = audiences.permission(permission);
             for (String text : texts) {
                 if (text == null) continue;
-                audience.sendMessage(deserialize(text, tagResolver));
+
+                server.getAllPlayers().stream()
+                        .filter(p -> p.hasPermission(permission))
+                        .forEach(p -> p.sendMessage(deserialize(text, tagResolver)));
             }
         }
     }
@@ -2938,7 +2921,7 @@ public class Text {
      * @param permissions       The permissions to check.
      * @throws NullPointerException if the texts, the neededPermissions, the sender or The permissions is null.
      */
-    public <P extends Collection<String>> void broadcast(@NotNull String[] texts, TagResolver tagResolver, @NotNull P neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <P extends Collection<String>> void broadcast(@NotNull String[] texts, TagResolver tagResolver, @NotNull P neededPermissions, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -2963,7 +2946,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the texts, the neededPermissions, the sender or The permissions is null.
      */
-    public <P extends Collection<String>> void broadcast(@NotNull String[] texts, @NotNull P neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <P extends Collection<String>> void broadcast(@NotNull String[] texts, @NotNull P neededPermissions, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcast(texts, null, neededPermissions, sender, permissions);
     }
 
@@ -2988,10 +2971,12 @@ public class Text {
         for (String permission : neededPermissions) {
             if (permission == null) continue;
 
-            Audience audience = audiences.permission(permission);
             for (String text : texts) {
                 if (text == null) continue;
-                audience.sendMessage(deserialize(text, tagResolver));
+
+                server.getAllPlayers().stream()
+                        .filter(p -> p.hasPermission(permission))
+                        .forEach(p -> p.sendMessage(deserialize(text, tagResolver)));
             }
         }
     }
@@ -3047,7 +3032,7 @@ public class Text {
      * @param permissions       The permissions to check.
      * @throws NullPointerException if the texts, the neededPermissions, the sender or The permissions is null.
      */
-    public <P extends Collection<String>, T extends Collection<String>> void broadcast(@NotNull T texts, TagResolver tagResolver, @NotNull P neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <P extends Collection<String>, T extends Collection<String>> void broadcast(@NotNull T texts, TagResolver tagResolver, @NotNull P neededPermissions, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -3072,7 +3057,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the texts, the neededPermissions, the sender or The permissions is null.
      */
-    public <P extends Collection<String>, T extends Collection<String>> void broadcast(@NotNull T texts, @NotNull P neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <P extends Collection<String>, T extends Collection<String>> void broadcast(@NotNull T texts, @NotNull P neededPermissions, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcast(texts, null, neededPermissions, sender, permissions);
     }
 
@@ -3093,11 +3078,7 @@ public class Text {
         Preconditions.checkNotNull(text, "Text cannot be null");
         Preconditions.checkNotNull(receiver, "Receiver cannot be null");
 
-        Audience audience;
-        if (receiver instanceof Player) audience = audiences.player((Player) receiver);
-        else audience = audiences.sender(receiver);
-
-        audience.sendActionBar(deserialize(text, tagResolver));
+        receiver.sendActionBar(deserialize(text, tagResolver));
     }
 
     /**
@@ -3152,7 +3133,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receiver, the sender or the permissions is null.
      */
-    public void sendActionBar(@NotNull String text, @NotNull Player receiver, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void sendActionBar(@NotNull String text, @NotNull Player receiver, TagResolver tagResolver, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -3178,7 +3159,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receiver or the sender or the permissions is null.
      */
-    public void sendActionBar(@NotNull String text, @NotNull Player receiver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void sendActionBar(@NotNull String text, @NotNull Player receiver, @NotNull CommandSource sender, @NotNull String... permissions) {
         sendActionBar(text, receiver, null, sender, permissions);
     }
 
@@ -3256,7 +3237,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receivers or the sender or the permissions is null.
      */
-    public void sendActionBar(@NotNull String text, @NotNull Player[] receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void sendActionBar(@NotNull String text, @NotNull Player[] receivers, TagResolver tagResolver, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -3282,7 +3263,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receivers, the sender or the permissions is null.
      */
-    public void sendActionBar(@NotNull String text, @NotNull Player[] receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void sendActionBar(@NotNull String text, @NotNull Player[] receivers, @NotNull CommandSource sender, @NotNull String... permissions) {
         sendActionBar(text, receivers, null, sender, permissions);
     }
 
@@ -3360,7 +3341,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receivers, the sender or the permissions is null.
      */
-    public <R extends Collection<Player>> void sendActionBar(@NotNull String text, @NotNull R receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <R extends Collection<Player>> void sendActionBar(@NotNull String text, @NotNull R receivers, TagResolver tagResolver, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -3386,7 +3367,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the receivers, the sender or the permissions is null.
      */
-    public <R extends Collection<Player>> void sendActionBar(@NotNull String text, @NotNull R receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <R extends Collection<Player>> void sendActionBar(@NotNull String text, @NotNull R receivers, @NotNull CommandSource sender, @NotNull String... permissions) {
         sendActionBar(text, receivers, null, sender, permissions);
     }
 
@@ -3405,7 +3386,7 @@ public class Text {
     public void broadcastActionBar(@NotNull String text, TagResolver tagResolver) {
         Preconditions.checkNotNull(text, "Text cannot be null");
 
-        audiences.players().sendActionBar(deserialize(text, tagResolver));
+        server.getAllPlayers().forEach(p -> p.sendActionBar(deserialize(text, tagResolver)));
     }
 
     /**
@@ -3456,7 +3437,7 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the sender or the permissions is null.
      */
-    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -3481,42 +3462,41 @@ public class Text {
      * @param permissions The permissions to check.
      * @throws NullPointerException if the text, the sender or the permissions is null.
      */
-    public void broadcastActionBar(@NotNull String text, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcastActionBar(@NotNull String text, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcastActionBar(text, (TagResolver) null, sender, permissions);
     }
 
 
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
-    /*    WORLD BROADCAST    */
+    /*    SERVER BROADCAST    */
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts an action bar text to all {@link Player}s in a world.
+     * Broadcasts an action bar text to all {@link Player}s in a server.
      * The text is deserialized before being sent.
      *
      * @param text        The text to send.
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
-     * @param world       The {@link World} to send the text to.
-     * @throws NullPointerException if the text or the world is null.
+     * @param server      The {@link RegisteredServer} to send the text to.
+     * @throws NullPointerException if the text or the server is null.
      */
-    @SuppressWarnings("PatternValidation")
-    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull World world) {
+    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull RegisteredServer server) {
         Preconditions.checkNotNull(text, "Text cannot be null");
-        Preconditions.checkNotNull(world, "World cannot be null");
+        Preconditions.checkNotNull(server, "World cannot be null");
 
-        audiences.world(Key.key(world.getKey().toString())).sendActionBar(deserialize(text, tagResolver));
+        server.getPlayersConnected().forEach(p -> p.sendActionBar(deserialize(text, tagResolver)));
     }
 
     /**
      * Broadcasts an action bar text to all {@link Player}s on the server.
      * The text is deserialized before being sent.
      *
-     * @param text  The text to send.
-     * @param world The {@link World} to send the text to.
-     * @throws NullPointerException if the text or the world is null.
+     * @param text   The text to send.
+     * @param server The {@link RegisteredServer} to send the text to.
+     * @throws NullPointerException if the text or the server is null.
      */
-    public void broadcastActionBar(@NotNull String text, @NotNull World world) {
-        broadcastActionBar(text, null, world);
+    public void broadcastActionBar(@NotNull String text, @NotNull RegisteredServer server) {
+        broadcastActionBar(text, null, server);
     }
 
     /**
@@ -3524,15 +3504,15 @@ public class Text {
      *
      * @param text            The text to send.
      * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
-     * @param world           The {@link World} to send the text to.
+     * @param server          The {@link RegisteredServer} to send the text to.
      * @param stripFormatting Whether to strip formatting from the text before sending it.
-     * @throws NullPointerException if the text or the world is null.
+     * @throws NullPointerException if the text or the server is null.
      */
-    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull World world, boolean stripFormatting) {
+    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull RegisteredServer server, boolean stripFormatting) {
         if (stripFormatting) {
-            broadcastActionBar(stripFormatting(text, tagResolver), tagResolver, world);
+            broadcastActionBar(stripFormatting(text, tagResolver), tagResolver, server);
         } else {
-            broadcastActionBar(text, tagResolver, world);
+            broadcastActionBar(text, tagResolver, server);
         }
     }
 
@@ -3540,12 +3520,12 @@ public class Text {
      * Broadcasts an action bar text to all {@link Player}s on the server.
      *
      * @param text            The text to send.
-     * @param world           The {@link World} to send the text to.
+     * @param server          The {@link RegisteredServer} to send the text to.
      * @param stripFormatting Whether to strip formatting from the text before sending it.
-     * @throws NullPointerException if the text or the world is null.
+     * @throws NullPointerException if the text or the server is null.
      */
-    public void broadcastActionBar(@NotNull String text, @NotNull World world, boolean stripFormatting) {
-        broadcastActionBar(text, null, world, stripFormatting);
+    public void broadcastActionBar(@NotNull String text, @NotNull RegisteredServer server, boolean stripFormatting) {
+        broadcastActionBar(text, null, server, stripFormatting);
     }
 
     /**
@@ -3554,12 +3534,12 @@ public class Text {
      *
      * @param text        The text to send.
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
-     * @param world       The {@link World} to send the text to.
+     * @param server      The {@link RegisteredServer} to send the text to.
      * @param sender      The sender of the text.
      * @param permissions The permissions to check.
-     * @throws NullPointerException if the text, the world, the sender or the permissions is null.
+     * @throws NullPointerException if the text, the server, the sender or the permissions is null.
      */
-    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull RegisteredServer server, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -3572,7 +3552,7 @@ public class Text {
             }
         }
 
-        broadcastActionBar(text, tagResolver, world, !hasPermission);
+        broadcastActionBar(text, tagResolver, server, !hasPermission);
     }
 
     /**
@@ -3580,13 +3560,13 @@ public class Text {
      * If the sender has at least one of the provided permissions, the text is deserialized before being sent.
      *
      * @param text        The text to send.
-     * @param world       The {@link World} to send the text to.
+     * @param server      The {@link RegisteredServer} to send the text to.
      * @param sender      The sender of the text.
      * @param permissions The permissions to check.
-     * @throws NullPointerException if the text, the world, the sender or the permissions is null.
+     * @throws NullPointerException if the text, the server, the sender or the permissions is null.
      */
-    public void broadcastActionBar(@NotNull String text, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
-        broadcastActionBar(text, null, world, sender, permissions);
+    public void broadcastActionBar(@NotNull String text, @NotNull RegisteredServer server, @NotNull CommandSource sender, @NotNull String... permissions) {
+        broadcastActionBar(text, null, server, sender, permissions);
     }
 
 
@@ -3607,7 +3587,10 @@ public class Text {
         Preconditions.checkNotNull(text, "Text cannot be null");
         Preconditions.checkNotNull(neededPermission, "Needed permission cannot be null");
 
-        audiences.permission(neededPermission).sendActionBar(deserialize(text, tagResolver));
+        server.getAllPlayers().stream()
+                .filter(p -> p.hasPermission(neededPermission))
+                .forEach(p -> p.sendActionBar(deserialize(text, tagResolver)));
+
     }
 
     /**
@@ -3662,7 +3645,7 @@ public class Text {
      * @param permissions      The permissions to check.
      * @throws NullPointerException if the text, the neededPermission, the sender or the permissions is null.
      */
-    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull String neededPermission, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull String neededPermission, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -3688,7 +3671,7 @@ public class Text {
      * @param permissions      The permissions to check.
      * @throws NullPointerException if the text, the neededPermission, the sender or the permissions is null.
      */
-    public void broadcastActionBar(@NotNull String text, @NotNull String neededPermission, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcastActionBar(@NotNull String text, @NotNull String neededPermission, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcastActionBar(text, null, neededPermission, sender, permissions);
     }
 
@@ -3711,7 +3694,9 @@ public class Text {
 
         for (String permission : neededPermissions) {
             if (permission == null) continue;
-            audiences.permission(permission).sendActionBar(deserialize(text, tagResolver));
+            server.getAllPlayers().stream()
+                    .filter(p -> p.hasPermission(permission))
+                    .forEach(p -> p.sendActionBar(deserialize(text, tagResolver)));
         }
     }
 
@@ -3767,7 +3752,7 @@ public class Text {
      * @param permissions       The permissions to check.
      * @throws NullPointerException if the text, the neededPermissions, the sender or The permissions is null.
      */
-    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull String[] neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull String[] neededPermissions, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -3793,7 +3778,7 @@ public class Text {
      * @param permissions       The permissions to check.
      * @throws NullPointerException if the text, the neededPermissions, the sender or The permissions is null.
      */
-    public void broadcastActionBar(@NotNull String text, @NotNull String[] neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcastActionBar(@NotNull String text, @NotNull String[] neededPermissions, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcastActionBar(text, null, neededPermissions, sender, permissions);
     }
 
@@ -3816,7 +3801,10 @@ public class Text {
 
         for (String permission : neededPermissions) {
             if (permission == null) continue;
-            audiences.permission(permission).sendActionBar(deserialize(text, tagResolver));
+
+            server.getAllPlayers().stream()
+                    .filter(p -> p.hasPermission(permission))
+                    .forEach(p -> p.sendActionBar(deserialize(text, tagResolver)));
         }
     }
 
@@ -3872,7 +3860,7 @@ public class Text {
      * @param permissions       The permissions to check.
      * @throws NullPointerException if the text, the neededPermissions, the sender or The permissions is null.
      */
-    public <P extends Collection<String>> void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull P neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <P extends Collection<String>> void broadcastActionBar(@NotNull String text, TagResolver tagResolver, @NotNull P neededPermissions, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -3898,7 +3886,7 @@ public class Text {
      * @param permissions       The permissions to check.
      * @throws NullPointerException if the text, the neededPermissions, the sender or The permissions is null.
      */
-    public <P extends Collection<String>> void broadcastActionBar(@NotNull String text, @NotNull P neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <P extends Collection<String>> void broadcastActionBar(@NotNull String text, @NotNull P neededPermissions, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcastActionBar(text, null, neededPermissions, sender, permissions);
     }
 
@@ -3924,13 +3912,9 @@ public class Text {
         Preconditions.checkArgument((title == null && subtitle != null) || (title != null && subtitle == null), "Both title and subtitle cannot be null simultaneously");
         Preconditions.checkNotNull(receiver, "Receiver cannot be null");
 
-        Audience audience;
-        if (receiver instanceof Player) audience = audiences.player((Player) receiver);
-        else audience = audiences.sender(receiver);
-
-        if (title != null) audience.sendTitlePart(TitlePart.TITLE, deserialize(title, tagResolver));
-        if (subtitle != null) audience.sendTitlePart(TitlePart.SUBTITLE, deserialize(subtitle, tagResolver));
-        audience.sendTitlePart(TitlePart.TIMES, Title.Times.times(
+        if (title != null) receiver.sendTitlePart(TitlePart.TITLE, deserialize(title, tagResolver));
+        if (subtitle != null) receiver.sendTitlePart(TitlePart.SUBTITLE, deserialize(subtitle, tagResolver));
+        receiver.sendTitlePart(TitlePart.TIMES, Title.Times.times(
                 Duration.of(fadeIn != null ? fadeIn : 1000, ChronoUnit.MILLIS),
                 Duration.of(stay != null ? stay : 3000, ChronoUnit.MILLIS),
                 Duration.of(fadeOut != null ? fadeOut : 1000, ChronoUnit.MILLIS)
@@ -4079,7 +4063,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player receiver, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player receiver, TagResolver tagResolver, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -4110,7 +4094,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player receiver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player receiver, @NotNull CommandSource sender, @NotNull String... permissions) {
         sendTitle(title, subtitle, fadeIn, stay, fadeOut, receiver, null, sender, permissions);
     }
 
@@ -4127,7 +4111,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, @NotNull Player receiver, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void sendTitle(String title, String subtitle, @NotNull Player receiver, TagResolver tagResolver, @NotNull CommandSource sender, @NotNull String... permissions) {
         sendTitle(title, subtitle, null, null, null, receiver, tagResolver, sender, permissions);
     }
 
@@ -4143,7 +4127,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, @NotNull Player receiver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void sendTitle(String title, String subtitle, @NotNull Player receiver, @NotNull CommandSource sender, @NotNull String... permissions) {
         sendTitle(title, subtitle, null, null, null, receiver, null, sender, permissions);
     }
 
@@ -4317,7 +4301,7 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player[] receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player[] receivers, TagResolver tagResolver, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -4348,7 +4332,7 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player[] receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull Player[] receivers, @NotNull CommandSource sender, @NotNull String... permissions) {
         sendTitle(title, subtitle, fadeIn, stay, fadeOut, receivers, null, sender, permissions);
     }
 
@@ -4365,7 +4349,7 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, @NotNull Player[] receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void sendTitle(String title, String subtitle, @NotNull Player[] receivers, TagResolver tagResolver, @NotNull CommandSource sender, @NotNull String... permissions) {
         sendTitle(title, subtitle, null, null, null, receivers, tagResolver, sender, permissions);
     }
 
@@ -4381,7 +4365,7 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void sendTitle(String title, String subtitle, @NotNull Player[] receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void sendTitle(String title, String subtitle, @NotNull Player[] receivers, @NotNull CommandSource sender, @NotNull String... permissions) {
         sendTitle(title, subtitle, null, null, null, receivers, null, sender, permissions);
     }
 
@@ -4555,7 +4539,7 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull R receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull R receivers, TagResolver tagResolver, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -4586,7 +4570,7 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull R receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull R receivers, @NotNull CommandSource sender, @NotNull String... permissions) {
         sendTitle(title, subtitle, fadeIn, stay, fadeOut, receivers, null, sender, permissions);
     }
 
@@ -4603,7 +4587,7 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, @NotNull R receivers, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, @NotNull R receivers, TagResolver tagResolver, @NotNull CommandSource sender, @NotNull String... permissions) {
         sendTitle(title, subtitle, null, null, null, receivers, tagResolver, sender, permissions);
     }
 
@@ -4619,7 +4603,7 @@ public class Text {
      * @throws NullPointerException     if the receivers is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, @NotNull R receivers, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <R extends Collection<Player>> void sendTitle(String title, String subtitle, @NotNull R receivers, @NotNull CommandSource sender, @NotNull String... permissions) {
         sendTitle(title, subtitle, null, null, null, receivers, null, sender, permissions);
     }
 
@@ -4643,15 +4627,13 @@ public class Text {
     public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver) {
         Preconditions.checkArgument((title == null && subtitle != null) || (title != null && subtitle == null), "Both title and subtitle cannot be null simultaneously");
 
-        Audience audience = audiences.players();
-
-        if (title != null) audience.sendTitlePart(TitlePart.TITLE, deserialize(title, tagResolver));
-        if (subtitle != null) audience.sendTitlePart(TitlePart.SUBTITLE, deserialize(subtitle, tagResolver));
-        audience.sendTitlePart(TitlePart.TIMES, Title.Times.times(
+        if (title != null) server.getAllPlayers().forEach(p -> p.sendTitlePart(TitlePart.TITLE, deserialize(title, tagResolver)));
+        if (subtitle != null) server.getAllPlayers().forEach(p -> p.sendTitlePart(TitlePart.SUBTITLE, deserialize(subtitle, tagResolver)));
+        server.getAllPlayers().forEach(p -> p.sendTitlePart(TitlePart.TIMES, Title.Times.times(
                 Duration.of(fadeIn != null ? fadeIn : 1000, ChronoUnit.MILLIS),
                 Duration.of(stay != null ? stay : 3000, ChronoUnit.MILLIS),
                 Duration.of(fadeOut != null ? fadeOut : 1000, ChronoUnit.MILLIS)
-        ));
+        )));
     }
 
     /**
@@ -4788,7 +4770,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -4818,7 +4800,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, (TagResolver) null, sender, permissions);
     }
 
@@ -4834,7 +4816,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcastTitle(title, subtitle, null, null, null, tagResolver, sender, permissions);
     }
 
@@ -4849,7 +4831,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcastTitle(String title, String subtitle, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcastTitle(title, subtitle, null, null, null, (TagResolver) null, sender, permissions);
     }
 
@@ -4858,7 +4840,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a title to all {@link Player}s in a world.
+     * Broadcasts a title to all {@link Player}s in a server.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -4867,28 +4849,26 @@ public class Text {
      * @param stay        The time in milliseconds for the title to stay on screen. (default: 3000)
      * @param fadeOut     The time in milliseconds for the title to fade out. (default: 1000)
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
-     * @param world       The {@link World} to send the title to.
+     * @param server      The {@link RegisteredServer} to send the title to.
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
     @SuppressWarnings("PatternValidation")
-    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull World world) {
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull RegisteredServer server) {
         Preconditions.checkArgument((title == null && subtitle != null) || (title != null && subtitle == null), "Both title and subtitle cannot be null simultaneously");
-        Preconditions.checkNotNull(world, "World cannot be null");
+        Preconditions.checkNotNull(server, "World cannot be null");
 
-        Audience audience = audiences.world(Key.key(world.getKey().toString()));
-
-        if (title != null) audience.sendTitlePart(TitlePart.TITLE, deserialize(title, tagResolver));
-        if (subtitle != null) audience.sendTitlePart(TitlePart.SUBTITLE, deserialize(subtitle, tagResolver));
-        audience.sendTitlePart(TitlePart.TIMES, Title.Times.times(
+        if (title != null) server.getPlayersConnected().forEach(p -> p.sendTitlePart(TitlePart.TITLE, deserialize(title, tagResolver)));
+        if (subtitle != null) server.getPlayersConnected().forEach(p -> p.sendTitlePart(TitlePart.SUBTITLE, deserialize(subtitle, tagResolver)));
+        server.getPlayersConnected().forEach(p -> p.sendTitlePart(TitlePart.TIMES, Title.Times.times(
                 Duration.of(fadeIn != null ? fadeIn : 1000, ChronoUnit.MILLIS),
                 Duration.of(stay != null ? stay : 3000, ChronoUnit.MILLIS),
                 Duration.of(fadeOut != null ? fadeOut : 1000, ChronoUnit.MILLIS)
-        ));
+        )));
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s in a world.
+     * Broadcasts a title to all {@link Player}s in a server.
      * The text is deserialized before being sent.
      *
      * @param title    The title to send.
@@ -4896,41 +4876,41 @@ public class Text {
      * @param fadeIn   The time in milliseconds for the title to fade in. (default: 1000)
      * @param stay     The time in milliseconds for the title to stay on screen. (default: 3000)
      * @param fadeOut  The time in milliseconds for the title to fade out. (default: 1000)
-     * @param world    The {@link World} to send the title to.
+     * @param server   The {@link RegisteredServer} to send the title to.
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull World world) {
-        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, world);
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull RegisteredServer server) {
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, server);
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s in a world.
+     * Broadcasts a title to all {@link Player}s in a server.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
      * @param subtitle    The subtitle to send.
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
-     * @param world       The {@link World} to send the title to.
+     * @param server      The {@link RegisteredServer} to send the title to.
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull World world) {
-        broadcastTitle(title, subtitle, null, null, null, tagResolver, world);
+    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull RegisteredServer server) {
+        broadcastTitle(title, subtitle, null, null, null, tagResolver, server);
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s in a world.
+     * Broadcasts a title to all {@link Player}s in a server.
      * The text is deserialized before being sent.
      *
      * @param title    The title to send.
      * @param subtitle The subtitle to send.
-     * @param world    The {@link World} to send the title to.
+     * @param server   The {@link RegisteredServer} to send the title to.
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, @NotNull World world) {
-        broadcastTitle(title, subtitle, null, null, null, null, world);
+    public void broadcastTitle(String title, String subtitle, @NotNull RegisteredServer server) {
+        broadcastTitle(title, subtitle, null, null, null, null, server);
     }
 
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -4938,7 +4918,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a title to all {@link Player}s in a world.
+     * Broadcasts a title to all {@link Player}s in a server.
      * The text is deserialized before being sent.
      *
      * @param title           The title to send.
@@ -4947,21 +4927,21 @@ public class Text {
      * @param stay            The time in milliseconds for the title to stay on screen. (default: 3000)
      * @param fadeOut         The time in milliseconds for the title to fade out. (default: 1000)
      * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
-     * @param world           The {@link World} to send the title to.
+     * @param server          The {@link RegisteredServer} to send the title to.
      * @param stripFormatting Whether to strip formatting from the text before sending it.
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull World world, boolean stripFormatting) {
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull RegisteredServer server, boolean stripFormatting) {
         if (stripFormatting) {
-            broadcastTitle(stripFormatting(title, tagResolver), stripFormatting(subtitle, tagResolver), fadeIn, stay, fadeOut, tagResolver, world);
+            broadcastTitle(stripFormatting(title, tagResolver), stripFormatting(subtitle, tagResolver), fadeIn, stay, fadeOut, tagResolver, server);
         } else {
-            broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, tagResolver, world);
+            broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, tagResolver, server);
         }
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s in a world.
+     * Broadcasts a title to all {@link Player}s in a server.
      * The text is deserialized before being sent.
      *
      * @param title           The title to send.
@@ -4969,44 +4949,44 @@ public class Text {
      * @param fadeIn          The time in milliseconds for the title to fade in. (default: 1000)
      * @param stay            The time in milliseconds for the title to stay on screen. (default: 3000)
      * @param fadeOut         The time in milliseconds for the title to fade out. (default: 1000)
-     * @param world           The {@link World} to send the title to.
+     * @param server          The {@link RegisteredServer} to send the title to.
      * @param stripFormatting Whether to strip formatting from the text before sending it.
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull World world, boolean stripFormatting) {
-        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, world, stripFormatting);
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull RegisteredServer server, boolean stripFormatting) {
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, server, stripFormatting);
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s in a world.
+     * Broadcasts a title to all {@link Player}s in a server.
      * The text is deserialized before being sent.
      *
      * @param title           The title to send.
      * @param subtitle        The subtitle to send.
      * @param tagResolver     The {@link TagResolver} for any additional tags to handle.
-     * @param world           The {@link World} to send the title to.
+     * @param server          The {@link RegisteredServer} to send the title to.
      * @param stripFormatting Whether to strip formatting from the text before sending it.
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull World world, boolean stripFormatting) {
-        broadcastTitle(title, subtitle, null, null, null, tagResolver, world, stripFormatting);
+    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull RegisteredServer server, boolean stripFormatting) {
+        broadcastTitle(title, subtitle, null, null, null, tagResolver, server, stripFormatting);
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s in a world.
+     * Broadcasts a title to all {@link Player}s in a server.
      * The text is deserialized before being sent.
      *
      * @param title           The title to send.
      * @param subtitle        The subtitle to send.
-     * @param world           The {@link World} to send the title to.
+     * @param server          The {@link RegisteredServer} to send the title to.
      * @param stripFormatting Whether to strip formatting from the text before sending it.
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, @NotNull World world, boolean stripFormatting) {
-        broadcastTitle(title, subtitle, null, null, null, null, world, stripFormatting);
+    public void broadcastTitle(String title, String subtitle, @NotNull RegisteredServer server, boolean stripFormatting) {
+        broadcastTitle(title, subtitle, null, null, null, null, server, stripFormatting);
     }
 
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -5014,7 +4994,7 @@ public class Text {
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Broadcasts a title to all {@link Player}s in a world.
+     * Broadcasts a title to all {@link Player}s in a server.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -5023,13 +5003,13 @@ public class Text {
      * @param stay        The time in milliseconds for the title to stay on screen. (default: 3000)
      * @param fadeOut     The time in milliseconds for the title to fade out. (default: 1000)
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
-     * @param world       The {@link World} to send the title to.
+     * @param server      The {@link RegisteredServer} to send the title to.
      * @param sender      The sender of the text.
      * @param permissions The permissions to check.
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull RegisteredServer server, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -5042,11 +5022,11 @@ public class Text {
             }
         }
 
-        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, tagResolver, world, !hasPermission);
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, tagResolver, server, !hasPermission);
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s in a world.
+     * Broadcasts a title to all {@link Player}s in a server.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
@@ -5054,47 +5034,47 @@ public class Text {
      * @param fadeIn      The time in milliseconds for the title to fade in. (default: 1000)
      * @param stay        The time in milliseconds for the title to stay on screen. (default: 3000)
      * @param fadeOut     The time in milliseconds for the title to fade out. (default: 1000)
-     * @param world       The {@link World} to send the title to.
+     * @param server      The {@link RegisteredServer} to send the title to.
      * @param sender      The sender of the text.
      * @param permissions The permissions to check.
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
-        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, world, sender, permissions);
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull RegisteredServer server, @NotNull CommandSource sender, @NotNull String... permissions) {
+        broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, server, sender, permissions);
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s in a world.
+     * Broadcasts a title to all {@link Player}s in a server.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
      * @param subtitle    The subtitle to send.
      * @param tagResolver The {@link TagResolver} for any additional tags to handle.
-     * @param world       The {@link World} to send the title to.
+     * @param server      The {@link RegisteredServer} to send the title to.
      * @param sender      The sender of the text.
      * @param permissions The permissions to check.
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
-        broadcastTitle(title, subtitle, null, null, null, tagResolver, world, sender, permissions);
+    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull RegisteredServer server, @NotNull CommandSource sender, @NotNull String... permissions) {
+        broadcastTitle(title, subtitle, null, null, null, tagResolver, server, sender, permissions);
     }
 
     /**
-     * Broadcasts a title to all {@link Player}s in a world.
+     * Broadcasts a title to all {@link Player}s in a server.
      * The text is deserialized before being sent.
      *
      * @param title       The title to send.
      * @param subtitle    The subtitle to send.
-     * @param world       The {@link World} to send the title to.
+     * @param server      The {@link RegisteredServer} to send the title to.
      * @param sender      The sender of the text.
      * @param permissions The permissions to check.
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, @NotNull World world, @NotNull CommandSender sender, @NotNull String... permissions) {
-        broadcastTitle(title, subtitle, null, null, null, null, world, sender, permissions);
+    public void broadcastTitle(String title, String subtitle, @NotNull RegisteredServer server, @NotNull CommandSource sender, @NotNull String... permissions) {
+        broadcastTitle(title, subtitle, null, null, null, null, server, sender, permissions);
     }
 
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -5119,15 +5099,13 @@ public class Text {
         Preconditions.checkArgument((title == null && subtitle != null) || (title != null && subtitle == null), "Both title and subtitle cannot be null simultaneously");
         Preconditions.checkNotNull(neededPermission, "Needed permission cannot be null");
 
-        Audience audience = audiences.permission(neededPermission);
-
-        if (title != null) audience.sendTitlePart(TitlePart.TITLE, deserialize(title, tagResolver));
-        if (subtitle != null) audience.sendTitlePart(TitlePart.SUBTITLE, deserialize(subtitle, tagResolver));
-        audience.sendTitlePart(TitlePart.TIMES, Title.Times.times(
+        if (title != null) server.getAllPlayers().forEach(p -> p.sendTitlePart(TitlePart.TITLE, deserialize(title, tagResolver)));
+        if (subtitle != null) server.getAllPlayers().forEach(p -> p.sendTitlePart(TitlePart.SUBTITLE, deserialize(subtitle, tagResolver)));
+        server.getAllPlayers().forEach(p -> p.sendTitlePart(TitlePart.TIMES, Title.Times.times(
                 Duration.of(fadeIn != null ? fadeIn : 1000, ChronoUnit.MILLIS),
                 Duration.of(stay != null ? stay : 3000, ChronoUnit.MILLIS),
                 Duration.of(fadeOut != null ? fadeOut : 1000, ChronoUnit.MILLIS)
-        ));
+        )));
     }
 
     /**
@@ -5272,7 +5250,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull String neededPermission, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull String neededPermission, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -5303,7 +5281,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull String neededPermission, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull String neededPermission, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, neededPermission, sender, permissions);
     }
 
@@ -5320,7 +5298,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull String neededPermission, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull String neededPermission, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcastTitle(title, subtitle, null, null, null, tagResolver, neededPermission, sender, permissions);
     }
 
@@ -5336,7 +5314,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, @NotNull String neededPermission, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcastTitle(String title, String subtitle, @NotNull String neededPermission, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcastTitle(title, subtitle, null, null, null, null, neededPermission, sender, permissions);
     }
 
@@ -5364,14 +5342,14 @@ public class Text {
 
         for (String permission : neededPermissions) {
             if (permission == null) continue;
-            Audience audience = audiences.permission(permission);
-            if (title != null) audience.sendTitlePart(TitlePart.TITLE, deserialize(title, tagResolver));
-            if (subtitle != null) audience.sendTitlePart(TitlePart.SUBTITLE, deserialize(subtitle, tagResolver));
-            audience.sendTitlePart(TitlePart.TIMES, Title.Times.times(
+
+            if (title != null) server.getAllPlayers().stream().filter(p -> p.hasPermission(permission)).forEach(p -> p.sendTitlePart(TitlePart.TITLE, deserialize(title, tagResolver)));
+            if (subtitle != null) server.getAllPlayers().stream().filter(p -> p.hasPermission(permission)).forEach(p -> p.sendTitlePart(TitlePart.SUBTITLE, deserialize(subtitle, tagResolver)));
+            server.getAllPlayers().stream().filter(p -> p.hasPermission(permission)).forEach(p -> p.sendTitlePart(TitlePart.TIMES, Title.Times.times(
                     Duration.of(fadeIn != null ? fadeIn : 1000, ChronoUnit.MILLIS),
                     Duration.of(stay != null ? stay : 3000, ChronoUnit.MILLIS),
                     Duration.of(fadeOut != null ? fadeOut : 1000, ChronoUnit.MILLIS)
-            ));
+            )));
         }
     }
 
@@ -5517,7 +5495,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull String[] neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull String[] neededPermissions, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -5548,7 +5526,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull String[] neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull String[] neededPermissions, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, neededPermissions, sender, permissions);
     }
 
@@ -5565,7 +5543,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull String[] neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull String[] neededPermissions, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcastTitle(title, subtitle, null, null, null, tagResolver, neededPermissions, sender, permissions);
     }
 
@@ -5581,7 +5559,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public void broadcastTitle(String title, String subtitle, @NotNull String[] neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public void broadcastTitle(String title, String subtitle, @NotNull String[] neededPermissions, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcastTitle(title, subtitle, null, null, null, null, neededPermissions, sender, permissions);
     }
     /* -------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -5608,14 +5586,13 @@ public class Text {
 
         for (String permission : neededPermissions) {
             if (permission == null) continue;
-            Audience audience = audiences.permission(permission);
-            if (title != null) audience.sendTitlePart(TitlePart.TITLE, deserialize(title, tagResolver));
-            if (subtitle != null) audience.sendTitlePart(TitlePart.SUBTITLE, deserialize(subtitle, tagResolver));
-            audience.sendTitlePart(TitlePart.TIMES, Title.Times.times(
+            if (title != null) server.getAllPlayers().stream().filter(p -> p.hasPermission(permission)).forEach(p -> p.sendTitlePart(TitlePart.TITLE, deserialize(title, tagResolver)));
+            if (subtitle != null) server.getAllPlayers().stream().filter(p -> p.hasPermission(permission)).forEach(p -> p.sendTitlePart(TitlePart.SUBTITLE, deserialize(subtitle, tagResolver)));
+            server.getAllPlayers().stream().filter(p -> p.hasPermission(permission)).forEach(p -> p.sendTitlePart(TitlePart.TIMES, Title.Times.times(
                     Duration.of(fadeIn != null ? fadeIn : 1000, ChronoUnit.MILLIS),
                     Duration.of(stay != null ? stay : 3000, ChronoUnit.MILLIS),
                     Duration.of(fadeOut != null ? fadeOut : 1000, ChronoUnit.MILLIS)
-            ));
+            )));
         }
     }
 
@@ -5761,7 +5738,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public <P extends Collection<String>> void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull P neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <P extends Collection<String>> void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, TagResolver tagResolver, @NotNull P neededPermissions, @NotNull CommandSource sender, @NotNull String... permissions) {
         Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(permissions, "Permissions cannot be null");
 
@@ -5792,7 +5769,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public <P extends Collection<String>> void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull P neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <P extends Collection<String>> void broadcastTitle(String title, String subtitle, Long fadeIn, Long stay, Long fadeOut, @NotNull P neededPermissions, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, null, neededPermissions, sender, permissions);
     }
 
@@ -5809,7 +5786,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public <P extends Collection<String>> void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull P neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <P extends Collection<String>> void broadcastTitle(String title, String subtitle, TagResolver tagResolver, @NotNull P neededPermissions, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcastTitle(title, subtitle, null, null, null, tagResolver, neededPermissions, sender, permissions);
     }
 
@@ -5825,7 +5802,7 @@ public class Text {
      * @throws NullPointerException     if the receiver is null.
      * @throws IllegalArgumentException if both title and subtitle are null.
      */
-    public <P extends Collection<String>> void broadcastTitle(String title, String subtitle, @NotNull P neededPermissions, @NotNull CommandSender sender, @NotNull String... permissions) {
+    public <P extends Collection<String>> void broadcastTitle(String title, String subtitle, @NotNull P neededPermissions, @NotNull CommandSource sender, @NotNull String... permissions) {
         broadcastTitle(title, subtitle, null, null, null, null, neededPermissions, sender, permissions);
     }
 }

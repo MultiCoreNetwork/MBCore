@@ -7,13 +7,13 @@
     <parent>
         <groupId>it.multicoredev.mbcore</groupId>
         <artifactId>MBCore</artifactId>
-        <version>8.0.0</version>
+        <version>8.0.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.multicoredev.mbcore.bungeecord</groupId>
     <artifactId>MBCore-bungeecord</artifactId>
-    <version>8.0.0</version>
+    <version>8.0.1</version>
     <packaging>jar</packaging>
 
     <name>MBCore-bungeecord</name>
@@ -81,16 +81,21 @@
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
-            <version>1.16-R0.5-SNAPSHOT</version>
+            <version>1.20-R0.2</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
-            <version>1.17-R0.1-SNAPSHOT</version>
+            <version>1.20-R0.2</version>
             <type>javadoc</type>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-platform-bungeecord</artifactId>
+            <version>4.3.2</version>
         </dependency>
         <dependency>
             <groupId>com.github.MyzelYam</groupId>
