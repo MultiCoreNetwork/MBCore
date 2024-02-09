@@ -55,6 +55,7 @@ import java.util.regex.Pattern;
 public class Text {
     private static final MiniMessage miniMessage = MiniMessage.miniMessage();
     private static final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.legacyAmpersand();
+    private static final LegacyComponentSerializer legacySerializerSection = LegacyComponentSerializer.legacySection();
     private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)[§&][0-9A-FK-ORX]");
 
     private static Text instance = null;
@@ -352,6 +353,97 @@ public class Text {
      */
     public static <C extends Collection<String>> C toLegacyText(C collection) {
         return toLegacyText(collection, null);
+    }
+
+    /**
+     * Serializes a text to a legacy alternate color codes string.
+     *
+     * @param text        The text to serialize.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @return The serialized text.
+     * null if the input text is null.
+     */
+    public static String toLegacyAlternateColorCodes(String text, TagResolver tagResolver) {
+        if (text == null) return null;
+
+        if (tagResolver == null) return legacySerializerSection.serialize(miniMessage.deserialize(text));
+        return legacySerializerSection.serialize(miniMessage.deserialize(text, tagResolver));
+    }
+
+    /**
+     * Serializes a text to a legacy alternate color codes string.
+     *
+     * @param text The text to serialize.
+     * @return The serialized text.
+     * null if the input text is null.
+     */
+    public static String toLegacyAlternateColorCodes(String text) {
+        return toLegacyAlternateColorCodes(text, null);
+    }
+
+    /**
+     * Serializes texts to a legacy alternate color codes string.
+     *
+     * @param texts       The texts to serialize.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @return An array of serialized texts or an empty array if no texts are provided.
+     * null if the input texts array is null.
+     */
+    public static String[] toLegacyAlternateColorCodes(String[] texts, TagResolver tagResolver) {
+        if (texts == null) return null;
+
+        for (int i = 0; i < texts.length; i++) {
+            texts[i] = toLegacyAlternateColorCodes(texts[i], tagResolver);
+        }
+
+        return texts;
+    }
+
+    /**
+     * Serializes texts to a legacy alternate color codes string.
+     *
+     * @param texts The texts to serialize.
+     * @return An array of serialized texts or an empty array if no texts are provided.
+     * null if the input texts array is null.
+     */
+    public static String[] toLegacyAlternateColorCodes(String[] texts) {
+        return toLegacyAlternateColorCodes(texts, null);
+    }
+
+    /**
+     * Serializes texts to a legacy alternate color codes string.
+     *
+     * @param collection  The collection of texts to serialize.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @param <C>         The type of the collection.
+     * @return A collection of serialized texts or an empty iterable if no texts are provided.
+     * null if the input iterable is null.
+     */
+    public static <C extends Collection<String>> C toLegacyAlternateColorCodes(C collection, TagResolver tagResolver) {
+        if (collection == null) return null;
+
+        List<String> texts = new ArrayList<>();
+
+        for (String text : collection) {
+            texts.add(toLegacyAlternateColorCodes(text, tagResolver));
+        }
+
+        collection.clear();
+        collection.addAll(texts);
+
+        return collection;
+    }
+
+    /**
+     * Serializes texts to a legacy alternate color codes string.
+     *
+     * @param collection The collection of texts to serialize.
+     * @param <C>        The type of the collection.
+     * @return A collection of serialized texts or an empty iterable if no texts are provided.
+     * null if the input iterable is null.
+     */
+    public static <C extends Collection<String>> C toLegacyAlternateColorCodes(C collection) {
+        return toLegacyAlternateColorCodes(collection, null);
     }
 
     /**
