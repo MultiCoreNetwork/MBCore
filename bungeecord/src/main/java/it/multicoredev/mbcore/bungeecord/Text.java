@@ -9,6 +9,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.TitlePart;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -71,7 +72,6 @@ public class Text {
      *
      * @return The existing Text instance, or null if no instance has been created yet.
      */
-    @Nullable
     public static Text get() {
         return instance;
     }
@@ -376,6 +376,97 @@ public class Text {
     }
 
     /**
+     * Serializes a text to a legacy alternate color codes string.
+     *
+     * @param text        The text to serialize.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @return The serialized text.
+     * null if the input text is null.
+     */
+    public static String toLegacyAlternateColorCodes(String text, TagResolver tagResolver) {
+        if (text == null) return null;
+
+        if (tagResolver == null) return ChatColor.translateAlternateColorCodes('&', legacySerializer.serialize(miniMessage.deserialize(text)));
+        return ChatColor.translateAlternateColorCodes('&', legacySerializer.serialize(miniMessage.deserialize(text, tagResolver)));
+    }
+
+    /**
+     * Serializes a text to a legacy alternate color codes string.
+     *
+     * @param text The text to serialize.
+     * @return The serialized text.
+     * null if the input text is null.
+     */
+    public static String toLegacyAlternateColorCodes(String text) {
+        return toLegacyAlternateColorCodes(text, null);
+    }
+
+    /**
+     * Serializes texts to a legacy alternate color codes string.
+     *
+     * @param texts       The texts to serialize.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @return An array of serialized texts or an empty array if no texts are provided.
+     * null if the input texts array is null.
+     */
+    public static String[] toLegacyAlternateColorCodes(String[] texts, TagResolver tagResolver) {
+        if (texts == null) return null;
+
+        for (int i = 0; i < texts.length; i++) {
+            texts[i] = toLegacyAlternateColorCodes(texts[i], tagResolver);
+        }
+
+        return texts;
+    }
+
+    /**
+     * Serializes texts to a legacy alternate color codes string.
+     *
+     * @param texts The texts to serialize.
+     * @return An array of serialized texts or an empty array if no texts are provided.
+     * null if the input texts array is null.
+     */
+    public static String[] toLegacyAlternateColorCodes(String[] texts) {
+        return toLegacyAlternateColorCodes(texts, null);
+    }
+
+    /**
+     * Serializes texts to a legacy alternate color codes string.
+     *
+     * @param collection  The collection of texts to serialize.
+     * @param tagResolver The {@link TagResolver} for any additional tags to handle.
+     * @param <C>         The type of the collection.
+     * @return A collection of serialized texts or an empty iterable if no texts are provided.
+     * null if the input iterable is null.
+     */
+    public static <C extends Collection<String>> C toLegacyAlternateColorCodes(C collection, TagResolver tagResolver) {
+        if (collection == null) return null;
+
+        List<String> texts = new ArrayList<>();
+
+        for (String text : collection) {
+            texts.add(toLegacyAlternateColorCodes(text, tagResolver));
+        }
+
+        collection.clear();
+        collection.addAll(texts);
+
+        return collection;
+    }
+
+    /**
+     * Serializes texts to a legacy alternate color codes string.
+     *
+     * @param collection The collection of texts to serialize.
+     * @param <C>        The type of the collection.
+     * @return A collection of serialized texts or an empty iterable if no texts are provided.
+     * null if the input iterable is null.
+     */
+    public static <C extends Collection<String>> C toLegacyAlternateColorCodes(C collection) {
+        return toLegacyAlternateColorCodes(collection, null);
+    }
+
+    /**
      * Converts a legacy text to a MiniMessage text.
      *
      * @param text The text to convert.
@@ -383,37 +474,7 @@ public class Text {
      */
     public static String toMiniMessage(String text) {
         if (text == null) return null;
-
-        StringBuilder builder = new StringBuilder(text);
-        Matcher matcher = STRIP_COLOR_PATTERN.matcher(builder);
-
-        while (matcher.find()) {
-            builder.replace(matcher.start(), matcher.end(), builder.substring(matcher.start(), matcher.end()).toLowerCase().replace("§", "&"));
-        }
-
-        return builder.toString()
-                .replace("&0", "<black>")
-                .replace("&1", "<dark_blue>")
-                .replace("&2", "<dark_green>")
-                .replace("&3", "<dark_aqua>")
-                .replace("&4", "<dark_red>")
-                .replace("&5", "<dark_purple>")
-                .replace("&6", "<gold>")
-                .replace("&7", "<grey>")
-                .replace("&8", "<dark_grey>")
-                .replace("&9", "<blue>")
-                .replace("&a", "<green>")
-                .replace("&b", "<aqua>")
-                .replace("&c", "<red>")
-                .replace("&d", "<light_purple>")
-                .replace("&e", "<yellow>")
-                .replace("&f", "<white>")
-                .replace("&k", "<obf>")
-                .replace("&l", "<b>")
-                .replace("&m", "<st>")
-                .replace("&n", "<u>")
-                .replace("&o", "<i>")
-                .replace("&r", "<reset>");
+        return miniMessage.serialize(legacySerializer.deserialize(text));
     }
 
     /**

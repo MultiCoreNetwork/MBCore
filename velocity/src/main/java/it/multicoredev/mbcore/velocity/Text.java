@@ -69,7 +69,6 @@ public class Text {
      *
      * @return The existing Text instance, or null if no instance has been created yet.
      */
-    @Nullable
     public static Text get() {
         return instance;
     }
@@ -363,37 +362,7 @@ public class Text {
      */
     public static String toMiniMessage(String text) {
         if (text == null) return null;
-
-        StringBuilder builder = new StringBuilder(text);
-        Matcher matcher = STRIP_COLOR_PATTERN.matcher(builder);
-
-        while (matcher.find()) {
-            builder.replace(matcher.start(), matcher.end(), builder.substring(matcher.start(), matcher.end()).toLowerCase().replace("§", "&"));
-        }
-
-        return builder.toString()
-                .replace("&0", "<black>")
-                .replace("&1", "<dark_blue>")
-                .replace("&2", "<dark_green>")
-                .replace("&3", "<dark_aqua>")
-                .replace("&4", "<dark_red>")
-                .replace("&5", "<dark_purple>")
-                .replace("&6", "<gold>")
-                .replace("&7", "<grey>")
-                .replace("&8", "<dark_grey>")
-                .replace("&9", "<blue>")
-                .replace("&a", "<green>")
-                .replace("&b", "<aqua>")
-                .replace("&c", "<red>")
-                .replace("&d", "<light_purple>")
-                .replace("&e", "<yellow>")
-                .replace("&f", "<white>")
-                .replace("&k", "<obf>")
-                .replace("&l", "<b>")
-                .replace("&m", "<st>")
-                .replace("&n", "<u>")
-                .replace("&o", "<i>")
-                .replace("&r", "<reset>");
+        return miniMessage.serialize(legacySerializer.deserialize(text));
     }
 
     /**
